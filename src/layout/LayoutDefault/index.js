@@ -8,7 +8,7 @@ function LayoutDefault(){
     <>
       <div className='layout-default'>
         <Header/>
-        <Layout className='container'>
+        <Layout className='container' style={{backgroundColor:'#fff'}}>
           <Content className='contet'>
             <Outlet/>
           </Content>
