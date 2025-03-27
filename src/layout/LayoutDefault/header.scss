@@ -1,0 +1,124 @@
+.header{
+  background-color: #0932A0;
+  position: relative;
+  &__top{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    &__logo{
+      a{
+        font-size:30px;
+        text-decoration: none;
+        font-weight: 700;
+        color: white;
+      }
+    }
+    &__menu{
+
+      ul{
+        list-style: none;
+        display:flex;
+        align-items: center;
+        .user-log{
+          display:inline-block;
+          padding: 5px 5px 10px 10px;
+          background-color: white;
+          align-items: center;
+          justify-items: center;
+          border-radius: 8px;
+          a{
+            color: #0932A0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-items: center;
+          }
+        }
+        li{
+          margin-right: 20px;
+          a{
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+  &__bottom{
+    padding:20px;
+    display: flex;
+    flex-direction: column;
+    &__content{
+      h1{
+        font-size: 40px;
+      }
+      margin-bottom: 40px;
+    }
+    &__search{
+      background-color: #F5AC0E;
+      position: absolute;
+      bottom: -20px;
+      width: 60%;
+      display: flex;
+      padding: 5px;
+      &__input{
+        width: 25%;
+        position: relative;
+        input{
+          width: 100%;
+          padding: 15px 10px 15px 40px;
+          border: none;
+          border-radius: 5px;
+          font-size: 18px;
+        }
+        .search-icon{
+          position: absolute;
+          left: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: black;
+          font-size: 20px;
+        }
+      }
+      &__timeline{
+        margin-left: 5px;
+        width:30%;
+        div{
+          width: 100%;
+          padding: 6.8px;
+        }
+      }
+      &__quantity{
+        width: 25%;
+        margin-left: 5px;
+        input{
+          width: 100%;
+          padding: 15px 10px 15px 10px;
+          border: none;
+          border-radius: 5px;
+          font-size: 18px;
+        }
+      }
+      &__button{
+        width: 20%;
+        margin-left: 25px;
+        button{
+          width: 100%;
+          padding: 15px;
+          border: none;
+          border-radius: 5px;
+          font-size: 18px;
+          background-color: #0932A0;
+          color: white;
+          cursor: pointer;
+          font-weight: 600;
+        }
+      }
+    }
+    
+  }
+  
+}
