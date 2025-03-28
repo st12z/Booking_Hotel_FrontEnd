@@ -2,6 +2,7 @@ import { Content } from 'antd/es/layout/layout';
 import Header from './header';
 import {Layout} from 'antd';
 import {Outlet} from 'react-router-dom';
+import Footer from './footer';
 import "./LayoutDefault.scss";
 function LayoutDefault(){
   return(
@@ -13,6 +14,7 @@ function LayoutDefault(){
             <Outlet/>
           </Content>
         </Layout>
+        <Footer/>
       </div>
     </>
   )

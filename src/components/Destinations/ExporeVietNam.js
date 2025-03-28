@@ -24,7 +24,6 @@ function ExporeVietNam(props){
           virtual
         >
           {data.map((item, index) => (
-            <div key={index}>
               <SwiperSlide key={item.id} virtualIndex={index} >
                 <a href="/">
                   <div className="explore__item">
@@ -32,7 +31,6 @@ function ExporeVietNam(props){
                   </div>
                 </a>
               </SwiperSlide>
-            </div>
           ))}
         </Swiper>
     </>

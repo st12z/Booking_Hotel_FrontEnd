@@ -1,9 +1,7 @@
 import {  NavLink } from "react-router-dom";
-import BookingLogo from "../../images/Booking-Logo.png";
 import "./header.scss";
 import { HomeOutlined } from "@ant-design/icons";
 import { DatePicker } from 'antd';
-import {Form} from 'antd';
 const { RangePicker } = DatePicker;
 function Header() {
   const handleSubmit = (e) => {

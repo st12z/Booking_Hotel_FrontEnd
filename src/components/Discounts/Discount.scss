@@ -1,0 +1,37 @@
+.discount {
+  &__item {
+    display: flex;
+    align-items: center; // Căn giữa theo chiều dọc
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px; // Thêm padding để nội dung không sát viền
+    gap: 15px; // Thêm khoảng cách giữa ảnh và nội dung
+    position:relative;
+    &__img {
+      display: flex;
+      aspect-ratio: 4 / 3;
+
+      img {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        border-radius: 5px; // Bo góc nhẹ cho ảnh
+      }
+    }
+
+    &__content {
+      flex: 1; // Để nội dung mở rộng hết phần còn lại
+      p {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+      }
+    }
+    &__save{
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+  }
+}

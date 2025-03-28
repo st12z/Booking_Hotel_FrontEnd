@@ -229,7 +229,6 @@ function TripPlanner(){
           virtual
         >
           { data?.map((item, index) => (
-            <div key={index}>
               <SwiperSlide key={item.id} virtualIndex={index} >
                 <a href="/">
                   <div className="trip__item">
@@ -237,7 +236,6 @@ function TripPlanner(){
                   </div>
                 </a>
               </SwiperSlide>
-            </div>
           ))}
         </Swiper>
     </>
