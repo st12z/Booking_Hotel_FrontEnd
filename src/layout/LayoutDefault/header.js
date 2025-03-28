@@ -7,10 +7,10 @@ function Header() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const data={
-      title:e.target[0].value,
+      destination:e.target[0].value,
       checkIn:e.target[1].value,
       checkOut:e.target[2].value,
-      quantity:e.target[3].value
+      quantityBed:e.target[3].value
     }
     console.log(data);
   };

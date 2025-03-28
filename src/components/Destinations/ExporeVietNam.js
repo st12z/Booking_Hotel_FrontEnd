@@ -7,6 +7,7 @@ import 'swiper/css/navigation';
 import "./ExploreVietName.scss"
 import { useEffect, useRef, useState } from "react";
 import DestinationItem from "./DestinationItem";
+import { NavLink } from "react-router-dom";
 function ExporeVietNam(props){
   const {data}=props;
   return(
@@ -25,11 +26,11 @@ function ExporeVietNam(props){
         >
           {data.map((item, index) => (
               <SwiperSlide key={item.id} virtualIndex={index} >
-                <a href="/">
+                <NavLink to={`/?destination=${item.name}`}>
                   <div className="explore__item">
                     <DestinationItem item={item}/>
                   </div>
-                </a>
+                </NavLink>
               </SwiperSlide>
           ))}
         </Swiper>

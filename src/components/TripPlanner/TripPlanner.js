@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import beachIcon from "../../images/beach-icon.jpg";
 import mountainIcon from "../../images/mountain-icon.jpg";
 import outdoorIcon from "../../images/outdoor-icon.jpg";
@@ -9,187 +9,31 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import TripItem from "./TripItem";
+import { getAllTripTypes, getTripsByType } from "../../service/DestinationService";
+import { NavLink } from "react-router-dom";
 function TripPlanner(){
-  const dataAll=[
-    {
-        "id": 1,
-        "name": "Lăng chủ tịch",
-        "tripType": "Outdoors",
-        "city_id": 1,
-        "latitude": 21.04,
-        "longitude": 105.83,
-        "image": "https://lh5.googleusercontent.com/p/AF1QipNk0hiKji1aeJiKGmyWvsQkokDlNbXQyJufTMiV=w408-h307-k-no"
-    },
-    {
-        "id": 2,
-        "name": "Hồ Tây",
-        "tripType": "Outdoors",
-        "city_id": 1,
-        "latitude": 21.05,
-        "longitude": 105.82,
-        "image": "https://lh5.googleusercontent.com/p/AF1QipNMXIxamQP1T5Y8-MWHHivPt109t7KUeS3Fra_c=w408-h271-k-no"
-    },
-    {
-        "id": 3,
-        "name": "Hồ Hoàn Kiếm",
-        "tripType": "Outdoors",
-        "city_id": 1,
-        "latitude": 21.03,
-        "longitude": 105.85,
-        "image": "https://lh5.googleusercontent.com/p/AF1QipN3-_0wrzFsf30vYg5nR6mwLroFyNp-qYsnV6B6=w408-h246-k-no"
-    },
-    {
-        "id": 4,
-        "name": "Phố đường tàu",
-        "tripType": "Outdoors",
-        "city_id": 1,
-        "latitude": 21.03,
-        "longitude": 105.84,
-        "image": "https://lh5.googleusercontent.com/p/AF1QipMML6HcF8W-K9js2Bo2pr5aRVip57Fn7bTlPswY=w408-h510-k-no"
-    },
-    {
-        "id": 7,
-        "name": "Cầu rồng",
-        "tripType": "Outdoors",
-        "city_id": 3,
-        "latitude": 16.06,
-        "longitude": 108.23,
-        "image": "https://lh5.googleusercontent.com/p/AF1QipORTOLHKjRkpcwmf9QE6qs_smZwgf-tPEdkwxlL=w408-h272-k-no"
-    },
-    {
-        "id": 8,
-        "name": "Ba Na Hills",
-        "tripType": "Outdoors",
-        "city_id": 3,
-        "latitude": 16.00,
-        "longitude": 108.00,
-        "image": "https://lh5.googleusercontent.com/p/AF1QipMW717XyWoWQH5nR6KQ1ukbcSczJNGcbU-On08r=w426-h240-k-no"
-    },
-    {
-        "id": 9,
-        "name": "Đà Lạt",
-        "tripType": "Outdoors",
-        "city_id": 4,
-        "latitude": 11.89,
-        "longitude": 108.49,
-        "image": "https://nhuytravel.net/wp-content/uploads/2023/08/samten-hills-da-lat-savingbooking1.jpg"
-    },
-    {
-      "id": 5,
-      "name": "Biển Nha Trang",
-      "tripType": "Beach",
-      "city_id": 5,
-      "latitude": 12.24,
-      "longitude": 109.20,
-      "image": "https://lh3.googleusercontent.com/p/AF1QipNhKiLpbzC-Sa2JyfXz95YKUBdxhHfIeHiYuw3O=w426-h240-k-no"
-    },
-    { 
-      "id": 6,
-      "name": "Bãi biển Thụy Khê",
-      "tripType": "Beach",
-      "city_id": 3,
-      "latitude": 16.07,
-      "longitude": 108.25,
-      "image": "https://lh3.googleusercontent.com/p/AF1QipPgpkvaWeKD9pejm2Org-oEx-SWXLyGH_qSUneu=s294-w294-h220-k-no"
-    }
-  ];
-  const [data,setData]=useState(dataAll);
-  const [tripType,setTripType]=useState(0);
-  
-  const dataOutdoor= [
-        {
-            "id": 1,
-            "name": "Lăng chủ tịch",
-            "tripType": "Outdoors",
-            "city_id": 1,
-            "latitude": 21.04,
-            "longitude": 105.83,
-            "image": "https://lh5.googleusercontent.com/p/AF1QipNk0hiKji1aeJiKGmyWvsQkokDlNbXQyJufTMiV=w408-h307-k-no"
-        },
-        {
-            "id": 2,
-            "name": "Hồ Tây",
-            "tripType": "Outdoors",
-            "city_id": 1,
-            "latitude": 21.05,
-            "longitude": 105.82,
-            "image": "https://lh5.googleusercontent.com/p/AF1QipNMXIxamQP1T5Y8-MWHHivPt109t7KUeS3Fra_c=w408-h271-k-no"
-        },
-        {
-            "id": 3,
-            "name": "Hồ Hoàn Kiếm",
-            "tripType": "Outdoors",
-            "city_id": 1,
-            "latitude": 21.03,
-            "longitude": 105.85,
-            "image": "https://lh5.googleusercontent.com/p/AF1QipN3-_0wrzFsf30vYg5nR6mwLroFyNp-qYsnV6B6=w408-h246-k-no"
-        },
-        {
-            "id": 4,
-            "name": "Phố đường tàu",
-            "tripType": "Outdoors",
-            "city_id": 1,
-            "latitude": 21.03,
-            "longitude": 105.84,
-            "image": "https://lh5.googleusercontent.com/p/AF1QipMML6HcF8W-K9js2Bo2pr5aRVip57Fn7bTlPswY=w408-h510-k-no"
-        },
-        {
-            "id": 7,
-            "name": "Cầu rồng",
-            "tripType": "Outdoors",
-            "city_id": 3,
-            "latitude": 16.06,
-            "longitude": 108.23,
-            "image": "https://lh5.googleusercontent.com/p/AF1QipORTOLHKjRkpcwmf9QE6qs_smZwgf-tPEdkwxlL=w408-h272-k-no"
-        },
-        {
-            "id": 8,
-            "name": "Ba Na Hills",
-            "tripType": "Outdoors",
-            "city_id": 3,
-            "latitude": 16.00,
-            "longitude": 108.00,
-            "image": "https://lh5.googleusercontent.com/p/AF1QipMW717XyWoWQH5nR6KQ1ukbcSczJNGcbU-On08r=w426-h240-k-no"
-        },
-        {
-            "id": 9,
-            "name": "Đà Lạt",
-            "tripType": "Outdoors",
-            "city_id": 4,
-            "latitude": 11.89,
-            "longitude": 108.49,
-            "image": "https://nhuytravel.net/wp-content/uploads/2023/08/samten-hills-da-lat-savingbooking1.jpg"
+  const [data,setData]=useState([]);
+  const [dataTripType,setDataTripType]=useState([]);
+  const [tripType,setTripType]=useState("");
+  useEffect(()=>{
+    const fetchApi= async()=>{
+      try{
+        const resData = await getTripsByType(tripType);
+        const resDataTripType= await getAllTripTypes();
+        console.log(resDataTripType);
+        console.log(resData);
+        if(resData.code==200){
+          setData(resData.data);
+          setDataTripType(resDataTripType.data);
         }
-  ];
-  const dataBeach=[
-    {
-        "id": 5,
-        "name": "Biển Nha Trang",
-        "tripType": "Beach",
-        "city_id": 5,
-        "latitude": 12.24,
-        "longitude": 109.20,
-        "image": "https://lh3.googleusercontent.com/p/AF1QipNhKiLpbzC-Sa2JyfXz95YKUBdxhHfIeHiYuw3O=w426-h240-k-no"
-    },
-    {
-        "id": 6,
-        "name": "Bãi biển Thụy Khê",
-        "tripType": "Beach",
-        "city_id": 3,
-        "latitude": 16.07,
-        "longitude": 108.25,
-        "image": "https://lh3.googleusercontent.com/p/AF1QipPgpkvaWeKD9pejm2Org-oEx-SWXLyGH_qSUneu=s294-w294-h220-k-no"
-    }
-  ];
-  const dataMountain=[];
+      }catch(error){
+        console.error(error);
+      }
+    };
+    fetchApi();
+  },[tripType]);
   const handleClick=(tripType)=>{
-    if(tripType===1){
-      setData(dataOutdoor);
-    }else if(tripType===2){
-      setData(dataBeach);
-    }else if(tripType===3){
-      setData(dataMountain);
-    }
+    console.log(tripType);
     setTripType(tripType);
   }
   return(
@@ -197,24 +41,14 @@ function TripPlanner(){
       <h1>Kế hoạch chuyến đi</h1>
       <div className="trip">
         <ul>
-          <li onClick={()=>handleClick(1)} className={tripType===1?"trip--active":""}>
-            <div>
-              <img src={outdoorIcon} alt="Outdoor" />
-              <span>Ngoài trời</span>
-            </div>
-          </li>
-          <li onClick={()=>handleClick(2)} className={tripType===2?"trip--active":""}>
-            <div>
-              <img src={beachIcon} alt="Beach" />
-              <span>Bãi biển</span>
-            </div>
-          </li>
-          <li onClick={()=>handleClick(3)} className={tripType===3?"trip--active":""}>
-            <div>
-              <img src={mountainIcon} alt="Mountain" />
-              <span>Núi</span>
-            </div>
-          </li>
+          {dataTripType?.map((item,index)=>(
+            <li key={index} onClick={()=>handleClick(item)} className={tripType===item.tripType?"trip--active":""}>
+              <div>
+                <img src={item.imageIcon} alt="Outdoor" />
+                <span>{item.tripType}</span>
+              </div>
+            </li>
+          ))}
         </ul>
       </div>
       <Swiper
@@ -230,11 +64,11 @@ function TripPlanner(){
         >
           { data?.map((item, index) => (
               <SwiperSlide key={item.id} virtualIndex={index} >
-                <a href="/">
+                <NavLink to={`/?destination=${item.name}`}>
                   <div className="trip__item">
                     <TripItem item={item}/>
                   </div>
-                </a>
+                </NavLink>
               </SwiperSlide>
           ))}
         </Swiper>
