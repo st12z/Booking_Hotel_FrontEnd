@@ -20,11 +20,11 @@ function Search() {
   const [pageSize,setPageSize]=useState(10);
   const searchRequest = {
     destination: searchParams.get("destination"),
-    checkIn: searchParams.get("checkIn"),
-    checkOut: searchParams.get("checkOut"),
-    quantityBeds: searchParams.get("quantityBeds"),
-    pageNo:searchParams.get("pageNo"),
-    pageSize:searchParams.get("pageSize"),
+    checkIn: searchParams.get("checkIn") ? searchParams.get("checkIn"):"",
+    checkOut: searchParams.get("checkOut") ?searchParams.get("checkIn"):"",
+    quantityBeds: searchParams.get("quantityBeds") ? searchParams.get("quantityBeds"):"",
+    pageNo:searchParams.get("pageNo") ? searchParams.get("pageNo"):1,
+    pageSize:searchParams.get("pageSize")?searchParams.get("pageSize"):10,
   };
 
   const facilities=['Parking','Restaurant','Pets allowed','Room service','24-hour front desk','Fitness centre','Air port']

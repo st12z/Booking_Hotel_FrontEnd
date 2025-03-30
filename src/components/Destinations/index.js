@@ -30,9 +30,9 @@ function Destinations(){
       <Row gutter={[10,10]}>
         {dataCities?.slice(0,5).map((item,index)=>(
           <Col key={index}  span={index<2 ? 12:8}>
-            <Link to={`?destination=${item.name}`}>
+          <a href={`/search?destination=${item.name}`}>
               <DestinationItem item={item}/>
-            </Link>
+            </a>
           </Col>
         ))}
       </Row>

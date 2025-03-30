@@ -26,11 +26,11 @@ function ExporeVietNam(props){
         >
           {data.map((item, index) => (
               <SwiperSlide key={item.id} virtualIndex={index} >
-                <NavLink to={`/?destination=${item.name}`}>
+                <a href={`/search?destination=${item.name}`}>
                   <div className="explore__item">
                     <DestinationItem item={item}/>
                   </div>
-                </NavLink>
+                </a>
               </SwiperSlide>
           ))}
         </Swiper>
