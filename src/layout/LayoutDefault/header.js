@@ -1,18 +1,20 @@
-import {  NavLink } from "react-router-dom";
+import {  NavLink, useNavigate } from "react-router-dom";
 import "./header.scss";
 import { HomeOutlined } from "@ant-design/icons";
 import { DatePicker } from 'antd';
+import { formatLocalDateTime } from "../../utils/format";
 const { RangePicker } = DatePicker;
 function Header() {
+  const nav = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     const data={
       destination:e.target[0].value,
-      checkIn:e.target[1].value,
-      checkOut:e.target[2].value,
-      quantityBed:e.target[3].value
+      checkIn:formatLocalDateTime(e.target[1].value),
+      checkOut: formatLocalDateTime(e.target[2].value),
+      quantityBeds:e.target[3].value
     }
-    console.log(data);
+    nav(`/search?destination=${data.destination}&checkIn=${data.checkIn}&checkOut=${data.checkOut}&quantityBeds=${data.quantityBeds}`);
   };
   return (
     <>
@@ -52,7 +54,7 @@ function Header() {
                 <HomeOutlined className="search-icon"/>
               </div>
               <div className="header__bottom__search__timeline">
-                  <RangePicker />
+                  <RangePicker showTime/>
               </div>
               <div className="header__bottom__search__quantity">
                 <input type="number" placeholder="Số lượng giường" name=""/>
