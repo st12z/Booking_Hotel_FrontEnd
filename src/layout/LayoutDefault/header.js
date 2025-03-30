@@ -11,7 +11,7 @@ function Header() {
   const nav = useNavigate();
   const [destination,setDestination] = useState("");
   const [dataDestinations,setDataDestinations] =useState([]);
-  const [showSearch, setShowSearch ] =useState(true);
+  const [showSearch, setShowSearch ] =useState(false);
   const handleChange = (e) => {
     const destination = e.target.value;
     setDestination(destination);
@@ -50,7 +50,8 @@ function Header() {
       checkOut: formatLocalDateTime(e.target[2].value||""),
       quantityBeds:e.target[3].value
     }
-    nav(`/search?destination=${data.destination}&checkIn=${data.checkIn}&checkOut=${data.checkOut}&quantityBeds=${data.quantityBeds}`);
+    setShowSearch(false);
+    nav(`/search?destination=${data.destination}&checkIn=${data.checkIn}&checkOut=${data.checkOut}&quantityBeds=${data.quantityBeds}&pageNo=1&pageSize=8`);
   };
   return (
     <>
