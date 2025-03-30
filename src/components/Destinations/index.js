@@ -3,7 +3,7 @@ import "./Destinations.scss"
 import DestinationItem from "./DestinationItem";
 import ExporeVietNam from "./ExporeVietNam";
 import { useEffect, useState } from "react";
-import { getAllDestinations } from "../../service/DestinationService";
+import { getAllTrips } from "../../service/TripService";
 import { getAllCities } from "../../service/CityService";
 import { Link } from "react-router-dom";
 function Destinations(){
@@ -13,7 +13,7 @@ function Destinations(){
     const fetchApi= async()=>{
       try{
         const resCities = await getAllCities();
-        const resDestinations = await getAllDestinations();
+        const resDestinations = await getAllTrips();
         if(resCities.code==200){
           setdataCities(resCities.data);
           setdataDestinations(resDestinations.data);
