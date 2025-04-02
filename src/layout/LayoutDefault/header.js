@@ -1,4 +1,4 @@
-import {  NavLink, useNavigate } from "react-router-dom";
+import {  NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import "./header.scss";
 import { HomeOutlined } from "@ant-design/icons";
 import { DatePicker } from 'antd';
@@ -8,8 +8,12 @@ import { getDestinationsBySearch } from "../../service/DestinationService";
 const { RangePicker } = DatePicker;
 
 function Header() {
+  const [searchParams] = useSearchParams();
   const nav = useNavigate();
-  const [destination,setDestination] = useState("");
+  const [destination,setDestination] = useState(searchParams.get("destination") ? searchParams.get("destination"):"");
+  const [checkIn,setCheckIn] = useState(searchParams.get("checkIn") ? searchParams.get("checkIn"):"");
+  const [checkOut,setcheckOut] = useState(searchParams.get("checkOut") ? searchParams.get("checkOut"):"");
+  const [quantityBeds,setQuantityBeds]=useState(searchParams.get("quantityBeds") ? searchParams.get("quantityBeds"):"");
   const [dataDestinations,setDataDestinations] =useState([]);
   const [showSearch, setShowSearch ] =useState(false);
   const handleChange = (e) => {
@@ -42,24 +46,27 @@ function Header() {
     }
   }, [destination]);
   
+  const params = new URLSearchParams();
+  const addParamIfExists = (key, value) => {
+    if (value) params.append(key, value);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const data={
-      destination:e.target[0].value,
-      checkIn:formatLocalDateTime(e.target[1].value || ""),
-      checkOut: formatLocalDateTime(e.target[2].value||""),
-      quantityBeds:e.target[3].value
-    }
+    addParamIfExists("destination", e.target[0].value);
+    addParamIfExists("checkIn", formatLocalDateTime(e.target[1].value || ""));
+    addParamIfExists("checkOut", formatLocalDateTime(e.target[2].value || ""));
+    addParamIfExists("quantityBeds", e.target[3].value);
     setShowSearch(false);
-    nav(`/search?destination=${data.destination}&checkIn=${data.checkIn}&checkOut=${data.checkOut}&quantityBeds=${data.quantityBeds}&pageNo=1&pageSize=8`);
+    window.location.href = `/search?${params.toString()}`;
   };
   return (
     <>
       <div className="header">
         <div className="container">
           <div className="header__top">
-            <div className="header__top__logo">
-              <NavLink to="/">Booking.com</NavLink>
+            <div className="header__top__logo"> 
+              <a href="/">Booking.com</a>
             </div>
             <div className="header__top__menu">
               <ul>
@@ -100,10 +107,10 @@ function Header() {
                 </div>}
               </div>
               <div className="header__bottom__search__timeline">
-                  <RangePicker showTime/>
+                  <RangePicker showTime defaultValue={[checkIn,checkOut]}/>
               </div>
               <div className="header__bottom__search__quantity">
-                <input type="number" placeholder="Số lượng giường" name="quantityBeds" max={4}/>
+                <input type="number" placeholder="Số lượng giường" name="quantityBeds" max={4} value={quantityBeds} />
               </div>
               <div className="header__bottom__search__button">
                 <button type="submit">Tìm kiếm</button>

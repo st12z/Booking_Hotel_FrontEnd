@@ -3,21 +3,7 @@ import { Button, Rate } from "antd";
 import {HeartOutlined} from "@ant-design/icons";
 function PropertyItem(props){
   const {item} = props;
-  console.log(item);
-  const dataRoomType=[
-    {
-      room: "Room1",
-      price:123
-    },
-    {
-      room:"Room2",
-      price:123
-    },
-    {
-      room:"Room3",
-      price:123
-    }
-  ]
+
   return(
     <>
       <div className="property__item">
@@ -28,10 +14,12 @@ function PropertyItem(props){
         <div className="property__item__content">
           <div className="property__item__content__title">
             <h3>{item.name} </h3>
+            <h4>Cách trung tâm thành phố: {item.distanceFromCenter.toFixed(2)} Km</h4>
+            {item.distanceFromTrip && <h4>Cách biển: {(item.distanceFromTrip/1000).toFixed(2)} Km</h4>}
             <Rate value={item.ratingStar} disabled style={{fontSize:15}}/>
             <h3 className="city-name">{item.cityName}</h3>
-            {dataRoomType.map((item,index)=>(
-              <h3>{item.room} - {new Intl.NumberFormat('vi-VN').format(item.price)} VNĐ</h3>
+            {item.roomTypes.map((roomType,index)=>(
+              <h4 key={index}>{roomType.name} - {new Intl.NumberFormat('vi-VN').format(roomType.price)} VNĐ</h4>
             ))}
           </div>
           <div className="property__item__content__review">

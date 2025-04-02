@@ -1,33 +1,48 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getPropertiesBySearch } from "../../service/SearchService";
-import { Button, Card, Checkbox, Col, Pagination, Row, Slider } from "antd";
+import { getPropertiesBySearch, getPropertiesFilterAfterSearch } from "../../service/SearchService";
+import { Button, Card, Checkbox, Col, Pagination, Row, Skeleton, Slider } from "antd";
 import "./search.scss";
 import ListSearchProperties from "../../components/ListSearchProperties";
 function Search() {
   const [searchParams] = useSearchParams();
-  const [quantityBeds,setQuantityBeds]=useState(0);
+  const [quantityBeds,setQuantityBeds]=useState(1);
   const [showMore,setShowMore] = useState(false);
   const [selectedRating, setSelectedRating] = useState([]);
   const [selectedFacilities,setSelectedFacilities]=useState([]);
   const [selectedReview, setSelectedReview] = useState([]);
   const [selectedDistance, setSelectedDistance] = useState([]);
   const [selectedProperty, setSelectedProperty] = useState([]);
-  const [budget,setBudget]=useState(50000);
+  const [budget,setBudget]=useState();
   const [data,setData] = useState([]);
   const [total,setTotal]=useState();
   const [pageNo,setPageNo]=useState(1);
   const [pageSize,setPageSize]=useState(10);
+  const [loading,setLoading] = useState(true);
+  const filter = useMemo(() => ({
+    quantityBeds,
+    rating: selectedRating,
+    facilities: selectedFacilities,
+    reviewScore: selectedReview,
+    distance: selectedDistance,
+    propertyType: selectedProperty,
+    budget:budget
+  }), [quantityBeds, selectedRating, selectedFacilities, selectedReview, selectedDistance, selectedProperty, budget]);
   const searchRequest = {
     destination: searchParams.get("destination"),
     checkIn: searchParams.get("checkIn") ? searchParams.get("checkIn"):"",
-    checkOut: searchParams.get("checkOut") ?searchParams.get("checkIn"):"",
+    checkOut: searchParams.get("checkOut") ? searchParams.get("checkOut"):"",
     quantityBeds: searchParams.get("quantityBeds") ? searchParams.get("quantityBeds"):"",
     pageNo:searchParams.get("pageNo") ? searchParams.get("pageNo"):1,
     pageSize:searchParams.get("pageSize")?searchParams.get("pageSize"):10,
   };
 
   const facilities=['Parking','Restaurant','Pets allowed','Room service','24-hour front desk','Fitness centre','Air port']
+
+  const params = new URLSearchParams();
+  const addParamIfExists = (key, value) => {
+    if (value) params.append(key, value);
+  };
   useEffect(() => {
     const fetchApi = async () => {
       try {
@@ -49,18 +64,39 @@ function Search() {
       }
     };
     fetchApi();
-  }, [searchRequest.destination, searchRequest.checkIn, searchRequest.checkOut, searchRequest.quantityBeds]);
+  }, []);
+  const prevFilter = useRef(filter);
   useEffect(()=>{
-    const filterData={
-      quantityBeds:quantityBeds,
-      rating:selectedRating,
-      facilities:selectedFacilities,
-      reviewScore:selectedReview,
-      distance:selectedDistance,
-      propertyType:selectedProperty,
-      budget:budget
+    const fetchApi=async()=>{
+      setLoading(false);
+      try{
+        addParamIfExists("destination", searchRequest.destination);
+        addParamIfExists("checkIn", searchRequest.checkIn);
+        addParamIfExists("checkOut", searchRequest.checkOut);
+        addParamIfExists("quantityBeds", searchRequest.quantityBeds);
+        addParamIfExists("pageNo", searchRequest.pageNo);
+        addParamIfExists("pageSize", searchRequest.pageSize);
+        const result = await getPropertiesFilterAfterSearch(params.toString(),filter);
+        if(result.code==200){
+          setData(result.data.dataPage);
+          setTotal(result.data.total);
+          setPageNo(result.data.pageNo);
+          setPageSize(result.data.pageSize);
+        }
+      }catch(error){
+        console.error(error);
+      }
+      finally{
+        setLoading(true);
+      }
+      
     }
-  },[budget,quantityBeds,selectedDistance,selectedProperty,selectedFacilities,selectedProperty,selectedReview])
+    if (JSON.stringify(prevFilter.current) !== JSON.stringify(filter)){
+      prevFilter.current = filter;
+      fetchApi();
+    } 
+
+  },[filter]);
   const handleBudgetChange=(e)=>{
     setBudget(e);
   }
@@ -68,11 +104,13 @@ function Search() {
     if(quantityBeds>1) setQuantityBeds(quantityBeds-1);
   }
   const handleIncrease=()=>{
-    setQuantityBeds(quantityBeds+1);
+    if(quantityBeds<=3)setQuantityBeds(quantityBeds+1);
   }
   return(
     <>
       <Row gutter={[20,20]}>
+
+        {/* Filter */}
         <Col span={6}>
           <div className="map">
             <img src="https://th.bing.com/th/id/OIP.-TMzwF-Nx7xrhvOdXqXp7QHaGR?rs=1&pid=ImgDetMain" style={{width:"200px"}}/>
@@ -124,7 +162,7 @@ function Search() {
                 <h3>Số lượng giường</h3>
                 <div className="filter__quantitybeds__action">
                   <Button onClick={handleDecrease}>-</Button>
-                  <input type="number" min={0} value={quantityBeds} />
+                  <input type="number" min={1} value={quantityBeds} max={4}/>
                   <Button onClick={handleIncrease}>+</Button>
                 </div>
               </div>
@@ -153,9 +191,9 @@ function Search() {
                   onChange={(checkedValues) => setSelectedReview(checkedValues)}
                   options={[
                     { label: "Dưới 5", value: "<5" },
-                    { label: "5-7", value: "5-7" },
+                    { label: "5-8", value: "5-8" },
                     { label: "8-9", value: "8-9" },
-                    { label: "10", value: "10" },
+                    { label: "9-10", value: "9-19" },
                   ]}
                 />
               </div>
@@ -174,12 +212,21 @@ function Search() {
             </div>
           </Card>
         </Col>
+
+        {/* Giá trị trả về */}
         <Col span={18}>
-          <div className="property">
-              <ListSearchProperties data={data}  />
-          </div>
-          <Pagination current={pageNo} total={total} pageSize={pageSize}/>;       
+          {loading ? (
+            <>
+              <div className="property">
+                  <ListSearchProperties data={data}  />
+              </div>
+              <Pagination current={pageNo} total={total} pageSize={pageSize}/>; 
+            </>
+          ):(
+            <Skeleton active />
+          )}   
         </Col>
+
       </Row>
     </>
   )
