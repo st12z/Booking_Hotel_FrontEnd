@@ -1,0 +1,47 @@
+.property {
+  &__header {
+    &__content{
+      position: relative;
+      &__address {
+        
+        display: flex;
+        img {
+          width: 30px;
+          object-fit: cover;
+          margin-right: 10px;
+        }
+      }
+      .icon{
+        position: absolute;
+        font-size: 32px;
+        right: 40px;
+        top: 10px;
+        &--active{
+          color: red;
+        }
+      }
+    }
+    
+  }
+  &__body{
+    &__overview{
+      p{
+        font-size: 18px;
+      }
+    }
+    &__facilities{
+      position: relative;
+      p{
+        color: blue;
+        right: 5px;
+        bottom: 0px;
+      }
+      p:hover {
+        cursor: pointer;
+        text-decoration: underline; /* Hoặc 'line-through', tùy theo mục đích */
+        
+
+      }
+    }
+  }
+}

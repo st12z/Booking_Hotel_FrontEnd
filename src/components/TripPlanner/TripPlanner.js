@@ -19,6 +19,7 @@ function TripPlanner(){
     const fetchApi= async()=>{
       try{
         const resData = await getTripsByType(tripType);
+        console.log(resData);
         const resDataTripType= await getAllTripTypes();
         if(resData.code==200){
           setData(resData.data);
@@ -32,7 +33,7 @@ function TripPlanner(){
   },[tripType]);
   const handleClick=(tripType)=>{
     console.log(tripType);
-    setTripType(tripType);
+    setTripType(tripType.tripType);
   }
   return(
     <>

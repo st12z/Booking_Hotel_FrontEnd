@@ -18,7 +18,7 @@ function PropertyItem(props){
             {item.distanceFromTrip && <h4>Cách biển: {(item.distanceFromTrip/1000).toFixed(2)} Km</h4>}
             <Rate value={item.ratingStar} disabled style={{fontSize:15}}/>
             <h3 className="city-name">{item.cityName}</h3>
-            {item.roomTypes.map((roomType,index)=>(
+            {item.roomTypes?.map((roomType,index)=>(
               <h4 key={index}>{roomType.name} - {new Intl.NumberFormat('vi-VN').format(roomType.price)} VNĐ</h4>
             ))}
           </div>
@@ -32,7 +32,7 @@ function PropertyItem(props){
             </div>
           </div>
         </div>
-        <a href="">
+        <a href={`/properties/${item.slug}`}>
           <Button type="primary">
             Xem ngay 
           </Button>
