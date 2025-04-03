@@ -132,7 +132,7 @@ function PropertyDetail(){
                 </Card>
               </Col>
               <Col span={24}>
-                <RoomAvailability item={roomTypes}/>
+                <RoomAvailability roomTypes={roomTypes}/>
               </Col>
             </Row>
           </div>

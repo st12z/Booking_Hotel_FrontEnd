@@ -1,21 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./RoomAvailability.scss"
-import { Button, DatePicker, Table, Tag } from 'antd';
+import { Button, DatePicker, Skeleton, Table, Tag } from 'antd';
 import "./RoomAvailability.scss";
 import bed_icon from "../../images/bed-icon.jpg";
 import area_icon from "../../images/area-icon.jpg";
+import { formatLocalDateTime } from "../../utils/format";
+import { getRoomTypesBySearchRequest } from "../../service/RoomTypeService";
+import { useParams } from "react-router-dom";
 const { RangePicker } = DatePicker;
 
 function RoomAvailability(props){
-  const {item}=props;
+  const params =useParams();
+  const [roomTypes,setRoomTypes] = useState(props.roomTypes);
   const [checkIn,setCheckIn]=useState();
   const [checkOut,setCheckOut]=useState();
   const [quantityBeds,setQuantityBeds]=useState();
+  const [searchRequest,setSearchRequest]=useState();
   const [quantityRooms,setQuantityRooms]=useState([{
     id:0,
     value:0
   }]);
-  const handleSubmit=(id)=>{
+  const [loading,setLoading] = useState(false);
+  // xử lý đặt phòng
+  const handleReserve=(id)=>{
     let room =quantityRooms?.find(room=>room.id==id);
     if(!room){
       room={
@@ -25,6 +32,8 @@ function RoomAvailability(props){
     }
     console.log(room);
   }
+
+  // xử lý select chọn số phòng
   const handleQuantityRoomChange = (id, value) => {
     setQuantityRooms((prevQuantityRooms) =>
       prevQuantityRooms.map((room) =>
@@ -35,6 +44,39 @@ function RoomAvailability(props){
       )
     );
   };
+
+  // xử lý form tìm kiếm
+  const handleSubmit=(e)=>{
+    setLoading(true);
+    e.preventDefault();
+    const searchRequest={
+      checkIn: formatLocalDateTime(e.target[0].value || ""),
+      checkOut: formatLocalDateTime(e.target[1].value || ""),
+      quantityBeds: e.target[2].value
+    }
+    setSearchRequest(searchRequest);
+    
+  }
+  useEffect(()=>{
+    console.log(searchRequest);
+    const fetchApi=async()=>{
+      try{
+        const res = await getRoomTypesBySearchRequest(`slugProperty=${params.slug}`,searchRequest);
+      if(res.code==200){
+        setRoomTypes(res.data);
+      }
+      }catch(error){
+        console.error(error);
+      }finally{
+        setLoading(false);
+      }
+    }
+    if(searchRequest){
+      setTimeout(()=>{
+        fetchApi();
+      },1000);
+    }
+  },[searchRequest]);
 
   const columns = [
     {
@@ -69,8 +111,8 @@ function RoomAvailability(props){
       render: (_,record)=>(
         <>
           <div className="roomtype__price" >
-            <p>{new Intl.NumberFormat('vi-VN').format(record.price)} VNĐ</p>
-            <p>{new Intl.NumberFormat('vi-VN').format(record.price*(1-1.0*record.discount/100))} VNĐ</p>
+            <p>{new Intl.NumberFormat('vi-VN').format(record.price)} VNĐ/1 ngày</p>
+            <p>{new Intl.NumberFormat('vi-VN').format(record.price*(1-1.0*record.discount/100))} VNĐ/1 ngày</p>
             <Tag style={{color:"red",fontWeight:"600"}}>Giảm giá: {record.discount} %</Tag>
           </div>
         </>
@@ -103,7 +145,7 @@ function RoomAvailability(props){
         return(
           <>
             <div className="roomtype__total" >
-              <p>{new Intl.NumberFormat('vi-VN').format(record.price*(1-1.0*record.discount/100)*quantity)} VNĐ</p>
+              <p>{new Intl.NumberFormat('vi-VN').format(record.price*(1-1.0*record.discount/100)*quantity)} VNĐ/1 ngày</p>
             </div>
           </>
         )
@@ -124,7 +166,7 @@ function RoomAvailability(props){
       render: (_,record)=>(
         <>
           <div className="roomtype__action" >
-            <Button type="primary"onClick={()=>handleSubmit(record.id)} >Đặt phòng</Button>
+            <Button type="primary"onClick={()=>handleReserve(record.id)} >Đặt phòng</Button>
           </div>
         </>
       )
@@ -139,13 +181,17 @@ function RoomAvailability(props){
             <RangePicker showTime defaultValue={[checkIn,checkOut]}/>
         </div>
         <div className="search__quantity">
-          <input type="number" placeholder="Số lượng giường" name="quantityBeds" max={4} value={quantityBeds} />
+          <input type="number" placeholder="Số lượng giường" name="quantityBeds" min={1} max={4} value={quantityBeds} />
         </div>
         <div className="search__button">
           <button type="submit">Tìm kiếm</button>
         </div>
       </form>
-      <Table dataSource={item} columns={columns} style={{marginTop:"100px"}} pagination={false}/>;
+      {loading==false ? (
+        <Table dataSource={roomTypes} columns={columns} style={{marginTop:"100px"}} pagination={false}/>
+      ):(
+        <Skeleton active/>
+      )}
     </>
   )
 }
