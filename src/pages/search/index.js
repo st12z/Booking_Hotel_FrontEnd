@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getPropertiesBySearch, getPropertiesFilterAfterSearch } from "../../service/SearchService";
-import { Button, Card, Checkbox, Col, Pagination, Row, Skeleton, Slider } from "antd";
+import { Button, Card, Checkbox, Col, Pagination, Row, Select, Skeleton, Slider } from "antd";
 import "./search.scss";
 import ListSearchProperties from "../../components/ListSearchProperties";
+import { getFacilities } from "../../service/FacilityService";
 function Search() {
   const [searchParams] = useSearchParams();
-  const [quantityBeds,setQuantityBeds]=useState(1);
+  const [quantityBeds,setQuantityBeds]=useState(0);
   const [showMore,setShowMore] = useState(false);
   const [selectedRating, setSelectedRating] = useState([]);
   const [selectedFacilities,setSelectedFacilities]=useState([]);
@@ -18,7 +19,9 @@ function Search() {
   const [total,setTotal]=useState();
   const [pageNo,setPageNo]=useState(1);
   const [pageSize,setPageSize]=useState(10);
-  const [loading,setLoading] = useState(true);
+  const [loading,setLoading] = useState(false);
+  const [sortCondition,setSortCondition]=useState("0");
+  const [facilities,setFacilities]=useState([]);
   const filter = useMemo(() => ({
     quantityBeds,
     rating: selectedRating,
@@ -26,8 +29,9 @@ function Search() {
     reviewScore: selectedReview,
     distance: selectedDistance,
     propertyType: selectedProperty,
-    budget:budget
-  }), [quantityBeds, selectedRating, selectedFacilities, selectedReview, selectedDistance, selectedProperty, budget]);
+    budget:budget,
+    sortCondition:sortCondition
+  }), [quantityBeds, selectedRating, selectedFacilities, selectedReview, selectedDistance, selectedProperty, budget,sortCondition]);
   const searchRequest = {
     destination: searchParams.get("destination"),
     checkIn: searchParams.get("checkIn") ? searchParams.get("checkIn"):"",
@@ -37,7 +41,7 @@ function Search() {
     pageSize:searchParams.get("pageSize")?searchParams.get("pageSize"):10,
   };
 
-  const facilities=['Parking','Restaurant','Pets allowed','Room service','24-hour front desk','Fitness centre','Air port']
+  
 
   const params = new URLSearchParams();
   const addParamIfExists = (key, value) => {
@@ -53,6 +57,11 @@ function Search() {
           &pageNo=${searchRequest.pageNo}
           &pageSize=${searchRequest.pageSize}`
         );
+        const resFacility=await getFacilities();
+        console.log(resFacility);
+        if(resFacility.code==200){
+          setFacilities(resFacility.data);
+        }
         if (res.code == 200) {
           setData(res.data.dataPage);
           setTotal(res.data.total);
@@ -67,8 +76,8 @@ function Search() {
   }, []);
   const prevFilter = useRef(filter);
   useEffect(()=>{
+    setLoading(true);
     const fetchApi=async()=>{
-      setLoading(false);
       try{
         addParamIfExists("destination", searchRequest.destination);
         addParamIfExists("checkIn", searchRequest.checkIn);
@@ -77,6 +86,8 @@ function Search() {
         addParamIfExists("pageNo", searchRequest.pageNo);
         addParamIfExists("pageSize", searchRequest.pageSize);
         const result = await getPropertiesFilterAfterSearch(params.toString(),filter);
+        console.log(filter);
+        console.log(result);
         if(result.code==200){
           setData(result.data.dataPage);
           setTotal(result.data.total);
@@ -86,25 +97,37 @@ function Search() {
       }catch(error){
         console.error(error);
       }
-      finally{
-        setLoading(true);
+      finally {
+        setLoading(false); // Kết thúc tải dữ liệu
       }
       
     }
     if (JSON.stringify(prevFilter.current) !== JSON.stringify(filter)){
       prevFilter.current = filter;
-      fetchApi();
-    } 
+        setTimeout(()=>{
+          fetchApi();
+        },1000)
+    }
+    else{
+      setLoading(false);
+    }
 
   },[filter]);
+  // thay đổi thay trượt giá
   const handleBudgetChange=(e)=>{
     setBudget(e);
   }
+  // tăng số lượng giường
   const handleDecrease=()=>{
     if(quantityBeds>1) setQuantityBeds(quantityBeds-1);
   }
+  // giảm số lượng giường
   const handleIncrease=()=>{
     if(quantityBeds<=3)setQuantityBeds(quantityBeds+1);
+  }
+  // xử lý sắp xếp
+  const handleSelectChange=(e)=>{
+    setSortCondition(e);
   }
   return(
     <>
@@ -215,8 +238,26 @@ function Search() {
 
         {/* Giá trị trả về */}
         <Col span={18}>
-          {loading ? (
+          {loading==false ? (
             <>
+              <h2>{data.length} properties found</h2>
+              <Select
+                defaultValue="Sắp xếp"
+                style={{ width: 240,marginBottom:"20px" }}
+                onChange={handleSelectChange}
+                value={sortCondition}
+                options={[
+                  { value: 'price-asc', label: 'Giá tăng dần' },
+                  { value: 'price-desc', label: 'Giá giảm dần' },
+                  { value: 'ratingStar-asc', label: 'Xếp lọai tăng dần' },
+                  { value: 'ratingStar-desc', label: 'Xếp lọai giảm dần' },
+                  { value: 'avgReviewScore-asc', label: 'Đánh giá tăng dần' },
+                  { value: 'avgReviewScore-desc', label: 'Đánh giá giảm dần' },
+                  { value: 'distanceFromCenter-asc', label: 'Khoảng cách tăng dần' },
+                  { value: 'distanceFromCenter-desc', label: 'Khoảng cách giảm dần' },
+                  { value: '0', label: 'Sắp xếp' },
+                ]}
+              />
               <div className="property">
                   <ListSearchProperties data={data}  />
               </div>
