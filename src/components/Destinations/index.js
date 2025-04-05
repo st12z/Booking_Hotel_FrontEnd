@@ -24,13 +24,26 @@ function Destinations(){
     };
     fetchApi();
   },[]);
+  const handleAddPropertiesLocal=(name)=>{
+    let destinations = localStorage.getItem("destinations") ? JSON.parse(localStorage.getItem("destinations")) : [];
+    if(destinations.length== 0){
+      destinations.push(name);
+    }
+    else{
+      const index = destinations.indexOf(name);
+      if(index == -1){
+        destinations.push(name);
+      }
+    } 
+    localStorage.setItem("destinations", JSON.stringify(destinations));
+  }
   return(
     <>
       <h1>Điểm đến hấp dẫn</h1>
       <Row gutter={[10,10]}>
         {dataCities?.slice(0,5).map((item,index)=>(
           <Col key={index}  span={index<2 ? 12:8}>
-          <a href={`/search?destination=${item.name}`}>
+          <a href={`/search?destination=${item.name}`} onClick={()=>handleAddPropertiesLocal(item.name)}>
               <DestinationItem item={item}/>
             </a>
           </Col>

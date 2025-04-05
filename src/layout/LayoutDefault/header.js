@@ -58,6 +58,17 @@ function Header() {
     addParamIfExists("checkOut", formatLocalDateTime(e.target[2].value || ""));
     addParamIfExists("quantityBeds", e.target[3].value);
     setShowSearch(false);
+    const destinationArray = localStorage.getItem("destinations") ? JSON.parse(localStorage.getItem("destinations")) : [];
+    if(destinationArray.length== 0){
+      destinationArray.push(e.target[0].value);
+    }
+    else{
+      const index = destinationArray.indexOf(e.target[0].value);
+      if(index == -1){
+        destinationArray.push(e.target[0].value);
+      }
+    }
+    localStorage.setItem("destinations", JSON.stringify(destinationArray));
     window.location.href = `/search?${params.toString()}`;
   };
   return (

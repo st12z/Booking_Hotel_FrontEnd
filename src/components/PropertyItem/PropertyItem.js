@@ -3,7 +3,19 @@ import { Button, Rate } from "antd";
 import {HeartOutlined} from "@ant-design/icons";
 function PropertyItem(props){
   const {item} = props;
-
+  const handleAddPropertiesLocal=(slug)=>{
+    let properties = localStorage.getItem("properties") ? JSON.parse(localStorage.getItem("properties")) : [];
+    if(properties.length== 0){
+      properties.push(slug);
+    }
+    else{
+      const index = properties.indexOf(slug);
+      if(index == -1){
+        properties.push(slug);
+      }
+    }
+    localStorage.setItem("properties", JSON.stringify(properties));
+  }
   return(
     <>
       <div className="property__item">
@@ -32,7 +44,7 @@ function PropertyItem(props){
             </div>
           </div>
         </div>
-        <a href={`/properties/${item.slug}`}>
+        <a href={`/properties/${item.slug}`} onClick={()=>handleAddPropertiesLocal(item.slug)}>
           <Button type="primary">
             Xem ngay 
           </Button>

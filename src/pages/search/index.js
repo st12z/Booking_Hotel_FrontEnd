@@ -37,8 +37,8 @@ function Search() {
     checkIn: searchParams.get("checkIn") ? searchParams.get("checkIn"):"",
     checkOut: searchParams.get("checkOut") ? searchParams.get("checkOut"):"",
     quantityBeds: searchParams.get("quantityBeds") ? searchParams.get("quantityBeds"):"",
-    pageNo:searchParams.get("pageNo") ? searchParams.get("pageNo"):1,
-    pageSize:searchParams.get("pageSize")?searchParams.get("pageSize"):10,
+    pageNo:pageNo,
+    pageSize:pageSize,
   };
 
   
@@ -73,7 +73,7 @@ function Search() {
       }
     };
     fetchApi();
-  }, []);
+  }, [pageNo]);
   const prevFilter = useRef(filter);
   useEffect(()=>{
     setLoading(true);
@@ -112,7 +112,7 @@ function Search() {
       setLoading(false);
     }
 
-  },[filter]);
+  },[filter,pageNo]);
   // thay đổi thay trượt giá
   const handleBudgetChange=(e)=>{
     setBudget(e);
@@ -240,7 +240,7 @@ function Search() {
         <Col span={18}>
           {loading==false ? (
             <>
-              <h2>{data.length} properties found</h2>
+              <h2>{total} properties found</h2>
               <Select
                 defaultValue="Sắp xếp"
                 style={{ width: 240,marginBottom:"20px" }}
@@ -261,7 +261,7 @@ function Search() {
               <div className="property">
                   <ListSearchProperties data={data}  />
               </div>
-              <Pagination current={pageNo} total={total} pageSize={pageSize}/>; 
+              <Pagination current={pageNo} total={total} pageSize={pageSize} onChange={(page)=>setPageNo(page)}/>; 
             </>
           ):(
             <Skeleton active />
