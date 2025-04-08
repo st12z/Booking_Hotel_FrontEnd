@@ -2,14 +2,15 @@ import { Button, Col, Row } from "antd";
 import DiscountItem from "./DiscountItem";
 import "./Discount.scss";
 import { useEffect, useState } from "react";
-import { getAllDiscounts } from "../../service/DiscountService";
+import { getAllDiscounts } from "../../service/RoomService/DiscountService";
 function Discounts() {
     const [show,setShowAll] = useState(false);
     const [data,setData]=useState([]);
     useEffect(()=>{
       const fetchApi= async()=>{
         try{
-          const res = await getAllDiscounts();         
+          const res = await getAllDiscounts();  
+          console.log(res);       
           if(res.code==200){
             setData(res.data);
           }

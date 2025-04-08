@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getPropertiesBySearch, getPropertiesFilterAfterSearch } from "../../service/SearchService";
+import { getPropertiesBySearch, getPropertiesFilterAfterSearch } from "../../service/RoomService/SearchService";
 import { Button, Card, Checkbox, Col, Pagination, Row, Select, Skeleton, Slider } from "antd";
 import "./search.scss";
 import ListSearchProperties from "../../components/ListSearchProperties";
-import { getFacilities } from "../../service/FacilityService";
+import { getFacilities } from "../../service/RoomService/FacilityService";
 function Search() {
   const [searchParams] = useSearchParams();
   const [quantityBeds,setQuantityBeds]=useState(0);

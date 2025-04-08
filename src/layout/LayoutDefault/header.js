@@ -4,7 +4,7 @@ import { HomeOutlined } from "@ant-design/icons";
 import { DatePicker } from 'antd';
 import { formatLocalDateTime } from "../../utils/format";
 import { useEffect, useState } from "react";
-import { getDestinationsBySearch } from "../../service/DestinationService";
+import { getDestinationsBySearch } from "../../service/RoomService/DestinationService";
 const { RangePicker } = DatePicker;
 
 function Header() {

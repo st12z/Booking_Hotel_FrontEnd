@@ -1,4 +1,5 @@
-import {get} from "../utils/request";
+import { get, post } from "../../utils/requestRoomService";
+
 export const getAllTrips=async ()=>{
   const result = await get(`trips`);
   return result;

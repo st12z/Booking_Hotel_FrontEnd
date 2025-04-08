@@ -5,7 +5,7 @@ import "./RoomAvailability.scss";
 import bed_icon from "../../images/bed-icon.jpg";
 import area_icon from "../../images/area-icon.jpg";
 import { formatLocalDateTime } from "../../utils/format";
-import { getRoomTypesBySearchRequest } from "../../service/RoomTypeService";
+import { getRoomTypesBySearchRequest } from "../../service/RoomService/RoomTypeService";
 import { useParams } from "react-router-dom";
 const { RangePicker } = DatePicker;
 

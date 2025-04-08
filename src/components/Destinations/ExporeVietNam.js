@@ -5,9 +5,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import "./ExploreVietName.scss"
-import { useEffect, useRef, useState } from "react";
 import DestinationItem from "./DestinationItem";
-import { NavLink } from "react-router-dom";
 function ExporeVietNam(props){
   const {data}=props;
   const handleAddPropertiesLocal=(name)=>{

@@ -1,7 +1,7 @@
 import { Col, Row } from "antd";
-import { getPropertiesBySuggest } from "../../service/PropertyService";
 import { useEffect, useState } from "react";
 import "./InterestedProperties.scss"
+import { getPropertiesBySuggest } from "../../service/RoomService/PropertyService";
 function InterestedProperties(){
    const properties = localStorage.getItem("properties") ? JSON.parse(localStorage.getItem("properties")) : [];
     console.log(properties);
@@ -26,7 +26,7 @@ function InterestedProperties(){
       <Row gutter={[16, 16]}>
       {data?.map((item,index)=>(
         <Col span={4}>
-            <a href={`/search?property=${item.name}`}>
+            <a href={`/properties/${item.slug}`}>
               <div className="property-suggest" key={index}>
                 <img src={item.images.length>0 ? item.images[0] :""} alt=""/>
                 <div className="property-suggest__name">

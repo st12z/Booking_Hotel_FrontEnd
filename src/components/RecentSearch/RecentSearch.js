@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDestinationsBySuggest} from "../../service/DestinationService";
+import { getDestinationsBySuggest} from "../../service/RoomService/DestinationService";
 import { Col, Row } from "antd";
 import "./RecentSearch.scss";
 function RecentSearch(){
@@ -26,7 +26,7 @@ function RecentSearch(){
       <Row gutter={[16, 16]}>
       {data?.map((item,index)=>(
         <Col span={4}>
-            <a href={`/properties/${item.slug}`}>
+            <a href={`/search?destination=${item.name}`}>
               <div className="destination-suggest" key={index}>
                 <img src={item.image}/>
                 <div className="destination-suggest__name">

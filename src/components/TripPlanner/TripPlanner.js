@@ -9,7 +9,7 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import TripItem from "./TripItem";
-import { getAllTripTypes, getTripsByType } from "../../service/TripService";
+import { getAllTripTypes, getTripsByType } from "../../service/RoomService/TripService";
 import { NavLink } from "react-router-dom";
 function TripPlanner(){
   const [data,setData]=useState([]);

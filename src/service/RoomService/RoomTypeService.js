@@ -1,4 +1,4 @@
-import { get, post } from "../utils/request"
+import { get, post } from "../../utils/requestRoomService";
 
 export const getRoomTypesBySlugProperty=async(query)=>{
   const result = await get(`roomtypes?${query}`);

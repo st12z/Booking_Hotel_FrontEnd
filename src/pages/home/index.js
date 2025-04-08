@@ -3,8 +3,9 @@ import InterestedProperties from "../../components/InterestedProperties/Interest
 import RecentSearch from "../../components/RecentSearch/RecentSearch";
 import Destinations from "../../components/Destinations";
 import TripPlanner from "../../components/TripPlanner/TripPlanner";
+import { useEffect } from "react";
 
-function Home(){
+function Home(){;
   return(
     <>
       <RecentSearch/>

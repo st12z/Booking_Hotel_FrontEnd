@@ -3,9 +3,8 @@ import "./Destinations.scss"
 import DestinationItem from "./DestinationItem";
 import ExporeVietNam from "./ExporeVietNam";
 import { useEffect, useState } from "react";
-import { getAllTrips } from "../../service/TripService";
-import { getAllCities } from "../../service/CityService";
-import { Link } from "react-router-dom";
+import { getAllTrips } from "../../service/RoomService/TripService";
+import { getAllCities } from "../../service/RoomService/CityService";
 function Destinations(){
   const [dataCities,setdataCities]=useState([]);
   const [dataDestinations,setdataDestinations]=useState([]);

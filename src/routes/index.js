@@ -1,8 +1,10 @@
 import LayoutDefault from "../layout/LayoutDefault";
-import Home from "../pages/home";
-import PropertyDetail from "../pages/property-detail/PropertyDetail";
-import Search from "../pages/search";
-
+import Home from "../pages/Home";
+import Search from "../pages/Search";
+import Register from "../pages/Register";
+import Login from "../pages/Login";
+import PropertyDetail from "../pages/PropertyDetail/PropertyDetail";
+import CallBackPage from "../pages/CallBackPage";
 export const routes=[
   {
     path:"/",
@@ -19,6 +21,18 @@ export const routes=[
       {
         path:"/properties/:slug",
         element: <PropertyDetail/>
+      },
+      {
+        path:"/register",
+        element: <Register/>
+      },
+      {
+        path:"/login",
+        element: <Login/>
+      },
+      {
+        path:"/callback",
+        element:<CallBackPage/>
       }
     ]
   }

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { getPropertyBySlug } from "../../service/PropertyService";
 import { useParams } from "react-router-dom";
 import location_icon from "../../images/location-icon.jpg";
 import {HeartFilled, HeartOutlined} from "@ant-design/icons";
 import "./PropertyDetail.scss";
 import { Card, Col, Row } from "antd";
 import RoomAvailability from "../../components/RoomAvailability";
-import { getRoomTypesBySlugProperty } from "../../service/RoomTypeService";
+import { getPropertyBySlug } from "../../service/RoomService/PropertyService";
+import { getRoomTypesBySlugProperty } from "../../service/RoomService/RoomTypeService";
 function PropertyDetail(){
   const [item,setItem] = useState();
   const [tym,setTym] = useState(false);
