@@ -4,15 +4,8 @@ export const getCredentials = async(path)=>{
     method:"GET",
     credentials:"include"
   });
-  if(response.status==200){
-    const result =await response.json();
-    localStorage.setItem("access_token", result.data.access_token);
-    return result;
-  }
-  throw new Error({
-    code:response.status,
-    message:"Lỗi gọi api!"
-  })
+  const result = await response.json();
+  return result;
 }
 export const get = async(path)=>{
   const response =await fetch(`${API_DOMAIN}/${path}`)

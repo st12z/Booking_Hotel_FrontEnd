@@ -1,4 +1,4 @@
-import {Button} from "antd";
+import {Button, Col, Row} from "antd";
 import { urlRedirectLogin } from "../../utils/redirectLogin";
 function Login(){
   const handleClick = ()=>{
@@ -6,9 +6,13 @@ function Login(){
   }
   return(
     <>
-      <Button type="primary" onClick={handleClick}>
-        Đăng nhập bằng keycloak
-      </Button>
+      <Row justify="center">
+        <Col span={12} justify="center" style={{textAlign:"center"}}>
+        <Button type="primary" onClick={handleClick}>
+          Đăng nhập bằng Keycloak
+        </Button>
+        </Col>
+      </Row>
     </>
   )
 }

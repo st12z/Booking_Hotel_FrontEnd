@@ -5,6 +5,8 @@ import { DatePicker } from 'antd';
 import { formatLocalDateTime } from "../../utils/format";
 import { useEffect, useState } from "react";
 import { getDestinationsBySearch } from "../../service/RoomService/DestinationService";
+import { useSelector } from "react-redux";
+import { logout } from "../../service/UserService/AuthService";
 const { RangePicker } = DatePicker;
 
 function Header() {
@@ -16,6 +18,8 @@ function Header() {
   const [quantityBeds,setQuantityBeds]=useState(searchParams.get("quantityBeds") ? searchParams.get("quantityBeds"):"");
   const [dataDestinations,setDataDestinations] =useState([]);
   const [showSearch, setShowSearch ] =useState(false);
+  const isLogin = useSelector((state) => state.login);
+  console.log(isLogin);
   const handleChange = (e) => {
     const destination = e.target.value;
     setDestination(destination);
@@ -25,6 +29,7 @@ function Header() {
     setDestination(destination);
     setShowSearch(false);
   }
+  // fetch lấy danh sách địa điểm gọi ý ở search
   const fetchApi = async () => {
     try{
       
@@ -47,10 +52,11 @@ function Header() {
   }, [destination]);
   
   const params = new URLSearchParams();
+  // kiểm tra nếu tồn tại giá trị thì add thêm params
   const addParamIfExists = (key, value) => {
     if (value) params.append(key, value);
   };
-
+  // form tìm kiếm
   const handleSubmit = (e) => {
     e.preventDefault();
     addParamIfExists("destination", e.target[0].value);
@@ -71,6 +77,22 @@ function Header() {
     localStorage.setItem("destinations", JSON.stringify(destinationArray));
     window.location.href = `/search?${params.toString()}`;
   };
+  // Đăng xuất
+  const handleLogout = () => {
+    localStorage.removeItem("access_token");
+    const fetchApi = async()=>{
+      try{
+        const res = await logout("logout");
+        if(res.code==200){
+          window.location.href = "/";
+        }
+      }catch(error){
+        console.error(error);
+      }
+    }
+    fetchApi();
+    
+  };
   return (
     <>
       <div className="header">
@@ -87,15 +109,22 @@ function Header() {
                 <li>
                   <NavLink to="/profile">Thông tin cá nhân</NavLink>
                 </li>
-                <li className="user-log">
-                  <NavLink to="/login">Đăng nhập</NavLink>
-                </li>
-                <li className="user-log">
-                  <NavLink to="/register">Đăng ký</NavLink>
-                </li>
-                <li className="user-log">
-                  <NavLink to="/logout">Đăng xuất</NavLink>
-                </li>
+                {isLogin ?(
+                  <li className="user-log">
+                    <NavLink to="/logout" onClick={handleLogout}>Đăng xuất</NavLink>
+                  </li>
+                ):(
+                  <>
+                    <li className="user-log">
+                      <NavLink to="/login">Đăng nhập</NavLink>
+                    </li>
+                    <li className="user-log">
+                      <NavLink to="/register">Đăng ký</NavLink>
+                    </li>
+                  </>
+                )}
+                
+                
               </ul>
             </div>
           </div>

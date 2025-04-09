@@ -1,16 +1,19 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getAccessToken } from "../../service/UserService/AuthService";
-
+import { useDispatch } from "react-redux";
+import { login } from "../../action/login";
 function CallBackPage(){
   const [searchParams] = useSearchParams();
   const nav = useNavigate();
+  const dispatch = useDispatch();
   useEffect(()=>{
     const code = searchParams.get("code");
     const fetchApi = async () => {
       try{
         const res=  await getAccessToken(`access-token?code=${code}`);
         if(res.code==200){
+          dispatch(login("LOGIN"));
           nav("/");
         }
       }catch(error){
