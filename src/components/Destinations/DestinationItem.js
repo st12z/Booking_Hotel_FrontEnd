@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function DestinationItem(props){
   const {item}=props;
   const handleAddPropertiesLocal=(name)=>{
@@ -16,10 +18,10 @@ function DestinationItem(props){
   return(
     <>
       <div className="destination__item">
-        <a href={`/search?destination=${item.name}`} onClick={()=>handleAddPropertiesLocal(item.name)}>
+        <Link to={`/search?destination=${item.name}`} onClick={()=>handleAddPropertiesLocal(item.name)}>
           <img src={item.image} alt={item.name}/>
           <h3>{item.name}</h3>
-        </a>
+        </Link>
       </div>
     </>
   )

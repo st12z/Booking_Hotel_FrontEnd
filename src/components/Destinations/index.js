@@ -5,6 +5,7 @@ import ExporeVietNam from "./ExporeVietNam";
 import { useEffect, useState } from "react";
 import { getAllTrips } from "../../service/RoomService/TripService";
 import { getAllCities } from "../../service/RoomService/CityService";
+import { Link } from "react-router-dom";
 function Destinations(){
   const [dataCities,setdataCities]=useState([]);
   const [dataDestinations,setdataDestinations]=useState([]);
@@ -42,9 +43,9 @@ function Destinations(){
       <Row gutter={[10,10]}>
         {dataCities?.slice(0,5).map((item,index)=>(
           <Col key={index}  span={index<2 ? 12:8}>
-          <a href={`/search?destination=${item.name}`} onClick={()=>handleAddPropertiesLocal(item.name)}>
+          <Link to={`/search?destination=${item.name}`} onClick={()=>handleAddPropertiesLocal(item.name)}>
               <DestinationItem item={item}/>
-            </a>
+            </Link>
           </Col>
         ))}
       </Row>

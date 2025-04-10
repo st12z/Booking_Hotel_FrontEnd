@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getAccessToken } from "../../service/UserService/AuthService";
+import { getAccessToken, getInfoUser } from "../../service/UserService/AuthService";
 import { useDispatch } from "react-redux";
 import { login } from "../../action/login";
 function CallBackPage(){
@@ -13,6 +13,9 @@ function CallBackPage(){
       try{
         const res=  await getAccessToken(`access-token?code=${code}`);
         if(res.code==200){
+          localStorage.setItem("access_token",res.data.access_token);
+          const getInfoUserApi = await getInfoUser();
+          dispatch({ type: "SAVE_USER", data: getInfoUserApi.data });
           dispatch(login("LOGIN"));
           nav("/");
         }

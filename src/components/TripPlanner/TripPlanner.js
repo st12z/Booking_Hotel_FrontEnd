@@ -10,7 +10,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import TripItem from "./TripItem";
 import { getAllTripTypes, getTripsByType } from "../../service/RoomService/TripService";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 function TripPlanner(){
   const [data,setData]=useState([]);
   const [dataTripType,setDataTripType]=useState([]);
@@ -61,11 +61,11 @@ function TripPlanner(){
         >
           { data?.map((item, index) => (
               <SwiperSlide key={item.id} virtualIndex={index} >
-                <a href={`/search?destination=${item.name}`}>
+                <Link to={`/search?destination=${item.name}`}>
                   <div className="trip__item">
                     <TripItem item={item}/>
                   </div>
-                </a>
+                </Link>
               </SwiperSlide>
           ))}
         </Swiper>

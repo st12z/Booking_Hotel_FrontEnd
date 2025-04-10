@@ -6,6 +6,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import "./ExploreVietName.scss"
 import DestinationItem from "./DestinationItem";
+import { Link } from "react-router-dom";
 function ExporeVietNam(props){
   const {data}=props;
   const handleAddPropertiesLocal=(name)=>{
@@ -37,11 +38,11 @@ function ExporeVietNam(props){
         >
           {data.map((item, index) => (
               <SwiperSlide key={item.id} virtualIndex={index} >
-                <a href={`/search?destination=${item.name}`} onClick={()=>handleAddPropertiesLocal(item.name)}>
+                <Link to={`/search?destination=${item.name}`} onClick={()=>handleAddPropertiesLocal(item.name)}>
                   <div className="explore__item">
                     <DestinationItem item={item}/>
                   </div>
-                </a>
+                </Link>
               </SwiperSlide>
           ))}
         </Swiper>

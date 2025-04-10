@@ -2,6 +2,7 @@ import { Col, Row } from "antd";
 import { useEffect, useState } from "react";
 import "./InterestedProperties.scss"
 import { getPropertiesBySuggest } from "../../service/RoomService/PropertyService";
+import { Link } from "react-router-dom";
 function InterestedProperties(){
    const properties = localStorage.getItem("properties") ? JSON.parse(localStorage.getItem("properties")) : [];
     const [data,setData] = useState([]);
@@ -24,14 +25,14 @@ function InterestedProperties(){
       <Row gutter={[16, 16]}>
       {data?.map((item,index)=>(
         <Col span={4} key={index}>
-            <a href={`/properties/${item.slug}`}>
+            <Link to={`/properties/${item.slug}`}>
               <div className="property-suggest" key={index}>
                 <img src={item.images.length>0 ? item.images[0] :""} alt=""/>
                 <div className="property-suggest__name">
                   <h3>{item.name}</h3>
                 </div>
               </div>
-            </a>
+            </Link>
         </Col>
       ))}
       </Row>

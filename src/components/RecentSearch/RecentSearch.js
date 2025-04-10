@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getDestinationsBySuggest} from "../../service/RoomService/DestinationService";
 import { Col, Row } from "antd";
 import "./RecentSearch.scss";
+import { Link } from "react-router-dom";
 function RecentSearch(){
   const destinations = localStorage.getItem("destinations") ? JSON.parse(localStorage.getItem("destinations")) : [];
   const [data,setData] = useState([]);
@@ -24,14 +25,14 @@ function RecentSearch(){
       <Row gutter={[16, 16]}>
       {data?.map((item,index)=>(
         <Col span={4} key={index}>
-            <a href={`/search?destination=${item.name}`}>
+            <Link to={`/search?destination=${item.name}`}>
               <div className="destination-suggest" key={index}>
                 <img src={item.image}/>
                 <div className="destination-suggest__name">
                   <h3>{item.name}</h3>
                 </div>
               </div>
-            </a>
+            </Link>
         </Col>
       ))}
       </Row>
