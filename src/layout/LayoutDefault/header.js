@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { getDestinationsBySearch } from "../../service/RoomService/DestinationService";
 import { useSelector } from "react-redux";
 import { logout } from "../../service/UserService/AuthService";
+import {HeartFilled} from "@ant-design/icons";
+
 const { RangePicker } = DatePicker;
 
 function Header() {
@@ -136,7 +138,9 @@ function Header() {
                   <NavLink to="/your-rooms">Danh sách phòng của bạn</NavLink>
                 </li>
                 <li>
-                  <NavLink to="/profile">Thông tin cá nhân</NavLink>
+                  <NavLink to="/properties-tym">
+                    Yêu thích <HeartFilled style={{color:"red"}}/>
+                  </NavLink>
                 </li>
                 {isLogin ? (
                   <li className="user-log">

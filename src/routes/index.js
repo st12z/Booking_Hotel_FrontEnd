@@ -5,6 +5,7 @@ import Register from "../pages/Register";
 import Login from "../pages/Login";
 import PropertyDetail from "../pages/PropertyDetail/PropertyDetail";
 import CallBackPage from "../pages/CallBackPage";
+import PropertiesTym from "../pages/PropertiesTym";
 export const routes=[
   {
     path:"/",
@@ -33,6 +34,10 @@ export const routes=[
       {
         path:"/callback",
         element:<CallBackPage/>
+      },
+      {
+        path:"/properties-tym",
+        element: <PropertiesTym/>
       }
     ]
   }

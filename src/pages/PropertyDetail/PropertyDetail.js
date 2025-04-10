@@ -14,12 +14,15 @@ function PropertyDetail(){
   const [roomTypes,setRoomTypes]=useState();
   const params =useParams();
   useEffect(()=>{
+    const propertiesFavortite = localStorage.getItem("properties_favor") ? JSON.parse(localStorage.getItem("properties_favor")) : [];
+    const existItem = propertiesFavortite.find(slug=>slug==params.slug);
+    if(existItem){
+      setTym(true);
+    }
     const fetchApi =async ()=>{
       try{
         const res = await getPropertyBySlug(`${params.slug}`);
         const resRoomTypes=await getRoomTypesBySlugProperty(`slugProperty=${params.slug}`);
-        console.log(resRoomTypes);
-        console.log(res);
         if(res.code==200){
           setItem(res.data);
         }
@@ -33,7 +36,24 @@ function PropertyDetail(){
     }
     fetchApi();
   },[]);
-
+  // Xử lý thêm vào danh sách yêu thích
+  const handleClickTym=(slug)=>{
+    const propertiesFavortite = localStorage.getItem("properties_favor") ? JSON.parse(localStorage.getItem("properties_favor")) : [];
+    if(tym==false){
+      const existItem = propertiesFavortite.find(slug=>slug==params.slug);
+      if(!existItem){
+        propertiesFavortite.push(slug);
+      }
+    }
+    else{
+      const index = propertiesFavortite.findIndex(slug=>slug==params.slug);
+      if(index!==-1){
+        propertiesFavortite.splice(index,1);
+      }
+    }
+    setTym(!tym);
+    localStorage.setItem("properties_favor",JSON.stringify(propertiesFavortite));
+  }
   return(
     <>
       {item && (
@@ -46,9 +66,9 @@ function PropertyDetail(){
                 <h3>{item.address}</h3>
               </div>
               {tym ? (
-                <HeartFilled className="icon icon--active" onClick={() => setTym(false)}/>
+                <HeartFilled className="icon icon--active" onClick={()=>handleClickTym(item.slug)}/>
               ):(
-                <HeartOutlined className="icon" onClick={() => setTym(true)}/>
+                <HeartOutlined className="icon" onClick={()=>handleClickTym(item.slug)}/>
               )}
             </div>
           </div>

@@ -1,6 +1,7 @@
 import "./PropertyItem.scss";
 import { Button, Rate } from "antd";
 import {HeartOutlined} from "@ant-design/icons";
+import { Link } from "react-router-dom";
 function PropertyItem(props){
   const {item} = props;
   const handleAddPropertiesLocal=(slug)=>{
@@ -44,11 +45,11 @@ function PropertyItem(props){
             </div>
           </div>
         </div>
-        <a href={`/properties/${item.slug}`} onClick={()=>handleAddPropertiesLocal(item.slug)}>
+        <Link to={`/properties/${item.slug}`} onClick={()=>handleAddPropertiesLocal(item.slug)}>
           <Button type="primary">
             Xem ngay 
           </Button>
-        </a>
+        </Link>
       </div>
     </>
   )
