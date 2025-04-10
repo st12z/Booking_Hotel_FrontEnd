@@ -95,6 +95,10 @@
     }
   }
   &__action{
+    button{
+      margin-right: 10px;
+    }
+    display: flex;
     position: absolute;
     top: 20px;
   }

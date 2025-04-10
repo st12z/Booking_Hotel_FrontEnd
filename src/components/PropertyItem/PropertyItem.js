@@ -1,9 +1,18 @@
 import "./PropertyItem.scss";
 import { Button, Rate } from "antd";
-import {HeartOutlined} from "@ant-design/icons";
+import {HeartOutlined,HeartFilled} from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 function PropertyItem(props){
+  const [tym,setTym]=useState(false);
+  const propertiesFavor= localStorage.getItem("properties_favor") ? JSON.parse(localStorage.getItem("properties_favor")) : [];
+  useEffect(()=>{
+    
+    const index = propertiesFavor.findIndex(slug=>slug==item.slug);
+    if(index!==-1) setTym(true);
+  },[tym]);
   const {item} = props;
+  console.log(tym);
   const handleAddPropertiesLocal=(slug)=>{
     let properties = localStorage.getItem("properties") ? JSON.parse(localStorage.getItem("properties")) : [];
     if(properties.length== 0){
@@ -17,12 +26,25 @@ function PropertyItem(props){
     }
     localStorage.setItem("properties", JSON.stringify(properties));
   }
+  const handleTym=()=>{
+    setTym(!tym);
+    let newPropertiesFavor=[];
+    if(tym){
+      newPropertiesFavor= propertiesFavor.filter(slug=>slug!=item.slug);
+    }
+    else{
+      newPropertiesFavor.push(item.slug);
+    }
+    localStorage.setItem("properties_favor",JSON.stringify(newPropertiesFavor));
+  }
   return(
     <>
       <div className="property__item">
         <div className="property__item__image">
           <img src={item.images.length>0 ? item.images[0]:""} alt="" />
-          <HeartOutlined className="icon"/>
+          {tym ? <HeartFilled className="icon icon--active" onClick={handleTym}/>:<HeartOutlined className="icon" onClick={handleTym}/>}
+          
+          
         </div>
         <div className="property__item__content">
           <div className="property__item__content__title">
