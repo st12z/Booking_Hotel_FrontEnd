@@ -7,6 +7,8 @@ import area_icon from "../../images/area-icon.jpg";
 import { formatLocalDateTime } from "../../utils/format";
 import { checkEnoughQuantityRooms, getRoomTypesBySearchRequest } from "../../service/RoomService/RoomTypeService";
 import { useNavigate, useParams } from "react-router-dom";
+import moment from 'moment';
+import { useSelector } from "react-redux";
 const { RangePicker } = DatePicker;
 
 function RoomAvailability(props){
@@ -16,8 +18,9 @@ function RoomAvailability(props){
   const [checkIn,setCheckIn]=useState();
   const [checkOut,setCheckOut]=useState();
   const [quantityBeds,setQuantityBeds]=useState();
-  const [searchRequest,setSearchRequest]=useState();
+  const [searchRequest,setSearchRequest]=useState({});
   const [loading,setLoading] = useState(false);
+  const user = useSelector(state=>state.user);
   // Thông tin đã kiểm tra phòng với yêu cầu
   const [checkRequest,setCheckRequest]=useState();
   const [quantityRooms,setQuantityRooms]=useState([{
@@ -41,8 +44,16 @@ function RoomAvailability(props){
 
   
 
-  // xử lý đặt phòng
-  const handleCheck=async (id)=>{
+  // Xử lý việc đặt phòng
+  const handleReserve=async (id)=>{
+    if(!user.email){
+      openNotification("topRight","Vui lòng đăng nhập để đặt phòng!","red");
+      return;
+    }
+    if (!searchRequest || !searchRequest.checkIn || !searchRequest.checkOut) {
+      openNotification("topRight", "Vui lòng chọn thời gian check-in, check-out!","red");
+      return;
+    }
     let room =quantityRooms?.find(room=>room.roomTypeId==id);
     if(!room){
       room={
@@ -50,40 +61,34 @@ function RoomAvailability(props){
         quantity:1
       }
     }
-    let checkRequest= {...room};
-    if(searchRequest){
-      checkRequest={
-        ...checkRequest,
-        checkIn:searchRequest.checkIn ?searchRequest.checkIn:"" ,
-        checkOut:searchRequest.checkOut ?searchRequest.checkOut:"",
-        quantityBeds:searchRequest.quantityBeds ? searchRequest.quantityBeds :""
-      }
+    
+
+    let checkRequest={
+      ...room,
+      checkIn:searchRequest.checkIn ? searchRequest.checkIn:"" ,
+      checkOut:searchRequest.checkOut ?searchRequest.checkOut:"",
+      email:user.email
     }
+    console.log(checkRequest);
     setCheckRequest(checkRequest);
-      try{
-        const res = await checkEnoughQuantityRooms("check-room",checkRequest);
-        if(res.code==200){
-          const data=res.data;
-          if(data<checkRequest.quantity){
-            openNotification("topRight",`Không đủ số phòng. Số phòng còn lại ${data}!`,"red");
-            return false;
-          }
-          else{
-            openNotification("topRight",`Bạn có thể đặt phòng!`,"green");
-            return true;
-          }
+    try{
+      const res = await checkEnoughQuantityRooms("check-room",checkRequest);
+      if(res.code==200){
+        const data=res.data;
+        if(data<checkRequest.quantity){
+          openNotification("topRight",`Không đủ số phòng. Số phòng còn lại ${data}!`,"red");
+          return null;
         }
-      }catch(error){
-        console.error(error);
+        else{
+          openNotification("topRight",`Bạn có thể đặt phòng!`,"green");
+          return checkRequest;
+        }
       }
-    }
-  const handleReserve=async(id)=>{
-    const check=await handleCheck(id);
-    console.log(check);
-    if(check){
-      nav("/booking",{state: checkRequest})
+    }catch(error){
+      console.error(error);
     }
   }
+  
 
   // xử lý select chọn số phòng
   const handleQuantityRoomChange = (id, value) => {
@@ -112,7 +117,6 @@ function RoomAvailability(props){
 
   // Gọi api tìm kiếm phòng theo điều kiện searchRequest
   useEffect(()=>{
-    console.log(searchRequest);
     const fetchApi=async()=>{
       try{
         const res = await getRoomTypesBySearchRequest(`slugProperty=${params.slug}`,searchRequest);
@@ -131,7 +135,7 @@ function RoomAvailability(props){
       },1000);
     }
   },[searchRequest]);
-
+  // data cột
   const columns = [
     {
       title: 'Loại phòng',
@@ -220,12 +224,11 @@ function RoomAvailability(props){
       render: (_,record)=>(
         <>
           <div className="roomtype__action" >
-          <Button color="danger" variant="solid" onClick={()=>handleCheck(record.id)} >Kiểm tra</Button>
           <Button type="primary" onClick={()=>handleReserve(record.id)} >Đặt phòng</Button>
           </div>
         </>
       ),
-      width:250
+      width:150
     },
     
   ];

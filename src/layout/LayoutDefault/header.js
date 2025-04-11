@@ -30,7 +30,6 @@ function Header() {
   const [showSearch, setShowSearch] = useState(false);
   const isLogin = useSelector((state) => state.login);
   const user = useSelector((state) => state.user);
-  console.log(user);
   const handleChange = (e) => {
     const destination = e.target.value;
     setDestination(destination);

@@ -46,7 +46,10 @@ function App() {
           dispatch(login("LOGIN"));
         }
         const getInfoUserApi = await getInfoUser();
-        dispatch({ type: "SAVE_USER", data: getInfoUserApi.data });
+        console.log(getInfoUserApi);
+        if(getInfoUserApi.code==200){
+          dispatch({ type: "SAVE_USER", data: getInfoUserApi.data });
+        }
       } catch (error) {
         openNotification("topRight", "Phiên đăng nhập đã hết hạn!", "red");
         console.error(error);
