@@ -6,6 +6,8 @@ import Login from "../pages/Login";
 import PropertyDetail from "../pages/PropertyDetail/PropertyDetail";
 import CallBackPage from "../pages/CallBackPage";
 import PropertiesTym from "../pages/PropertiesTym";
+import Booking from "../pages/Booking";
+import PrivateRoute from "../components/PrivateRoutes";
 export const routes=[
   {
     path:"/",
@@ -38,6 +40,15 @@ export const routes=[
       {
         path:"/properties-tym",
         element: <PropertiesTym/>
+      },
+      {
+        element:<PrivateRoute/>,
+        children:[
+          {
+            path:"/booking",
+            element: <Booking/>
+          }
+        ]
       }
     ]
   }

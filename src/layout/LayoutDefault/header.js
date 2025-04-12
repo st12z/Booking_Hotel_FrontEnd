@@ -8,6 +8,7 @@ import { getDestinationsBySearch } from "../../service/RoomService/DestinationSe
 import { useSelector } from "react-redux";
 import { logout } from "../../service/UserService/AuthService";
 import {HeartFilled} from "@ant-design/icons";
+import dayjs from "dayjs";
 
 const { RangePicker } = DatePicker;
 
@@ -30,6 +31,7 @@ function Header() {
   const [showSearch, setShowSearch] = useState(false);
   const isLogin = useSelector((state) => state.login);
   const user = useSelector((state) => state.user);
+  
   const handleChange = (e) => {
     const destination = e.target.value;
     setDestination(destination);
@@ -197,7 +199,10 @@ function Header() {
                 )}
               </div>
               <div className="header__bottom__search__timeline">
-                <RangePicker showTime defaultValue={[checkIn, checkOut]} />
+                <RangePicker  defaultValue={[
+                              checkIn ?dayjs(checkIn):null,
+                              checkOut?dayjs(checkOut):null
+                            ]}/>
               </div>
               <div className="header__bottom__search__quantity">
                 <input

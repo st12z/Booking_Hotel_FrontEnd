@@ -11,13 +11,15 @@ function CallBackPage(){
     const code = searchParams.get("code");
     const fetchApi = async () => {
       try{
-        const res=  await getAccessToken(`access-token?code=${code}`);
-        if(res.code==200){
-          localStorage.setItem("access_token",res.data.access_token);
+        const resAccessToken=  await getAccessToken(`access-token?code=${code}`);
+        if(resAccessToken.code==200){
+          localStorage.setItem("access_token",resAccessToken.data.access_token);
           const getInfoUserApi = await getInfoUser();
           dispatch({ type: "SAVE_USER", data: getInfoUserApi.data });
           dispatch(login("LOGIN"));
-          nav("/");
+          setTimeout(() => {
+            nav("/");
+          }, 100);
         }
       }catch(error){
         console.error(error);

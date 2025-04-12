@@ -18,10 +18,8 @@ function DestinationItem(props){
   return(
     <>
       <div className="destination__item">
-        <Link to={`/search?destination=${item.name}`} onClick={()=>handleAddPropertiesLocal(item.name)}>
           <img src={item.image} alt={item.name}/>
           <h3>{item.name}</h3>
-        </Link>
       </div>
     </>
   )

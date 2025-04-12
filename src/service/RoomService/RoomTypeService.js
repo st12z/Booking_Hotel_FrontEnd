@@ -13,3 +13,7 @@ export const checkEnoughQuantityRooms=async(query,data)=>{
   const res= await post(`roomtypes/${query}`,data);
   return res;
 }
+export const getRoomTypeById = async(id)=>{
+  const res = await get(`roomtypes/${id}`);
+  return res;
+} 

@@ -9,6 +9,7 @@ import { checkEnoughQuantityRooms, getRoomTypesBySearchRequest } from "../../ser
 import { useNavigate, useParams } from "react-router-dom";
 import moment from 'moment';
 import { useSelector } from "react-redux";
+import dayjs from "dayjs";
 const { RangePicker } = DatePicker;
 
 function RoomAvailability(props){
@@ -21,6 +22,7 @@ function RoomAvailability(props){
   const [searchRequest,setSearchRequest]=useState({});
   const [loading,setLoading] = useState(false);
   const user = useSelector(state=>state.user);
+
   // Thông tin đã kiểm tra phòng với yêu cầu
   const [checkRequest,setCheckRequest]=useState();
   const [quantityRooms,setQuantityRooms]=useState([{
@@ -77,11 +79,11 @@ function RoomAvailability(props){
         const data=res.data;
         if(data<checkRequest.quantity){
           openNotification("topRight",`Không đủ số phòng. Số phòng còn lại ${data}!`,"red");
-          return null;
         }
         else{
           openNotification("topRight",`Bạn có thể đặt phòng!`,"green");
-          return checkRequest;
+          const checkRequestQuery= new URLSearchParams(checkRequest);
+          nav(`/booking?${checkRequestQuery.toString()}`)
         }
       }
     }catch(error){
@@ -238,7 +240,10 @@ function RoomAvailability(props){
       <h2>Tìm phòng có sẵn</h2>
       <form className="search" onSubmit={handleSubmit}>
         <div className="search__timeline">
-            <RangePicker showTime defaultValue={[checkIn,checkOut]}/>
+            <RangePicker  defaultValue={[
+              checkIn ?dayjs(checkIn):null,
+              checkOut?dayjs(checkOut):null
+            ]}/>
         </div>
         <div className="search__quantity">
           <input type="number" placeholder="Số lượng giường" name="quantityBeds" min={1} max={4} value={quantityBeds} />

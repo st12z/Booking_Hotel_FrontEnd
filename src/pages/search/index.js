@@ -5,6 +5,7 @@ import { Button, Card, Checkbox, Col, Pagination, Row, Select, Skeleton, Slider 
 import "./search.scss";
 import ListSearchProperties from "../../components/ListSearchProperties";
 import { getFacilities } from "../../service/RoomService/FacilityService";
+import { formatLocalDateTime } from "../../utils/format";
 function Search() {
   const [searchParams] = useSearchParams();
   const [quantityBeds,setQuantityBeds]=useState(0);
@@ -34,13 +35,12 @@ function Search() {
   }), [quantityBeds, selectedRating, selectedFacilities, selectedReview, selectedDistance, selectedProperty, budget,sortCondition]);
   const searchRequest = {
     destination: searchParams.get("destination"),
-    checkIn: searchParams.get("checkIn") ? searchParams.get("checkIn"):"",
-    checkOut: searchParams.get("checkOut") ? searchParams.get("checkOut"):"",
+    checkIn: searchParams.get("checkIn") ? formatLocalDateTime(searchParams.get("checkIn")):"",
+    checkOut: searchParams.get("checkOut") ?formatLocalDateTime( searchParams.get("checkOut")):"",
     quantityBeds: searchParams.get("quantityBeds") ? searchParams.get("quantityBeds"):"",
     pageNo:pageNo,
     pageSize:pageSize,
   };
-
   
 
   const params = new URLSearchParams();
