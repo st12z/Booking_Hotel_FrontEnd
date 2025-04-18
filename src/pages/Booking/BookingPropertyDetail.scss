@@ -1,0 +1,214 @@
+.booking-property{
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  position: relative;
+  margin-bottom: 20px;
+  p{
+    margin: 0;
+  
+  }
+  &__header{
+    display: flex;
+    align-items: center;
+    p{    
+      margin-right: 10px;
+      font-size: 16px;
+    }
+    li{
+      font-size: 15px;
+    }
+    margin-bottom: 10px;
+  }
+  &__body{
+    
+    .name{
+      font-size: 18px;
+      font-weight: 600;
+      color: #0057B8;
+      margin-bottom: 10px;
+    }
+    .address{
+      display: flex;
+      align-items: center;
+      img{
+        width: 30px;
+      }
+      p{
+        font-weight: 600;
+        color: black;
+      }
+    }
+    
+  }
+  &__reviews{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    .score{
+      display: inline-block;
+      padding: 10px;
+      background-color: #0057B8;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      margin-right: 5px;
+    }
+    .review{
+      font-weight: 600;
+    }
+  }
+}
+
+//
+
+.booking-roomtype{
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  p{
+    margin: 0;
+  }
+  &__header{
+    p{
+      color: #0057B8;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    margin-bottom: 10px;
+  }
+  &__body{
+    .price_old{
+      color: red;
+      font-weight: 600;
+      text-decoration: line-through;
+      margin-bottom: 10px;
+    }
+    .price_new{
+      color: black;
+      font-weight: 600;
+    }
+    .num_beds{
+      display: flex;
+      align-items: center;
+      img{
+        width: 50px;
+        margin-right: 5px;
+      }
+      span{
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+//
+.booking-yourdetails{
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  &__header{
+    p{
+      font-size: 18px;
+      color: #0057B8;
+      font-weight: 600;
+    }
+  }
+  &__body{
+    .time-detail{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: fit-content;
+      .check-in{
+        padding-right: 40px;
+        margin-right: 40px;
+        border-right: 1px solid #ddd; 
+      }
+      .check-out{
+        padding-left: 40px;
+      }
+      .check-type{
+        color: black;
+        font-weight: 500;
+        font-size: 16px;
+      }
+      .date{
+        color: #0057B8;
+        font-weight: 600;
+        font-size: 16px;
+      }
+      .time{
+        color: #0057B8;
+        font-weight: 600;
+        font-size: 16px;
+      }
+    }
+    .time-stay{
+      p{
+        font-size: 15px;
+        font-weight: 600;
+      }
+    }
+    .total-rooms{
+      p{
+        font-size: 15px;
+        font-weight: 600;
+      }
+    }
+  }
+ 
+}
+
+// 
+.booking-price{
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  &__header{
+    p{
+      font-size: 18px;
+      color: #0057B8;
+      font-weight: 600;
+    }
+  }
+  &__body{
+    p{
+      display: flex;
+      justify-content: space-between;
+      font-weight: 400;
+    }
+    .price_total{
+      position: relative;
+      padding: 20px;
+      background-color: #EBF3FF;
+      width: 100%;
+      margin-right: 20px;
+      p{
+        font-size: 24px;
+        font-weight: 600;
+      }
+      .price__total-discount{
+        text-decoration: line-through;
+        color: red;
+        position: absolute;
+        top: -10px;
+        right: 20px;
+      }
+    }
+  }
+}
+
+//
+.booking-discounts{
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+}

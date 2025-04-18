@@ -10,7 +10,6 @@ function Discounts() {
       const fetchApi= async()=>{
         try{
           const res = await getAllDiscounts();  
-          console.log(res);       
           if(res.code==200){
             setData(res.data);
           }
@@ -39,9 +38,11 @@ function Discounts() {
         )
         }
       </Row>
-    {data.length>0 &&<Button type="primary" onClick={()=>setShowAll(!show)} className="discount__btn">
-        {show ? "Ẩn bớt" : "Xem thêm"}
-    </Button>}
+    {data.length>0 &&
+        <Button type="primary" onClick={()=>setShowAll(!show)} className="discount__btn">
+          {show ? "Ẩn bớt" : "Xem thêm"}
+        </Button>
+    }
     </div>
   );
 }

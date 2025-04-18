@@ -1,12 +1,48 @@
-import { Badge, Button, Card } from "antd";
+import { Badge, Button, Card, notification } from "antd";
+import { useSelector } from "react-redux";
+import { saveDiscount } from "../../service/RoomService/DiscountService";
 
 function DiscountItem(props){
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (placement, message, color, onClose) => {
+    api.info({
+      message: `Thông báo`,
+      description: (
+        <span style={{ color: color, fontSize: "20px", fontWeight: 600 }}>
+          {message}
+        </span>
+      ),
+      placement,
+      duration: 5,
+    });
+  };
+  const user = useSelector(state=>state.user);
   const {item}=props;
   const handleSave=(id)=>{
-    console.log(id);
+    if(!user){
+      openNotification("topRight","Vui lòng đăng nhập để lưu phiếu giảm giá!","red");
+    }
+    const fetchApi=async()=>{
+      const data={
+        email:user.email,
+        discountId:id
+      }
+      const res= await saveDiscount(data);
+      console.log(res);
+      if(res.code==200){
+        openNotification("topRight","Lưu phiếu giảm giá thành công!","green");
+      }
+      else{
+        openNotification("topRight","Phiếu giảm giá đã hết!","red");
+      }
+    }
+    fetchApi();
+    
   }
   return(
-    <Badge.Ribbon 
+    <>
+      {contextHolder}
+      <Badge.Ribbon 
       text={`${item.discountType === "PERCENT" 
         ? `${item.discountValue} %` 
         : `${new Intl.NumberFormat('vi-VN').format(item.discountValue)} VNĐ`
@@ -30,6 +66,8 @@ function DiscountItem(props){
         </div>
       </div>
     </Badge.Ribbon>
+    </>
+    
     
   )
 }

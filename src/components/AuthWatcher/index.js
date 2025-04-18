@@ -31,7 +31,6 @@ function AuthWatcher() {
     if (access_token && isTokenExpired(access_token)) {
       try {
         const refreshApi = await getCredentials("refresh-token");
-        console.log(refreshApi);
         if (refreshApi.code === 200) {
           const newToken = refreshApi.data.access_token;
           localStorage.setItem("access_token", newToken);
