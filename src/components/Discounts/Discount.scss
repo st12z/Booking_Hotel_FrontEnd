@@ -1,22 +1,21 @@
 .discount {
+  
   &__item {
     display: flex;
     align-items: center; // Căn giữa theo chiều dọc
-    justify-content: space-between;
     border: 1px solid #ccc;
     border-radius: 5px;
-    padding: 10px; // Thêm padding để nội dung không sát viền
     gap: 15px; // Thêm khoảng cách giữa ảnh và nội dung
     position:relative;
-    &__img {
-      display: flex;
-      aspect-ratio: 4 / 3;
-
-      img {
+    p{
+      margin: 0;
+    }
+    &__img{
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      img{
         width: 150px;
-        height: 150px;
-        object-fit: contain;
-        border-radius: 5px; // Bo góc nhẹ cho ảnh
+        height: 130%;
       }
     }
 

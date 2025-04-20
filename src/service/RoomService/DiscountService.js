@@ -10,6 +10,6 @@ export const saveDiscount = async(id)=>{
   return result;
 }
 export const getDiscountsByUser = async(email)=>{
-  const result = await get("discounts/my-discounts",email);
+  const result = await get(`discounts/my-discounts/${email}`);
   return result;
 }

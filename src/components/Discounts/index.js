@@ -2,16 +2,36 @@ import { Button, Col, Row } from "antd";
 import DiscountItem from "./DiscountItem";
 import "./Discount.scss";
 import { useEffect, useState } from "react";
-import { getAllDiscounts } from "../../service/RoomService/DiscountService";
+import { getAllDiscounts, getDiscountsByUser } from "../../service/RoomService/DiscountService";
+import { useSelector } from "react-redux";
 function Discounts() {
     const [show,setShowAll] = useState(false);
     const [data,setData]=useState([]);
+    const user = useSelector(state=>state.user);
+    const [myDiscounts,setMyDiscounts] = useState();
+    // Lấy tất cả phiếu giảm giá
     useEffect(()=>{
       const fetchApi= async()=>{
         try{
           const res = await getAllDiscounts();  
+        
           if(res.code==200){
             setData(res.data);
+          }
+        }catch(error){
+          console.error(error);
+        }
+      };
+      fetchApi();
+    },[]);
+    // Lấy phiếu giảm giá của người dùng
+    useEffect(()=>{
+      const fetchApi= async()=>{
+        try{
+          const res = await getDiscountsByUser(user.email);  
+        
+          if(res.code==200){
+            setMyDiscounts(res.data);
           }
         }catch(error){
           console.error(error);
@@ -32,7 +52,7 @@ function Discounts() {
         ):(
             data?.slice(0,5).map((item,index)=>(
             <Col span={8} key={index}>
-                <DiscountItem item={item}/>
+                <DiscountItem item={item} myDiscounts={myDiscounts}/>
             </Col>
             ))
         )

@@ -35,3 +35,6 @@ export const getTotalDay = (checkIn, checkOut) => {
 
   return totalDay;
 };
+export const getFormatPrice=(price)=>{
+  return `${new Intl.NumberFormat("vi-VN").format(price)} VNĐ`;
+}

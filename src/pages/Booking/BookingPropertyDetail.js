@@ -1,10 +1,30 @@
-import { Badge, Rate, Skeleton } from "antd";
+import { Badge, Button, notification, Rate, Skeleton } from "antd";
 import "./BookingPropertyDetail.scss";
 import LocationIcon from "../../images/location-icon.jpg";
 import BedIcon from "../../images/bed-icon.jpg";
-import { getDate, getTime, getTotalDay } from "../../utils/format";
-import { useEffect } from "react";
+import {
+  getDate,
+  getFormatPrice,
+  getTime,
+  getTotalDay,
+} from "../../utils/format";
+import { useEffect, useState } from "react";
 function BookingPropertyDetail(props) {
+  const [api, contextHolder] = notification.useNotification();
+  const [priceDiscount, setPriceDiscount] = useState(0);
+  const [choosedId, setChoosedId] = useState(false);
+  const openNotification = (placement, message, color, onClose) => {
+    api.info({
+      message: `Thông báo`,
+      description: (
+        <span style={{ color: color, fontSize: "20px", fontWeight: 600 }}>
+          {message}
+        </span>
+      ),
+      placement,
+      duration: 5,
+    });
+  };
   let { property, roomType, bookingRequest, myDiscounts } = props;
   if (!property || !roomType || !bookingRequest) {
     return (
@@ -18,11 +38,42 @@ function BookingPropertyDetail(props) {
     price_new: roomType.price * (1 - (1.0 * roomType.discount) / 100),
   };
   let totalDay = getTotalDay(bookingRequest.checkIn, bookingRequest.checkOut);
-  const totalPriceOld = roomType.price * bookingRequest.quantity;
-  const totalPriceNew = roomType.price_new * bookingRequest.quantity;
-  const totalPriceDiscount = totalPriceNew - totalPriceOld;
+  // tổng tiền ban đầu
+  const totalPriceOld = roomType.price * bookingRequest.quantity * totalDay;
+  // tổng tiền khuyến mãi + giảm giá
+  const totalPriceNew =
+    roomType.price_new * bookingRequest.quantity * totalDay - priceDiscount;
+  // giá khuyến mãi
+  const pricePromotion = roomType.price*roomType.discount/100;
+  // button use discount
+  const handleUseDiscount = (id) => {
+    const discount = myDiscounts.find((item) => item.id == id);
+    const minBookingAmount = discount.minBookingAmount;
+
+    if (minBookingAmount > totalPriceNew) {
+      openNotification(
+        "topRight",
+        "Phiếu giảm giá chưa đủ điều kiện để áp dụng!",
+        "red"
+      );
+      return;
+    }
+    const priceDiscountFromCoupon =
+      discount.discountType == "FIXED"
+        ? discount.discountValue
+        : roomType.price * (1 - (1.0 * discount.discountValue) / 100);
+    setPriceDiscount(priceDiscountFromCoupon);
+    setChoosedId(id);
+  };
+  // button cancel discount
+  const handleCancelDiscount = (id) => {
+    setPriceDiscount(0);
+    setChoosedId(-1);
+  };
+
   return (
     <>
+      {contextHolder}
       {property && (
         <div className="booking-property">
           <div className="booking-property__header">
@@ -45,7 +96,7 @@ function BookingPropertyDetail(props) {
               {property.facilities && property.facilities.length > 2 && (
                 <li>
                   {property.facilities.slice(0, 3).map((item, index) => (
-                    <li>{item}</li>
+                    <li key={index}>{item}</li>
                   ))}
                 </li>
               )}
@@ -73,8 +124,8 @@ function BookingPropertyDetail(props) {
             </div>
             <div className="booking-roomtype__footer">
               <ul>
-                {roomType.freeServices.slice(0, 5).map((item) => (
-                  <li>{item}</li>
+                {roomType.freeServices.slice(0, 5).map((item, index) => (
+                  <li key={index}>{item}</li>
                 ))}
               </ul>
             </div>
@@ -117,19 +168,26 @@ function BookingPropertyDetail(props) {
             <div className="booking-price__body">
               <p className="price_origin">
                 <b>Giá gốc: </b>
-                {new Intl.NumberFormat("vi-VN").format(totalPriceOld)} VNĐ
+                {getFormatPrice(roomType.price)} VNĐ
               </p>
               <p className="price_discount">
                 <b>Khuyến mại: </b>
-                {new Intl.NumberFormat("vi-VN").format(totalPriceDiscount)} VNĐ
+                - {getFormatPrice(pricePromotion)}
+              </p>
+              <p className="price_discount">
+                <b>Phiếu giảm giá: </b>- {getFormatPrice(priceDiscount)}
+              </p>
+              <p className="price_discount">
+                <b>Tổng số ngày ở: </b>
+                {totalDay} ngày
               </p>
               <div className="price_total">
                 <p className="price__total-discount">
-                  {new Intl.NumberFormat("vi-VN").format(totalPriceOld)} VNĐ
+                  {getFormatPrice(totalPriceOld)}
                 </p>
                 <p>
                   <b>Tổng tiền: </b>
-                  {new Intl.NumberFormat("vi-VN").format(totalPriceNew)} VNĐ
+                  {getFormatPrice(totalPriceNew)}
                 </p>
               </div>
             </div>
@@ -137,19 +195,58 @@ function BookingPropertyDetail(props) {
         </>
       )}
       {myDiscounts && (
-        <>
-          <div className="booking-discounts">
-            <div className="booking-discounts__header">
-              <p>Mã giảm giá</p>
-            </div>
-            <div className="booking-discounts__body">
-
-            </div>
-            <div className="booking-discounts__footer">
-              
-            </div>
+        <div className="booking-discounts">
+          <div className="booking-discounts__header">
+            <p>Mã giảm giá</p>
           </div>
-        </>
+          {myDiscounts.map((item, index) => (
+            <>
+              <Badge.Ribbon
+                text={
+                  item.discountType == "PERCENT"
+                    ? `${item.discountValue}%`
+                    : `${getFormatPrice(item.discountValue)}`
+                }
+                color="red"
+              >
+                <div className="booking-discounts__item" key={index}>
+                  <div className="booking-discounts__item__image">
+                    <img src={item.image} />
+                  </div>
+                  <div className="booking-discounts__item__content">
+                    <p className="discount-code">{item.code}</p>
+                    <p>
+                      <b>Giá tối thiểu: </b>
+                      {getFormatPrice(item.minBookingAmount)}
+                    </p>
+                    <p>
+                      <b>Thời gian áp dụng: </b>
+                      {getDate(item.startDate)} - {getDate(item.endDate)}
+                    </p>
+                  </div>
+                  <div className="booking-discounts__item__use">
+                    {choosedId != item.id ? (
+                      <Button
+                        type="primary"
+                        onClick={() => handleUseDiscount(item.id)}
+                      >
+                        Sử dụng
+                      </Button>
+                    ) : (
+                      <Button
+                        color="danger"
+                        variant="solid"
+                        onClick={() => handleCancelDiscount(item.id)}
+                      >
+                        Hủy bỏ
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Badge.Ribbon>
+            </>
+          ))}
+        </div>
       )}
     </>
   );

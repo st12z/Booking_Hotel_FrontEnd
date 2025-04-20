@@ -152,6 +152,7 @@ function PropertyDetail(){
                 </Card>
               </Col>
               <Col span={24}>
+                {/* Đặt phòng */}
                 <RoomAvailability roomTypes={roomTypes}/>
               </Col>
             </Row>

@@ -211,4 +211,45 @@
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 10px;
+  overflow-y: auto;
+  height: 500px;
+  
+  &__header{
+    p{
+      font-size: 18px;
+      color: #0057B8;
+      font-weight: 600;
+    }
+  }
+  &__item{
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    box-shadow: rgb(0, 0, 0,0.2);
+    position: relative;
+    p{
+      margin: 0;
+    }
+    .discount-code{
+      font-weight: 600;
+      color: black;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    &__image{
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      margin-right: 20px;
+      img{
+        width: 120px;
+        height: 120%;
+      }
+    }
+    &__use{
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+    }
+  }
 }
