@@ -16,6 +16,7 @@ import { formatLocalDateTime } from "../../utils/format";
 import {
   checkEnoughQuantityRooms,
   getRoomTypesBySearchRequest,
+  holdRooms,
 } from "../../service/RoomService/RoomTypeService";
 import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
@@ -41,7 +42,6 @@ function RoomAvailability(props) {
   const [loading, setLoading] = useState(false);
 
   const [loadingButtons, setLoadingButtons] = useState([]);
-
 
   const [roomChecked, setRoomChecked] = useState([]);
 
@@ -71,6 +71,41 @@ function RoomAvailability(props) {
       placement,
     });
   };
+  // xử lý form tìm kiếm
+  const handleSubmit = (e) => {
+    setLoading(true);
+    e.preventDefault();
+    const searchRequest = {
+      checkIn: formatLocalDateTime(e.target[0].value || ""),
+      checkOut: formatLocalDateTime(e.target[1].value || ""),
+      quantityBeds: e.target[2].value,
+    };
+    setSearchRequest(searchRequest);
+  };
+
+  // Gọi api tìm kiếm phòng theo điều kiện searchRequest
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const res = await getRoomTypesBySearchRequest(
+          `slugProperty=${params.slug}`,
+          searchRequest
+        );
+        if (res.code == 200) {
+          setRoomTypes(res.data);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (searchRequest) {
+      setTimeout(() => {
+        fetchApi();
+      }, 1000);
+    }
+  }, [searchRequest]);
 
   // Hàm kiểm tra có đủ số lượng phòng để đặt
   const fetchApi = async (id) => {
@@ -109,15 +144,14 @@ function RoomAvailability(props) {
             }
             return prevRoomChecked;
           });
-          // const checkRequestQuery = new URLSearchParams(checkRequest);
-          // nav(`/booking?${checkRequestQuery.toString()}`);
+          
         }
       }
     } catch (error) {
       console.error(error);
     }
   };
-  // Xử lý việc đặt phòng
+  // Xử lý việc kiểm tra đặt phòng
   const handleCheckRoom = async (index, id) => {
     if (!user.email) {
       openNotification("topRight", "Vui lòng đăng nhập để đặt phòng!", "red");
@@ -151,12 +185,14 @@ function RoomAvailability(props) {
   // xử lý select chọn số phòng
   const handleQuantityRoomChange = (id, value) => {
     const indexChecked = roomChecked.findIndex((item) => item.roomTypeId == id);
-    const indexReversed = roomReversed.findIndex((item) => item.roomTypeId == id);
+    const indexReversed = roomReversed.findIndex(
+      (item) => item.roomTypeId == id
+    );
     if (indexChecked !== -1) {
-      setRoomChecked(roomChecked.filter(item=>item.roomTypeId!==id));
+      setRoomChecked(roomChecked.filter((item) => item.roomTypeId !== id));
     }
     if (indexReversed !== -1) {
-      setRoomReversed(roomReversed.filter(item=>item.roomTypeId!==id));
+      setRoomReversed(roomReversed.filter((item) => item.roomTypeId !== id));
     }
     setQuantityRooms((prevQuantityRooms) =>
       prevQuantityRooms.map((room) =>
@@ -172,49 +208,39 @@ function RoomAvailability(props) {
 
   // xử lý checkbox
   const handleCheckBox = (id, e) => {
-    const index = roomChecked.findIndex(item=>item.roomTypeId==id);
-    if (e.target.checked && index!==-1) {
-      setRoomReversed([...roomReversed,roomChecked[index]]);
+    const index = roomChecked.findIndex((item) => item.roomTypeId == id);
+    if (e.target.checked && index !== -1) {
+      setRoomReversed([...roomReversed, roomChecked[index]]);
     }
-    if(!e.target.checked && index!==-1){
-      setRoomReversed(roomReversed.filter(item=>item.roomTypeId!==id));
+    if (!e.target.checked && index !== -1) {
+      setRoomReversed(roomReversed.filter((item) => item.roomTypeId !== id));
     }
-  };
-  // xử lý form tìm kiếm
-  const handleSubmit = (e) => {
-    setLoading(true);
-    e.preventDefault();
-    const searchRequest = {
-      checkIn: formatLocalDateTime(e.target[0].value || ""),
-      checkOut: formatLocalDateTime(e.target[1].value || ""),
-      quantityBeds: e.target[2].value,
-    };
-    setSearchRequest(searchRequest);
   };
 
-  // Gọi api tìm kiếm phòng theo điều kiện searchRequest
-  useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        const res = await getRoomTypesBySearchRequest(
-          `slugProperty=${params.slug}`,
-          searchRequest
-        );
-        if (res.code == 200) {
-          setRoomTypes(res.data);
+  // xử lý đặt phòng gửi request roomReversed lên server
+  const handleRequestReverse = async() => {
+    try{
+      const res = await holdRooms(roomReversed);
+      console.log(roomReversed);
+      if(res.code==200){
+        const requestQuery = {
+          roomReversed:JSON.stringify(roomChecked),
+          checkIn: searchRequest.checkIn ? searchRequest.checkIn : "",
+          checkOut: searchRequest.checkOut ? searchRequest.checkOut : "",
+          email: user.email,
         }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+        const query = new URLSearchParams(requestQuery);
+        nav(`/booking?${query.toString()}`);
       }
-    };
-    if (searchRequest) {
-      setTimeout(() => {
-        fetchApi();
-      }, 1000);
+      else{
+        openNotification("topRight","Vui lòng kiểm tra lại!","red");
+      }
+    }catch(error){
+      openNotification("topRight","Vui lòng kiểm tra lại","red");
+      console.error(error);
     }
-  }, [searchRequest]);
+
+  };
 
   // data cột
   const columns = [
@@ -391,7 +417,12 @@ function RoomAvailability(props) {
           <button type="submit">Tìm kiếm</button>
         </div>
       </form>
-      <Button type="primary" className="reverse-button" disabled={!roomReversed.length>0}>
+      <Button
+        type="primary"
+        className="reverse-button"
+        disabled={!roomReversed.length > 0}
+        onClick={handleRequestReverse}
+      >
         Đặt phòng
       </Button>
       {loading == false ? (

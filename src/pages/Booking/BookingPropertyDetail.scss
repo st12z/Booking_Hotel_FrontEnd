@@ -1,53 +1,64 @@
-.booking-property{
+.booking-property {
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 10px;
   position: relative;
   margin-bottom: 20px;
-  p{
+
+  p {
     margin: 0;
-  
+
   }
-  &__header{
+
+  &__header {
     display: flex;
     align-items: center;
-    p{    
+
+    p {
       margin-right: 10px;
       font-size: 16px;
     }
-    li{
+
+    li {
       font-size: 15px;
     }
+
     margin-bottom: 10px;
   }
-  &__body{
-    
-    .name{
+
+  &__body {
+
+    .name {
       font-size: 18px;
       font-weight: 600;
       color: #0057B8;
       margin-bottom: 10px;
     }
-    .address{
+
+    .address {
       display: flex;
       align-items: center;
-      img{
+
+      img {
         width: 30px;
       }
-      p{
+
+      p {
         font-weight: 600;
         color: black;
       }
     }
-    
+
   }
-  &__reviews{
+
+  &__reviews {
     position: absolute;
     top: 10px;
     right: 10px;
     display: flex;
     align-items: center;
-    .score{
+
+    .score {
       display: inline-block;
       padding: 10px;
       background-color: #0057B8;
@@ -56,7 +67,8 @@
       font-weight: 600;
       margin-right: 5px;
     }
-    .review{
+
+    .review {
       font-weight: 600;
     }
   }
@@ -64,41 +76,45 @@
 
 //
 
-.booking-roomtype{
+.booking-roomtype {
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 20px;
-  p{
-    margin: 0;
-  }
-  &__header{
-    p{
+
+  &__header {
+    p {
       color: #0057B8;
       font-size: 18px;
       font-weight: 600;
     }
+
     margin-bottom: 10px;
   }
-  &__body{
-    .price_old{
+
+  &__body {
+    .price_old {
       color: red;
       font-weight: 600;
       text-decoration: line-through;
       margin-bottom: 10px;
     }
-    .price_new{
+
+    .price_new {
       color: black;
       font-weight: 600;
     }
-    .num_beds{
+
+    .num_beds {
       display: flex;
       align-items: center;
-      img{
+
+      img {
         width: 50px;
         margin-right: 5px;
       }
-      span{
+
+      span {
         font-size: 16px;
         font-weight: 600;
       }
@@ -107,95 +123,103 @@
 }
 
 //
-.booking-yourdetails{
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 10px;
+.booking-yourdetails {
   margin-bottom: 20px;
-  &__header{
-    p{
+
+  &__header {
+    p {
       font-size: 18px;
       color: #0057B8;
       font-weight: 600;
     }
   }
-  &__body{
-    .time-detail{
+
+  &__body {
+    .time-detail {
       display: flex;
       align-items: center;
       justify-content: space-between;
       width: fit-content;
-      .check-in{
+
+      .check-in {
         padding-right: 40px;
         margin-right: 40px;
-        border-right: 1px solid #ddd; 
+        border-right: 1px solid #ddd;
       }
-      .check-out{
+
+      .check-out {
         padding-left: 40px;
       }
-      .check-type{
+
+      .check-type {
         color: black;
         font-weight: 500;
         font-size: 16px;
       }
-      .date{
+
+      .date {
         color: #0057B8;
         font-weight: 600;
         font-size: 16px;
       }
-      .time{
+
+      .time {
         color: #0057B8;
         font-weight: 600;
         font-size: 16px;
       }
     }
-    .time-stay{
-      p{
+
+    .time-stay {
+      p {
         font-size: 15px;
         font-weight: 600;
       }
     }
-    .total-rooms{
-      p{
+
+    .total-rooms {
+      p {
         font-size: 15px;
         font-weight: 600;
       }
     }
   }
- 
+
 }
 
 // 
-.booking-price{
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 10px;
+.booking-price {
   margin-bottom: 20px;
   width: 100%;
-  &__header{
-    p{
+
+  &__header {
+    p {
       font-size: 18px;
       color: #0057B8;
       font-weight: 600;
     }
   }
-  &__body{
-    p{
+
+  &__body {
+    p {
       display: flex;
       justify-content: space-between;
       font-weight: 400;
     }
-    .price_total{
+
+    .price_total {
       position: relative;
       padding: 20px;
       background-color: #EBF3FF;
       width: 100%;
       margin-right: 20px;
-      p{
+
+      p {
         font-size: 24px;
         font-weight: 600;
       }
-      .price__total-discount{
+
+      .price__total-discount {
         text-decoration: line-through;
         color: red;
         position: absolute;
@@ -207,49 +231,99 @@
 }
 
 //
-.booking-discounts{
+.booking-discounts {
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 10px;
   overflow-y: auto;
   height: 500px;
-  
-  &__header{
-    p{
+
+  &__header {
+    p {
       font-size: 18px;
       color: #0057B8;
       font-weight: 600;
     }
   }
-  &__item{
+
+  &__item {
     border: 2px solid #ddd;
     border-radius: 10px;
     margin-bottom: 10px;
     display: flex;
-    box-shadow: rgb(0, 0, 0,0.2);
+    box-shadow: rgb(0, 0, 0, 0.2);
     position: relative;
-    p{
+
+    p {
       margin: 0;
     }
-    .discount-code{
+
+    .discount-code {
       font-weight: 600;
       color: black;
       font-size: 16px;
       margin-bottom: 10px;
     }
-    &__image{
+
+    &__image {
       aspect-ratio: 4/3;
       object-fit: cover;
       margin-right: 20px;
-      img{
+
+      img {
         width: 120px;
         height: 120%;
       }
     }
-    &__use{
+
+    &__use {
       position: absolute;
       bottom: 5px;
       right: 5px;
+    }
+  }
+}
+
+// 
+.booking-order {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+
+  &__header {
+    p {
+      font-size: 18px;
+      color: #0057B8;
+      font-weight: 600;
+    }
+  }
+
+  &__body {
+    
+
+    .price__total{
+      padding: 20px;
+      background-color: #EBF3FF;
+      width: 100%;
+      p {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        font-size: 16px;
+      }
+      &-old{
+        p {
+          font-size: 16px;
+          font-weight: 600;
+          display: flex;
+          justify-content: space-between;
+        }
+        span{
+          text-decoration: line-through;
+          color: red;
+        }
+      }
     }
   }
 }

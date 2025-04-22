@@ -17,3 +17,7 @@ export const getRoomTypeById = async(id)=>{
   const res = await get(`roomtypes/${id}`);
   return res;
 } 
+export const holdRooms = async(data)=>{
+  const res = await post(`roomtypes/hold-rooms`,data);
+  return res;
+}

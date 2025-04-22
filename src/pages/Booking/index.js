@@ -10,23 +10,21 @@ import { getDiscountsByUser } from "../../service/RoomService/DiscountService";
 
 function Booking(){
   const user = useSelector(state=>state.user);
-  const [roomType,setRoomType] = useState();
+  const [roomReverseds,setRoomReverseds] = useState([]);
   const [searchParams] = useSearchParams();
   const [property,setProperty] = useState();
   const [myDiscounts,setMyDiscounts] = useState();
   const bookingRequest={
-    roomTypeId: searchParams.get("roomTypeId"),
-    quantity: searchParams.get("quantity"),
     checkIn: searchParams.get("checkIn"),
     checkOut: searchParams.get("checkOut"),
-    email: searchParams.get("email")
+    email: searchParams.get("email"),
+    roomReverseds: JSON.parse(searchParams.get("roomReversed"))
   }
   // Lấy phiếu giảm giá của người dùng
   useEffect(()=>{
     const fetchApi =async ()=>{
       try{
         const resDiscounts = await getDiscountsByUser(user.email);
-        console.log(resDiscounts);
         if(resDiscounts.code==200){
           setMyDiscounts(resDiscounts.data);
         }
@@ -41,19 +39,29 @@ function Booking(){
   // Thhông tin đặt phòng, phòng đặt
   useEffect(()=>{
     const fetchApi =async ()=>{
+      let propertyId;
       try{
-        const resRoomType = await getRoomTypeById(bookingRequest.roomTypeId);
-        const resDiscounts = await getDiscountsByUser(user.email);
-        if(resDiscounts)
-        if(resRoomType.code==200){
-          const roomType=resRoomType.data;
-          setRoomType(roomType);
-          const resProperty = await getPropertyId(roomType.propertyId);
-          console.log(resProperty);
+        let newRoomReverseds=[];
+        for(const item of bookingRequest.roomReverseds){
+          const resRoomType = await getRoomTypeById(item.roomTypeId);
+          
+          if(resRoomType.code==200){
+            const data=resRoomType.data;
+            propertyId=data.propertyId;
+            newRoomReverseds.push({...data,
+              quantity:item.quantity,
+              checkIn: item.checkIn,
+              checkOut: item.checkOut})
+          }
+          setRoomReverseds(newRoomReverseds);
+        }
+        if(propertyId){
+          const resProperty = await getPropertyId(propertyId);
           if(resProperty.code==200){
             setProperty(resProperty.data);
           }
         }
+        
       }catch(error){
         console.error(error);
       }
@@ -61,15 +69,13 @@ function Booking(){
     }
     fetchApi();
   },[]);
-
   return(
     <>
       <Row gutter={[16,16]}>
         <Col span={10}>
           <BookingPropertyDetail 
             property={property} 
-            roomType={roomType}
-            bookingRequest={bookingRequest}
+            roomReverseds={roomReverseds}
             myDiscounts={myDiscounts}
           />
         </Col>

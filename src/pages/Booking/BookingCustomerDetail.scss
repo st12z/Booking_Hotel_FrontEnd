@@ -2,4 +2,48 @@
   border: 1px solid #ddd;
   padding: 10px;
   border-radius: 10px;
+  &__header{
+    p {
+      font-size: 18px;
+      color: #0057B8;
+      font-weight: 600;
+    }
+  }
+  &__body{
+    .info-customer{
+      padding-bottom: 30px ;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 30px;
+    }
+    .info-optional{
+      h2{
+        font-size: 18px;
+        color: #0057B8;
+        font-weight: 600;
+      }
+      padding-bottom: 30px ;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 30px;
+    }
+    .info-service{
+      h2{
+        font-size: 18px;
+        color: #0057B8;
+        font-weight: 600;
+      }
+      padding-bottom: 30px ;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 30px;
+    }
+    .info-request{
+      h2{
+        font-size: 18px;
+        color: #0057B8;
+        font-weight: 600;
+      }
+      padding-bottom: 30px ;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 30px;
+    }
+  }
 }

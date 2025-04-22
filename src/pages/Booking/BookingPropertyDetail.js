@@ -25,32 +25,42 @@ function BookingPropertyDetail(props) {
       duration: 5,
     });
   };
-  let { property, roomType, bookingRequest, myDiscounts } = props;
-  if (!property || !roomType || !bookingRequest) {
+  const { property, roomReverseds, myDiscounts } = props;
+  if (!property || !roomReverseds || !myDiscounts) {
     return (
       <>
         <Skeleton active />
       </>
     );
   }
-  roomType = {
-    ...roomType,
-    price_new: roomType.price * (1 - (1.0 * roomType.discount) / 100),
-  };
-  let totalDay = getTotalDay(bookingRequest.checkIn, bookingRequest.checkOut);
-  // tổng tiền ban đầu
-  const totalPriceOld = roomType.price * bookingRequest.quantity * totalDay;
-  // tổng tiền khuyến mãi + giảm giá
-  const totalPriceNew =
-    roomType.price_new * bookingRequest.quantity * totalDay - priceDiscount;
-  // giá khuyến mãi
-  const pricePromotion = roomType.price*roomType.discount/100;
-  // button use discount
+  const updatedRoomReverseds = roomReverseds.map((item) => {
+    const totalDay = getTotalDay(item.checkIn, item.checkOut);
+    const priceNew = item.price * (1 - (1.0 * item.discount) / 100);
+    const totalPriceOld = item.price * item.quantity * totalDay;
+    const totalPriceNew = priceNew * item.quantity * totalDay;
+    const pricePromotion = (item.price * item.discount) / 100;
+
+    return {
+      ...item,
+      priceNew: priceNew,
+      totalPriceOld: totalPriceOld,
+      totalPriceNew: totalPriceNew,
+      pricePromotion: pricePromotion,
+      totalDay: totalDay,
+    };
+  });
+  const totalPromotion = updatedRoomReverseds.reduce((sum,item)=>sum+item.pricePromotion,0);
+  const totalOrderOld = updatedRoomReverseds.reduce(
+    (sum, item) => sum + item.totalPriceOld,
+    0
+  );
+  const totalOrderNew =
+    updatedRoomReverseds.reduce((sum, item) => sum + item.totalPriceNew, 0) -
+    priceDiscount;
   const handleUseDiscount = (id) => {
     const discount = myDiscounts.find((item) => item.id == id);
     const minBookingAmount = discount.minBookingAmount;
-
-    if (minBookingAmount > totalPriceNew) {
+    if (minBookingAmount > totalOrderNew) {
       openNotification(
         "topRight",
         "Phiếu giảm giá chưa đủ điều kiện để áp dụng!",
@@ -61,7 +71,7 @@ function BookingPropertyDetail(props) {
     const priceDiscountFromCoupon =
       discount.discountType == "FIXED"
         ? discount.discountValue
-        : roomType.price * (1 - (1.0 * discount.discountValue) / 100);
+        : totalOrderNew * ((1.0 * discount.discountValue) / 100);
     setPriceDiscount(priceDiscountFromCoupon);
     setChoosedId(id);
   };
@@ -104,96 +114,116 @@ function BookingPropertyDetail(props) {
           </div>
         </div>
       )}
-      {roomType && (
-        <Badge.Ribbon text={`${roomType.discount}%`} color="red">
-          <div className="booking-roomtype">
-            <div className="booking-roomtype__header">
-              <p>{roomType.name}</p>
-            </div>
-            <div className="booking-roomtype__body">
-              <p className="price_old">
-                {new Intl.NumberFormat("vi-VN").format(roomType.price)} VNĐ
-              </p>
-              <p className="price_new">
-                {new Intl.NumberFormat("vi-VN").format(roomType.price_new)} VNĐ
-              </p>
-              <p className="num_beds">
-                <img src={BedIcon} />
-                <span>{roomType.numBeds} giường</span>
-              </p>
-            </div>
-            <div className="booking-roomtype__footer">
-              <ul>
-                {roomType.freeServices.slice(0, 5).map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </Badge.Ribbon>
-      )}
-      {bookingRequest && (
-        <>
-          <div className="booking-yourdetails">
-            <div className="booking-yourdetails__header">
-              <p>Thông tin phòng</p>
-            </div>
-            <div className="booking-yourdetails__body">
-              <div className="time-detail">
-                <div className="check-in">
-                  <p className="check-type">Check-in</p>
-                  <p className="date">{getDate(bookingRequest.checkIn)}</p>
-                  <p className="time">{getTime(bookingRequest.checkIn)}</p>
-                </div>
-                <div className="check-out">
-                  <p className="check-type">Check-out</p>
-                  <p className="date">{getDate(bookingRequest.checkOut)}</p>
-                  <p className="time">{getTime(bookingRequest.checkOut)}</p>
-                </div>
+      {updatedRoomReverseds &&
+        updatedRoomReverseds.map((item, index) => (
+          <Badge.Ribbon text={`${item.discount}%`} color="red" key={index}>
+            <div className="booking-roomtype">
+              <div className="booking-roomtype__header">
+                <p>{item.name}</p>
               </div>
-              <div className="time-stay">
-                <p>Tổng số ngày ở: </p>
-                <p>{totalDay} buổi</p>
-              </div>
-              <div className="total-rooms">
-                <p>Tổng số phòng đặt: </p>
-                <p>{bookingRequest.quantity}</p>
-              </div>
-            </div>
-          </div>
-          <div className="booking-price">
-            <div className="booking-price__header">
-              <p>Hóa đơn</p>
-            </div>
-            <div className="booking-price__body">
-              <p className="price_origin">
-                <b>Giá gốc: </b>
-                {getFormatPrice(roomType.price)} VNĐ
-              </p>
-              <p className="price_discount">
-                <b>Khuyến mại: </b>
-                - {getFormatPrice(pricePromotion)}
-              </p>
-              <p className="price_discount">
-                <b>Phiếu giảm giá: </b>- {getFormatPrice(priceDiscount)}
-              </p>
-              <p className="price_discount">
-                <b>Tổng số ngày ở: </b>
-                {totalDay} ngày
-              </p>
-              <div className="price_total">
-                <p className="price__total-discount">
-                  {getFormatPrice(totalPriceOld)}
+              <div className="booking-roomtype__body">
+                <p className="price_old">
+                  {new Intl.NumberFormat("vi-VN").format(item.price)} VNĐ
                 </p>
-                <p>
-                  <b>Tổng tiền: </b>
-                  {getFormatPrice(totalPriceNew)}
+                <p className="price_new">
+                  {new Intl.NumberFormat("vi-VN").format(item.priceNew)} VNĐ
+                </p>
+                <p className="num_beds">
+                  <img src={BedIcon} />
+                  <span>{item.numBeds} giường</span>
                 </p>
               </div>
+              <div className="booking-roomtype__footer">
+                <ul>
+                  {item.freeServices.slice(0, 5).map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="booking-yourdetails">
+                <div className="booking-yourdetails__header">
+                  <p>Thông tin phòng</p>
+                </div>
+                <div className="booking-yourdetails__body">
+                  <div className="time-detail">
+                    <div className="check-in">
+                      <p className="check-type">Check-in</p>
+                      <p className="date">{getDate(item.checkIn)}</p>
+                      <p className="time">{getTime(item.checkIn)}</p>
+                    </div>
+                    <div className="check-out">
+                      <p className="check-type">Check-out</p>
+                      <p className="date">{getDate(item.checkOut)}</p>
+                      <p className="time">{getTime(item.checkOut)}</p>
+                    </div>
+                  </div>
+                  <div className="time-stay">
+                    <p>Tổng số ngày ở: </p>
+                    <p>{item.totalDay} buổi</p>
+                  </div>
+                  <div className="total-rooms">
+                    <p>Tổng số phòng đặt: </p>
+                    <p>{item.quantity}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="booking-price">
+                <div className="booking-price__header">
+                  <p>Hóa đơn phòng</p>
+                </div>
+                <div className="booking-price__body">
+                  <p className="price_origin">
+                    <b>Giá gốc: </b>
+                    {getFormatPrice(item.price)} VNĐ
+                  </p>
+                  <p className="price_discount">
+                    <b>Khuyến mại: </b>- {getFormatPrice(item.pricePromotion)}
+                  </p>
+                  <p className="price_discount">
+                    <b>Tổng số ngày ở: </b>
+                    {item.totalDay} ngày
+                  </p>
+                  <div className="price_total">
+                    <p className="price__total-discount">
+                      {getFormatPrice(item.totalPriceOld)}
+                    </p>
+                    <p>
+                      <b>Tổng tiền: </b>
+                      {getFormatPrice(item.totalPriceNew)}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
+          </Badge.Ribbon>
+        ))}
+      <div className="booking-order">
+        <div className="booking-order__header">
+          <p>Hóa đơn</p>
+        </div>
+        <div className="booking-order__body">
+          <div className="price__total">
+            <div className="price__total-old">
+              <p>
+                <b>Tổng tiền ban đầu: </b>
+                <span className="">{getFormatPrice(totalOrderOld)}</span>
+              </p>
+              <p>
+                <b>Khuyến mãi: </b>
+                - {getFormatPrice(totalPromotion)}
+              </p>
+              <p>
+                <b>Giảm giá: </b>
+                - {getFormatPrice(priceDiscount)}
+              </p>
+            </div>
+            <p>
+              <b>Tổng tiền: </b>
+              {getFormatPrice(totalOrderNew)}
+            </p>
           </div>
-        </>
-      )}
+        </div>
+      </div>
       {myDiscounts && (
         <div className="booking-discounts">
           <div className="booking-discounts__header">
@@ -251,4 +281,5 @@ function BookingPropertyDetail(props) {
     </>
   );
 }
+
 export default BookingPropertyDetail;
