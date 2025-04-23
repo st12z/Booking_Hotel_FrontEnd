@@ -21,7 +21,7 @@ function InterestedProperties(){
     },[]);
   return(
     <>
-      <h1>Bạn vẫn quan tâm đến những chỗ ở này ?</h1>
+      {data.length>0 && <h2>Có thể bạn sẽ thích</h2>}
       <Row gutter={[16, 16]}>
       {data?.map((item,index)=>(
         <Col span={4} key={index}>

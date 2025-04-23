@@ -41,7 +41,7 @@ function Discounts() {
     },[]);
   return (
     <div>
-      <h1>Giảm giá</h1>
+      <h2>Giảm giá khách sạn</h2>
       <Row gutter={[24,24]} style={{marginBottom:"10px"}}>
         {show ? (
             data?.map((item,index)=>(

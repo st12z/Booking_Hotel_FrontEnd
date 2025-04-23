@@ -24,7 +24,7 @@ function ExporeVietNam(props){
   }
   return(
     <>
-      <h1>Khám phá Việt Nam</h1>
+      <h2>Khám phá Việt Nam</h2>
       <Swiper 
           modules={[Virtual, Navigation, Pagination,Autoplay]}
           slidesPerView={5}

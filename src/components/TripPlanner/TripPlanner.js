@@ -35,7 +35,7 @@ function TripPlanner(){
   }
   return(
     <>
-      <h1>Kế hoạch chuyến đi</h1>
+      <h2>Kế hoạch chuyến đi</h2>
       <div className="trip">
         <ul>
           {dataTripType?.map((item,index)=>(

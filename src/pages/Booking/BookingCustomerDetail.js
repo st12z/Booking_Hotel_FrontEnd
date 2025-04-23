@@ -12,6 +12,9 @@ function BookingCustomerDetail() {
     flexDirection: "column",
     gap: 8,
   };
+  const handleChangeShuttle=(e)=>{
+    console.log(e.target.value);
+  }
   return (
     <>
       {user && (
@@ -175,7 +178,7 @@ function BookingCustomerDetail() {
                     name="isShuttleService"
                   >
                     <Radio.Group
-                      
+                      onChange={(e)=>handleChangeShuttle(e)}
                       style={style}
                       options={[
                         { value: 1, label: "Có." },

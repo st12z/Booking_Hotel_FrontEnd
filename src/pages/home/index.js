@@ -4,6 +4,7 @@ import RecentSearch from "../../components/RecentSearch/RecentSearch";
 import Destinations from "../../components/Destinations";
 import TripPlanner from "../../components/TripPlanner/TripPlanner";
 import { useEffect } from "react";
+import DiscountCars from "../../components/DiscountCars";
 
 function Home(){;
   return(
@@ -11,6 +12,7 @@ function Home(){;
       <RecentSearch/>
       <InterestedProperties/>
       <Discounts/>
+      <DiscountCars/>
       <Destinations/>
       <TripPlanner/>
     </>

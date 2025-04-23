@@ -21,19 +21,21 @@ function RecentSearch(){
   },[]);
   return(
     <>
-      <h1>Tìm kiếm gần đây</h1>
+      {data.length>0 && <h2>Tìm kiếm gần đây</h2>}
       <Row gutter={[16, 16]}>
       {data?.map((item,index)=>(
-        <Col span={4} key={index}>
-            <Link to={`/search?destination=${item.name}`}>
-              <div className="destination-suggest" key={index}>
-                <img src={item.image}/>
-                <div className="destination-suggest__name">
-                  <h3>{item.name}</h3>
+        <>
+          <Col span={4} key={index}>
+              <Link to={`/search?destination=${item.name}`}>
+                <div className="destination-suggest" key={index}>
+                  <img src={item.image}/>
+                  <div className="destination-suggest__name">
+                    <h3>{item.name}</h3>
+                  </div>
                 </div>
-              </div>
-            </Link>
-        </Col>
+              </Link>
+          </Col>
+        </>
       ))}
       </Row>
     </>

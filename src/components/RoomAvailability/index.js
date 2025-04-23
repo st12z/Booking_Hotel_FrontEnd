@@ -47,6 +47,8 @@ function RoomAvailability(props) {
 
   const [roomReversed, setRoomReversed] = useState([]);
 
+  const [reversedButtonLoading,setReversedButtonLoading] = useState(false);
+
   const user = useSelector((state) => state.user);
 
   // Thông tin đã kiểm tra phòng với yêu cầu
@@ -230,7 +232,11 @@ function RoomAvailability(props) {
           email: user.email,
         }
         const query = new URLSearchParams(requestQuery);
-        nav(`/booking?${query.toString()}`);
+        setReversedButtonLoading(true);
+        setTimeout(()=>{
+          setReversedButtonLoading(false);
+          nav(`/booking?${query.toString()}`);
+        },3000);
       }
       else{
         openNotification("topRight","Vui lòng kiểm tra lại!","red");
@@ -420,6 +426,7 @@ function RoomAvailability(props) {
       <Button
         type="primary"
         className="reverse-button"
+        loading={reversedButtonLoading}
         disabled={!roomReversed.length > 0}
         onClick={handleRequestReverse}
       >

@@ -39,7 +39,7 @@ function Destinations(){
   }
   return(
     <>
-      <h1>Điểm đến hấp dẫn</h1>
+      <h2>Điểm đến hấp dẫn</h2>
       <Row gutter={[10,10]}>
         {dataCities?.slice(0,5).map((item,index)=>(
           <Col key={index}  span={index<2 ? 12:8}>
