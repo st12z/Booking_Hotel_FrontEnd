@@ -2,17 +2,21 @@ import { Badge, Button, notification, Rate, Skeleton } from "antd";
 import "./BookingPropertyDetail.scss";
 import LocationIcon from "../../images/location-icon.jpg";
 import BedIcon from "../../images/bed-icon.jpg";
+
 import {
   getDate,
   getFormatPrice,
   getTime,
   getTotalDay,
 } from "../../utils/format";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { PriceContext } from ".";
 function BookingPropertyDetail(props) {
   const [api, contextHolder] = notification.useNotification();
   const [priceDiscount, setPriceDiscount] = useState(0);
   const [choosedId, setChoosedId] = useState(false);
+  const [loadingButtons, setLoadingButtons] = useState([]);
+  const { priceCar } = useContext(PriceContext);
   const openNotification = (placement, message, color, onClose) => {
     api.info({
       message: `Thông báo`,
@@ -49,7 +53,10 @@ function BookingPropertyDetail(props) {
       totalDay: totalDay,
     };
   });
-  const totalPromotion = updatedRoomReverseds.reduce((sum,item)=>sum+item.pricePromotion,0);
+  const totalPromotion = updatedRoomReverseds.reduce(
+    (sum, item) => sum + item.pricePromotion,
+    0
+  );
   const totalOrderOld = updatedRoomReverseds.reduce(
     (sum, item) => sum + item.totalPriceOld,
     0
@@ -57,28 +64,56 @@ function BookingPropertyDetail(props) {
   const totalOrderNew =
     updatedRoomReverseds.reduce((sum, item) => sum + item.totalPriceNew, 0) -
     priceDiscount;
-  const handleUseDiscount = (id) => {
-    const discount = myDiscounts.find((item) => item.id == id);
-    const minBookingAmount = discount.minBookingAmount;
-    if (minBookingAmount > totalOrderNew) {
-      openNotification(
-        "topRight",
-        "Phiếu giảm giá chưa đủ điều kiện để áp dụng!",
-        "red"
-      );
-      return;
-    }
-    const priceDiscountFromCoupon =
-      discount.discountType == "FIXED"
-        ? discount.discountValue
-        : totalOrderNew * ((1.0 * discount.discountValue) / 100);
-    setPriceDiscount(priceDiscountFromCoupon);
-    setChoosedId(id);
+  const handleUseDiscount = (index, id) => {
+    // set trạng thái loading của nút là true
+    setLoadingButtons((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+    // thời gian chạy loading là false, đồng thời gọi api check
+    setTimeout(async () => {
+      setLoadingButtons((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+      const discount = myDiscounts.find((item) => item.id == id);
+      const minBookingAmount = discount.minBookingAmount;
+      if (minBookingAmount > totalOrderNew) {
+        openNotification(
+          "topRight",
+          "Phiếu giảm giá chưa đủ điều kiện để áp dụng!",
+          "red"
+        );
+        return;
+      }
+      const priceDiscountFromCoupon =
+        discount.discountType == "FIXED"
+          ? discount.discountValue
+          : totalOrderNew * ((1.0 * discount.discountValue) / 100);
+      setPriceDiscount(priceDiscountFromCoupon);
+      setChoosedId(id);
+    }, 3000);
   };
   // button cancel discount
-  const handleCancelDiscount = (id) => {
-    setPriceDiscount(0);
-    setChoosedId(-1);
+  const handleCancelDiscount = (index, id) => {
+    // set trạng thái loading của nút là true
+    setLoadingButtons((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+    // thời gian chạy loading là false, đồng thời gọi api check
+    setTimeout(async () => {
+      setLoadingButtons((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+      setPriceDiscount(0);
+      setChoosedId(-1);
+    }, 3000);
   };
 
   return (
@@ -208,13 +243,17 @@ function BookingPropertyDetail(props) {
                 <b>Tổng tiền ban đầu: </b>
                 <span className="">{getFormatPrice(totalOrderOld)}</span>
               </p>
+              {priceCar > 0 && (
+                <p>
+                  <b>Giá xe: </b>
+                  {getFormatPrice(priceCar)}
+                </p>
+              )}
               <p>
-                <b>Khuyến mãi: </b>
-                - {getFormatPrice(totalPromotion)}
+                <b>Khuyến mãi: </b>- {getFormatPrice(totalPromotion)}
               </p>
               <p>
-                <b>Giảm giá: </b>
-                - {getFormatPrice(priceDiscount)}
+                <b>Giảm giá: </b>- {getFormatPrice(priceDiscount)}
               </p>
             </div>
             <p>
@@ -258,7 +297,8 @@ function BookingPropertyDetail(props) {
                     {choosedId != item.id ? (
                       <Button
                         type="primary"
-                        onClick={() => handleUseDiscount(item.id)}
+                        onClick={() => handleUseDiscount(index, item.id)}
+                        loading={loadingButtons[index]}
                       >
                         Sử dụng
                       </Button>
@@ -266,7 +306,8 @@ function BookingPropertyDetail(props) {
                       <Button
                         color="danger"
                         variant="solid"
-                        onClick={() => handleCancelDiscount(item.id)}
+                        onClick={() => handleCancelDiscount(index, item.id)}
+                        loading={loadingButtons[index]}
                       >
                         Hủy bỏ
                       </Button>

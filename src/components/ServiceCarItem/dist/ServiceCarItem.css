@@ -1,0 +1,41 @@
+.car__item {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.1);
+  height: 280px;
+  cursor: pointer;
+}
+.car__item--choosed {
+  border: 2px solid #CAA470;
+  border-radius: 10px;
+}
+.car__item__img {
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  width: 100%;
+}
+.car__item__img .item-image {
+  width: 100%;
+  height: 80%;
+  border-radius: 10px;
+}
+.car__item__img .tick-icon {
+  width: 30px;
+  position: absolute;
+}
+.car__item__content {
+  padding-left: 20px;
+}
+.car__item__content p {
+  margin: 2px;
+}
+.car__item__content .price-old {
+  color: red;
+  font-weight: 600;
+  text-decoration: line-through;
+}
+.car__item__content .price-new {
+  color: black;
+  font-weight: 600;
+  font-size: 16px;
+}

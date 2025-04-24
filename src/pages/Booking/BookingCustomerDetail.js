@@ -1,20 +1,21 @@
 import { useSelector } from "react-redux";
 import "./BookingCustomerDetail.scss";
-import { Button, Col, Form, Input, Radio, Row } from "antd";
+import { Button, Col, Form, Input, Radio, Row, Skeleton } from "antd";
 import TextArea from "antd/es/input/TextArea";
+import ServiceCar from "../../components/ServiceCar";
 function BookingCustomerDetail() {
   const user = useSelector((state) => state.user);
-  const handleSubmit = (e) => {
-    console.log(e);
-  };
+  
   const style = {
     display: "flex",
     flexDirection: "column",
     gap: 8,
   };
-  const handleChangeShuttle=(e)=>{
-    console.log(e.target.value);
-  }
+  const handleSubmit = (e) => {
+    console.log(e);
+  };
+
+ 
   return (
     <>
       {user && (
@@ -144,9 +145,7 @@ function BookingCustomerDetail() {
               <div className="info-optional">
                 <div className="">
                   <h2>Bạn đặt phòng cho ai ?</h2>
-                  <Form.Item
-                    name="bookingForWho"
-                  >
+                  <Form.Item name="bookingForWho">
                     <Radio.Group
                       style={style}
                       options={[
@@ -158,9 +157,7 @@ function BookingCustomerDetail() {
                 </div>
                 <div className="">
                   <h2>Bạn đặt phòng cho công việc ?</h2>
-                  <Form.Item
-                    name="isBusinessTrip"
-                  >
+                  <Form.Item name="isBusinessTrip">
                     <Radio.Group
                       style={style}
                       options={[
@@ -171,30 +168,12 @@ function BookingCustomerDetail() {
                   </Form.Item>
                 </div>
               </div>
-              <div className="info-service">
-                <div className="">
-                  <h2>Bạn có muốn dịch vụ xe đưa đón ?</h2>
-                  <Form.Item
-                    name="isShuttleService"
-                  >
-                    <Radio.Group
-                      onChange={(e)=>handleChangeShuttle(e)}
-                      style={style}
-                      options={[
-                        { value: 1, label: "Có." },
-                        { value: 2, label: "Không." },
-                      ]}
-                    />
-                  </Form.Item>
-                </div>
-              </div>
+              <ServiceCar />
               <div className="info-request">
                 <div className="">
                   <h2>Bạn có muốn gửi lời nhắn không ?</h2>
-                  <Form.Item
-                    name="specialMessage"
-                  >
-                    <TextArea rows={4}/>
+                  <Form.Item name="specialMessage">
+                    <TextArea rows={4} />
                   </Form.Item>
                 </div>
               </div>

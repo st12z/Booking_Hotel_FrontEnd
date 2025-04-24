@@ -44,6 +44,9 @@ function AuthWatcher() {
             "red",
             () => navigate("/login")
           );
+          setTimeout(()=>{
+            navigate("/login")
+          },5000)
         }
       } catch (err) {
         openNotification("topRight", "Phiên đăng nhập đã hết hạn!", "red", () =>

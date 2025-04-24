@@ -1,6 +1,6 @@
 
 
-export const API_DOMAIN="http://localhost:8072/bookinghotel/booking/api";
+export const API_DOMAIN="http://localhost:8072/bookinghotel/bookings/api";
 export const get = async(path)=>{
   const response =await fetch(`${API_DOMAIN}/${path}`)
   const result =await response.json();
