@@ -6,16 +6,17 @@ import { useSearchParams } from "react-router-dom";
 import { createContext, useEffect, useState } from "react";
 import { getRoomTypeById } from "../../service/RoomService/RoomTypeService";
 import { getPropertyId } from "../../service/RoomService/PropertyService";
-import { getDiscountsByUser } from "../../service/RoomService/DiscountService";
 import { LoadingOutlined } from "@ant-design/icons";
 import "./index.scss";
+import { getDiscountCarsByUser, getDiscountHotelsByUser } from "../../service/RoomService/DiscountService";
 export const PriceContext = createContext();
 function Booking() {
   const user = useSelector((state) => state.user);
   const [roomReverseds, setRoomReverseds] = useState([]);
   const [searchParams] = useSearchParams();
   const [property, setProperty] = useState();
-  const [myDiscounts, setMyDiscounts] = useState();
+  const [myDiscountHotels, setMyDiscountHotels] = useState();
+  const [myDiscountCars, setMyDiscountCars] = useState();
   // create context get price car
   const [priceCar, setPriceCar] = useState(0);
   
@@ -25,13 +26,13 @@ function Booking() {
     email: searchParams.get("email"),
     roomReverseds: JSON.parse(searchParams.get("roomReversed")),
   };
-  // Lấy phiếu giảm giá của người dùng
+  // Lấy phiếu giảm giá hotel của người dùng
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const resDiscounts = await getDiscountsByUser(user.email);
+        const resDiscounts = await getDiscountHotelsByUser(user.email);
         if (resDiscounts.code == 200) {
-          setMyDiscounts(resDiscounts.data);
+          setMyDiscountHotels(resDiscounts.data);
         }
       } catch (error) {
         console.error(error);
@@ -39,6 +40,22 @@ function Booking() {
     };
     fetchApi();
   }, []);
+
+  // Lấy phiếu giảm giá đặt xe của người dùng
+  useEffect(()=>{
+    const fetchApi = async () => {
+      try {
+        const resDiscounts = await getDiscountCarsByUser(user.email);
+        console.log(resDiscounts);
+        if (resDiscounts.code == 200) {
+          setMyDiscountCars(resDiscounts.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchApi();
+  },[]);
 
   // Thhông tin đặt phòng, phòng đặt
   useEffect(() => {
@@ -81,7 +98,8 @@ function Booking() {
             <BookingPropertyDetail
               property={property}
               roomReverseds={roomReverseds}
-              myDiscounts={myDiscounts}
+              myDiscountHotels={myDiscountHotels}
+              myDiscountCars={myDiscountCars}
             />
           </Col>
           <Col span={14}>

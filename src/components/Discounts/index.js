@@ -2,7 +2,7 @@ import { Button, Col, Row } from "antd";
 import DiscountItem from "./DiscountItem";
 import "./Discount.scss";
 import { useEffect, useState } from "react";
-import { getAllDiscounts, getDiscountsByUser } from "../../service/RoomService/DiscountService";
+import { getAllDiscounts, getDiscountHotelsByUser, getDiscountsByUser } from "../../service/RoomService/DiscountService";
 import { useSelector } from "react-redux";
 function Discounts() {
     const [show,setShowAll] = useState(false);
@@ -28,7 +28,7 @@ function Discounts() {
     useEffect(()=>{
       const fetchApi= async()=>{
         try{
-          const res = await getDiscountsByUser(user.email);  
+          const res = await getDiscountHotelsByUser(user.email);  
         
           if(res.code==200){
             setMyDiscounts(res.data);

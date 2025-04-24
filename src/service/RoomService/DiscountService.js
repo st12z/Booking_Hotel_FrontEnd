@@ -9,7 +9,11 @@ export const saveDiscount = async(id)=>{
   const result = await post(`discounts/save`,id);
   return result;
 }
-export const getDiscountsByUser = async(email)=>{
+export const getDiscountHotelsByUser = async(email)=>{
   const result = await get(`discounts/my-discounts/${email}`);
+  return result;
+}
+export const getDiscountCarsByUser = async(email)=>{
+  const result = await get(`discount-cars/my-discounts/${email}`);
   return result;
 }

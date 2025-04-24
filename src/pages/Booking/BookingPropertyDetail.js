@@ -14,8 +14,11 @@ import { PriceContext } from ".";
 function BookingPropertyDetail(props) {
   const [api, contextHolder] = notification.useNotification();
   const [priceDiscount, setPriceDiscount] = useState(0);
+  const [priceDiscountCar, setPriceDiscountCar] = useState(0);
   const [choosedId, setChoosedId] = useState(false);
+  const [choosedIdCar, setChoosedIdCar] = useState(false);
   const [loadingButtons, setLoadingButtons] = useState([]);
+  const [loadingButtonsCar, setLoadingButtonsCar] = useState([]);
   const { priceCar } = useContext(PriceContext);
   const openNotification = (placement, message, color, onClose) => {
     api.info({
@@ -29,8 +32,8 @@ function BookingPropertyDetail(props) {
       duration: 5,
     });
   };
-  const { property, roomReverseds, myDiscounts } = props;
-  if (!property || !roomReverseds || !myDiscounts) {
+  const { property, roomReverseds, myDiscountHotels, myDiscountCars } = props;
+  if (!property || !roomReverseds || !myDiscountHotels || !myDiscountCars) {
     return (
       <>
         <Skeleton active />
@@ -57,13 +60,15 @@ function BookingPropertyDetail(props) {
     (sum, item) => sum + item.pricePromotion,
     0
   );
-  const totalOrderOld = updatedRoomReverseds.reduce(
+  let totalOrderOld = updatedRoomReverseds.reduce(
     (sum, item) => sum + item.totalPriceOld,
     0
   );
+  totalOrderOld = totalOrderOld + priceCar;
   const totalOrderNew =
-    updatedRoomReverseds.reduce((sum, item) => sum + item.totalPriceNew, 0) -
-    priceDiscount;
+    updatedRoomReverseds.reduce((sum, item) => sum + item.totalPriceNew, 0) +priceCar -
+    priceDiscount -
+    priceDiscountCar;
   const handleUseDiscount = (index, id) => {
     // set trạng thái loading của nút là true
     setLoadingButtons((prevLoadings) => {
@@ -78,7 +83,7 @@ function BookingPropertyDetail(props) {
         newLoadings[index] = false;
         return newLoadings;
       });
-      const discount = myDiscounts.find((item) => item.id == id);
+      const discount = myDiscountHotels.find((item) => item.id == id);
       const minBookingAmount = discount.minBookingAmount;
       if (minBookingAmount > totalOrderNew) {
         openNotification(
@@ -115,7 +120,51 @@ function BookingPropertyDetail(props) {
       setChoosedId(-1);
     }, 3000);
   };
-
+  // Đặt xe
+  const handleUseDiscountCar = (index, id) => {
+    // set trạng thái loading của nút là true
+    setLoadingButtonsCar((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+    // thời gian chạy loading là false, đồng thời gọi api check
+    setTimeout(async () => {
+      setLoadingButtonsCar((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+      if(priceCar==0){
+        openNotification("topRight", "Vui lòng đặt xe trước!", "red");
+        return;
+      }
+      const discount = myDiscountCars.find((item) => item.id == id);
+      const priceDiscountFromCoupon =
+        priceCar * ((1.0 * discount.discountValue) / 100);
+      setPriceDiscountCar(priceDiscountFromCoupon);
+      setChoosedIdCar(id);
+    }, 3000);
+  };
+  // button cancel discount
+  const handleCancelDiscountCar = (index, id) => {
+    // set trạng thái loading của nút là true
+    setLoadingButtonsCar((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+    // thời gian chạy loading là false, đồng thời gọi api check
+    setTimeout(async () => {
+      setLoadingButtonsCar((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+      setPriceDiscountCar(0);
+      setChoosedIdCar(-1);
+    }, 3000);
+  };
   return (
     <>
       {contextHolder}
@@ -253,7 +302,10 @@ function BookingPropertyDetail(props) {
                 <b>Khuyến mãi: </b>- {getFormatPrice(totalPromotion)}
               </p>
               <p>
-                <b>Giảm giá: </b>- {getFormatPrice(priceDiscount)}
+                <b>Giảm giá khách sạn: </b>- {getFormatPrice(priceDiscount)}
+              </p>
+              <p>
+                <b>Giảm giá đặt xe: </b>- {getFormatPrice(priceDiscountCar)}
               </p>
             </div>
             <p>
@@ -263,12 +315,12 @@ function BookingPropertyDetail(props) {
           </div>
         </div>
       </div>
-      {myDiscounts && (
+      {myDiscountHotels && (
         <div className="booking-discounts">
           <div className="booking-discounts__header">
-            <p>Mã giảm giá</p>
+            <p>Mã giảm giá khách sạn</p>
           </div>
-          {myDiscounts.map((item, index) => (
+          {myDiscountHotels.map((item, index) => (
             <>
               <Badge.Ribbon
                 text={
@@ -277,8 +329,9 @@ function BookingPropertyDetail(props) {
                     : `${getFormatPrice(item.discountValue)}`
                 }
                 color="red"
+                key={index}
               >
-                <div className="booking-discounts__item" key={index}>
+                <div className="booking-discounts__item">
                   <div className="booking-discounts__item__image">
                     <img src={item.image} />
                   </div>
@@ -308,6 +361,55 @@ function BookingPropertyDetail(props) {
                         variant="solid"
                         onClick={() => handleCancelDiscount(index, item.id)}
                         loading={loadingButtons[index]}
+                      >
+                        Hủy bỏ
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </Badge.Ribbon>
+            </>
+          ))}
+        </div>
+      )}
+      {myDiscountCars && (
+        <div className="booking-discounts">
+          <div className="booking-discounts__header">
+            <p>Mã giảm giá đặt xe</p>
+          </div>
+          {myDiscountCars.map((item, index) => (
+            <>
+              <Badge.Ribbon
+                text={`${item.discountValue}%`}
+                color="red"
+                key={index}
+              >
+                <div className="booking-discounts__item">
+                  <div className="booking-discounts__item__image">
+                    <img src={item.images} />
+                  </div>
+                  <div className="booking-discounts__item__content">
+                    <p className="discount-code">{item.code}</p>
+                    <p>
+                      <b>Thời gian áp dụng: </b>
+                      {getDate(item.startDate)} - {getDate(item.endDate)}
+                    </p>
+                  </div>
+                  <div className="booking-discounts__item__use">
+                    {choosedIdCar != item.id ? (
+                      <Button
+                        type="primary"
+                        onClick={() => handleUseDiscountCar(index, item.id)}
+                        loading={loadingButtonsCar[index]}
+                      >
+                        Sử dụng
+                      </Button>
+                    ) : (
+                      <Button
+                        color="danger"
+                        variant="solid"
+                        onClick={() => handleCancelDiscountCar(index, item.id)}
+                        loading={loadingButtonsCar[index]}
                       >
                         Hủy bỏ
                       </Button>

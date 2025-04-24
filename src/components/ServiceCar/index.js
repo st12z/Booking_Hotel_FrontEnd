@@ -26,16 +26,14 @@ function ServiceCar() {
       choosedPrice: choosedPrice,
     };
   }, [choosedStars, choosedCarTypes, choosedPrice]);
-  console.log(data);
   // fetch data
   useEffect(() => {
-    setLoading(true);
+    if(show) setLoading(true);
     setTimeout(() => {
       fetchApiVehicles(data);
       setLoading(false);
     }, 2000);
   }, [data]);
-  console.log(data);
   const style = {
     display: "flex",
     flexDirection: "column",
@@ -45,7 +43,6 @@ function ServiceCar() {
   const fetchApiVehicles = async () => {
     try {
       const res = await getAllVehicles(data);
-      console.log(res);
       if (res.code == 200) {
         setDataCar(res.data);
       }
