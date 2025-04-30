@@ -1,22 +1,21 @@
 import { Badge, notification, Spin, Rate, Radio } from "antd";
 import { getFormatPrice } from "../../utils/format";
 import "./ServiceCarItem.scss";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import TickIcon from "../../images/tick-icon.jpg";
 import {
   cancelVehicle,
   holdVehicle,
 } from "../../service/BookingService/VehicleService";
 import { useSelector } from "react-redux";
-import { PriceContext } from "../../pages/Booking";
+import { Context } from "../../pages/Booking";
 
 function ServiceCarItem(props) {
-  const { item } = props;
+  const { item, choosedCar, onChangeChoosedCar } = props;
   const priceNew = item.price * (1 - item.discount / 100);
-  const [choosed, setChoosed] = useState([]);
   const [spin, setSpin] = useState(false);
   const user = useSelector((state) => state.user);
-  const {setPriceCar} = useContext(PriceContext);
+  const { priceCar, setPriceCar } = useContext(Context);
   // Thông báo
   const [api, contextHolder] = notification.useNotification();
   const openNotification = (placement, message, color) => {
@@ -41,66 +40,74 @@ function ServiceCarItem(props) {
         const res = await holdVehicle(data);
         console.log(res);
         if (res.code == 200) {
-          setPriceCar(priceNew);
+          setPriceCar(priceCar + priceNew);
           openNotification(
             "topRight",
-            "Đặt chỗ thành công trong 10 phút!",
+            `${res.message}`,
             "green"
           );
+          return true;
         } else {
-          openNotification("topRight", "Đặt xe thất bại!", "red");
+          openNotification("topRight", `"Đặt xe thất bại!"`, "red");
+          return false;
         }
       } catch (error) {
-        openNotification("topRight", "Đặt xe thất bại!", "red");
+        openNotification("topRight", `"Đặt xe thất bại!"`, "red");
         console.error(error);
+        return false;
       }
     } else {
       try {
         const res = await cancelVehicle(data);
         if (res.code == 200) {
-          setPriceCar(0);
+          setPriceCar(priceCar - priceNew);
           openNotification("topRight", "Hủy xe thành công!", "green");
+          return true;
         } else {
           openNotification("topRight", "Hủy xe thất bại!", "red");
+          return false;
         }
       } catch (error) {
         openNotification("topRight", "Hủy xe thất bại!", "red");
         console.error(error);
+        return false;
       }
     }
   };
   // Chọn xe
   const handleChooseCar = (id) => {
     setSpin(true);
-    setTimeout(() => {
-      const index = choosed.findIndex((i) => i == id);
+    setTimeout(async () => {
+      const index = choosedCar?.findIndex((i) => i == id);
       if (index != -1) {
-        fetchApi("cancel", id);
-        setChoosed(choosed.filter((i) => i != id));
+        const check = await fetchApi("cancel", id);
+        if (check) {
+          onChangeChoosedCar(choosedCar?.filter((i) => i != id));
+        }
         setSpin(false);
         return;
       }
-      fetchApi("hold", id);
-      setChoosed([...choosed, id]);
+      const check =await fetchApi("hold", id);
+      if(check) onChangeChoosedCar([...choosedCar, id]);
       setSpin(false);
     }, 2000);
   };
   return (
     <>
       {contextHolder}
-      
+
       <Spin tip="Loading" size="small" spinning={spin}>
         <Badge.Ribbon text={`${item.discount}%`} color="red">
           <div
             className={
-              choosed.includes(item.id)
+              choosedCar?.includes(item.id)
                 ? `car__item car__item--choosed`
                 : `car__item`
             }
             onClick={() => handleChooseCar(item.id)}
           >
             <div className="car__item__img">
-              {choosed.includes(item.id) && (
+              {choosedCar?.includes(item.id) && (
                 <img src={TickIcon} className="tick-icon" />
               )}
               <img src={item.images} alt="" className="item-image" />

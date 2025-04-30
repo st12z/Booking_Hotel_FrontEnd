@@ -12,3 +12,7 @@ export const cancelVehicle = async (data) => {
   const result = await post(`vehicles/cancel`, data);
   return result;
 }
+export const checkBookingVehicle = async (data) => {
+  const result = await post(`vehicles/check`,data);
+  return result;
+}

@@ -21,3 +21,7 @@ export const holdRooms = async(data)=>{
   const res = await post(`roomtypes/hold-rooms`,data);
   return res;
 }
+export const checkBookingRooms = async(data)=>{
+  const res= await post(`roomtypes/check-bookrooms`,data);
+  return res;
+}

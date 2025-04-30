@@ -5,10 +5,11 @@ import { DatePicker, Space ,Dropdown} from "antd";
 import { formatLocalDateTime } from "../../utils/format";
 import { useEffect, useState } from "react";
 import { getDestinationsBySearch } from "../../service/RoomService/DestinationService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../service/UserService/AuthService";
 import {HeartFilled} from "@ant-design/icons";
 import dayjs from "dayjs";
+import { login } from "../../action/login";
 
 const { RangePicker } = DatePicker;
 
@@ -27,6 +28,7 @@ function Header() {
   const [quantityBeds, setQuantityBeds] = useState(
     searchParams.get("quantityBeds") ? searchParams.get("quantityBeds") : ""
   );
+  const dispatch = useDispatch();
   const [dataDestinations, setDataDestinations] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const isLogin = useSelector((state) => state.login);
@@ -91,12 +93,14 @@ function Header() {
   };
   // Đăng xuất
   const handleLogout = () => {
-    localStorage.removeItem("access_token");
+    
     const fetchApi = async () => {
       try {
         const res = await logout("logout");
         if (res.code == 200) {
-          window.location.href = "/";
+          dispatch(login("LOGOUT"));
+          localStorage.removeItem("access_token");
+          window.location.href = "/login";
         }
       } catch (error) {
         console.error(error);

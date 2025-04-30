@@ -136,7 +136,7 @@ function Search() {
         {/* Filter */}
         <Col span={6}>
           <div className="map">
-            <img src="https://th.bing.com/th/id/OIP.-TMzwF-Nx7xrhvOdXqXp7QHaGR?rs=1&pid=ImgDetMain" style={{width:"200px"}}/>
+            <img src="https://th.bing.com/th/id/OIP.-QuVfq51mN6d80MDH16pUQHaD4?rs=1&pid=ImgDetMain" style={{width:"200px"}}/>
           </div>
           <Card title="Bộ lọc" style={{ width: 200,padding:0 }}>
             <div className="filter">

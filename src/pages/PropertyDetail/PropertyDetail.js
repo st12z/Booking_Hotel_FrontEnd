@@ -115,7 +115,7 @@ function PropertyDetail(){
                   <p>Lorem</p>
                 </Card>
                 <div className="map" style={{marginTop:"45px"}}>
-                  <img src="https://th.bing.com/th/id/OIP.-TMzwF-Nx7xrhvOdXqXp7QHaGR?rs=1&pid=ImgDetMain" style={{width:"300px"}}/>
+                  <img src="https://th.bing.com/th/id/OIP.-QuVfq51mN6d80MDH16pUQHaD4?rs=1&pid=ImgDetMain" style={{width:"300px"}}/>
                 </div>
               </Col>
               <Col span={20}>

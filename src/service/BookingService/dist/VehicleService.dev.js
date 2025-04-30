@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.cancelVehicle = exports.holdVehicle = exports.getAllVehicles = void 0;
+exports.checkBookingVehicle = exports.cancelVehicle = exports.holdVehicle = exports.getAllVehicles = void 0;
 
 var _requestBookingService = require("../../utils/requestBookingService");
 
@@ -75,3 +75,26 @@ var cancelVehicle = function cancelVehicle(data) {
 };
 
 exports.cancelVehicle = cancelVehicle;
+
+var checkBookingVehicle = function checkBookingVehicle(data) {
+  var result;
+  return regeneratorRuntime.async(function checkBookingVehicle$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
+          return regeneratorRuntime.awrap((0, _requestBookingService.post)("vehicles/check", data));
+
+        case 2:
+          result = _context4.sent;
+          return _context4.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  });
+};
+
+exports.checkBookingVehicle = checkBookingVehicle;

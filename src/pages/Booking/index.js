@@ -1,4 +1,4 @@
-import { Col, Row, Spin } from "antd";
+import { Col, Form, Row, Spin } from "antd";
 import BookingPropertyDetail from "./BookingPropertyDetail";
 import BookingCustomerDetail from "./BookingCustomerDetail";
 import { useSelector } from "react-redux";
@@ -9,7 +9,7 @@ import { getPropertyId } from "../../service/RoomService/PropertyService";
 import { LoadingOutlined } from "@ant-design/icons";
 import "./index.scss";
 import { getDiscountCarsByUser, getDiscountHotelsByUser } from "../../service/RoomService/DiscountService";
-export const PriceContext = createContext();
+export const Context = createContext();
 function Booking() {
   const user = useSelector((state) => state.user);
   const [roomReverseds, setRoomReverseds] = useState([]);
@@ -17,8 +17,10 @@ function Booking() {
   const [property, setProperty] = useState();
   const [myDiscountHotels, setMyDiscountHotels] = useState();
   const [myDiscountCars, setMyDiscountCars] = useState();
+  const [form] = Form.useForm();
+  
   // create context get price car
-  const [priceCar, setPriceCar] = useState(0);
+  let [priceCar, setPriceCar] = useState(0);
   
   const bookingRequest = {
     checkIn: searchParams.get("checkIn"),
@@ -68,18 +70,20 @@ function Booking() {
 
           if (resRoomType.code == 200) {
             const data = resRoomType.data;
-            propertyId = data.propertyId;
+            propertyId = data.propertyId;         
             newRoomReverseds.push({
               ...data,
               quantity: item.quantity,
               checkIn: item.checkIn,
               checkOut: item.checkOut,
             });
+            
           }
-          setRoomReverseds(newRoomReverseds);
+          
         }
+        setRoomReverseds(newRoomReverseds);
         if (propertyId) {
-          const resProperty = await getPropertyId(propertyId);
+          const resProperty = await getPropertyId( propertyId);
           if (resProperty.code == 200) {
             setProperty(resProperty.data);
           }
@@ -92,7 +96,7 @@ function Booking() {
   }, []);
   return (
     <>
-      <PriceContext.Provider value={{ priceCar, setPriceCar }}>
+      <Context.Provider value={{ priceCar, setPriceCar ,form}}>
         <Row gutter={[16, 16]}>
           <Col span={10}>
             <BookingPropertyDetail
@@ -106,7 +110,7 @@ function Booking() {
             <BookingCustomerDetail user={user} />
           </Col>
         </Row>
-      </PriceContext.Provider>
+      </Context.Provider>
     </>
   );
 }

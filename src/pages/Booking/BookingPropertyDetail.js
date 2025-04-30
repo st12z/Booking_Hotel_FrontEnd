@@ -9,17 +9,20 @@ import {
   getTime,
   getTotalDay,
 } from "../../utils/format";
-import { useContext, useEffect, useState } from "react";
-import { PriceContext } from ".";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { Context } from ".";
 function BookingPropertyDetail(props) {
+  const { form } = useContext(Context);
+  const { priceCar } = useContext(Context);
   const [api, contextHolder] = notification.useNotification();
   const [priceDiscount, setPriceDiscount] = useState(0);
-  const [priceDiscountCar, setPriceDiscountCar] = useState(0);
+  // discount hotel được chọn
   const [choosedId, setChoosedId] = useState(false);
+  // discount car được chọn
   const [choosedIdCar, setChoosedIdCar] = useState(false);
   const [loadingButtons, setLoadingButtons] = useState([]);
   const [loadingButtonsCar, setLoadingButtonsCar] = useState([]);
-  const { priceCar } = useContext(PriceContext);
+  
   const openNotification = (placement, message, color, onClose) => {
     api.info({
       message: `Thông báo`,
@@ -32,14 +35,7 @@ function BookingPropertyDetail(props) {
       duration: 5,
     });
   };
-  const { property, roomReverseds, myDiscountHotels, myDiscountCars } = props;
-  if (!property || !roomReverseds || !myDiscountHotels || !myDiscountCars) {
-    return (
-      <>
-        <Skeleton active />
-      </>
-    );
-  }
+  const { property, roomReverseds, myDiscountHotels, myDiscountCars} = props;
   const updatedRoomReverseds = roomReverseds.map((item) => {
     const totalDay = getTotalDay(item.checkIn, item.checkOut);
     const priceNew = item.price * (1 - (1.0 * item.discount) / 100);
@@ -56,19 +52,44 @@ function BookingPropertyDetail(props) {
       totalDay: totalDay,
     };
   });
+  // set propertyId vào form
+  // set propertyId vào form
+  form.setFieldsValue({
+    propertyId: props.property?.id,
+  });
+  // Đặt xe
+  const priceDiscountCar = useMemo(() => {
+    if (choosedIdCar == -1) {
+      return 0;
+    }
+    const discount = myDiscountCars?.find((item) => item.id == choosedIdCar);
+    if (!discount) return 0; // thêm phòng lỗi discount không tồn tại
+
+    return priceCar * (discount.discountValue / 100);
+  }, [priceCar, choosedIdCar, myDiscountCars]);
+  // Tổng khuyến mãi
   const totalPromotion = updatedRoomReverseds.reduce(
     (sum, item) => sum + item.pricePromotion,
     0
   );
+  // Tổng tiền đặt khách sạn
+  let totalPaymentHotel = updatedRoomReverseds.reduce(
+    (sum, item) => sum + item.totalPriceOld,
+    0
+  );
+  // Tổng tiền ban đầu
   let totalOrderOld = updatedRoomReverseds.reduce(
     (sum, item) => sum + item.totalPriceOld,
     0
   );
   totalOrderOld = totalOrderOld + priceCar;
+  // Tổng tiền mới
   const totalOrderNew =
-    updatedRoomReverseds.reduce((sum, item) => sum + item.totalPriceNew, 0) +priceCar -
+    updatedRoomReverseds.reduce((sum, item) => sum + item.totalPriceNew, 0) +
+    priceCar -
     priceDiscount -
     priceDiscountCar;
+  // sử dụng discount hotel
   const handleUseDiscount = (index, id) => {
     // set trạng thái loading của nút là true
     setLoadingButtons((prevLoadings) => {
@@ -101,7 +122,33 @@ function BookingPropertyDetail(props) {
       setChoosedId(id);
     }, 3000);
   };
-  // button cancel discount
+
+  // set form
+  form.setFieldsValue({
+    discountHotel: priceDiscount, // phiếu giảm giá khách sạn
+    discountCar: priceDiscountCar, // phiếu giảm giá xe
+    pricePromotion: totalPromotion, // tổng tiền khuyến mãi
+    originTotalPayment: totalOrderOld, // tổng tiền ban đầu
+    newTotalPayment: totalOrderNew, // tổng tiền mới
+  });
+  let roomTypes = [];
+  updatedRoomReverseds?.forEach((item) => {
+    roomTypes.push({
+      roomTypeId: item.id,
+      quantityRooms: item.quantity,
+      checkIn: item.checkIn,
+      checkOut: item.checkOut,
+      dayStays: item.totalDay,
+      originPayment: item.totalPriceOld,
+      promotion: item.pricePromotion,
+      newPayment: item.totalPriceNew,
+      propertyId: item.propertyId,
+    });
+  });
+  form.setFieldsValue({
+    roomTypes: roomTypes,
+  });
+  // Nút hủy dùng discount của hotel
   const handleCancelDiscount = (index, id) => {
     // set trạng thái loading của nút là true
     setLoadingButtons((prevLoadings) => {
@@ -120,7 +167,7 @@ function BookingPropertyDetail(props) {
       setChoosedId(-1);
     }, 3000);
   };
-  // Đặt xe
+  // sử dụng discont car
   const handleUseDiscountCar = (index, id) => {
     // set trạng thái loading của nút là true
     setLoadingButtonsCar((prevLoadings) => {
@@ -135,18 +182,15 @@ function BookingPropertyDetail(props) {
         newLoadings[index] = false;
         return newLoadings;
       });
-      if(priceCar==0){
+      if (priceCar == 0) {
         openNotification("topRight", "Vui lòng đặt xe trước!", "red");
         return;
       }
-      const discount = myDiscountCars.find((item) => item.id == id);
-      const priceDiscountFromCoupon =
-        priceCar * ((1.0 * discount.discountValue) / 100);
-      setPriceDiscountCar(priceDiscountFromCoupon);
+
       setChoosedIdCar(id);
     }, 3000);
   };
-  // button cancel discount
+  // nút hủy dùng discount car
   const handleCancelDiscountCar = (index, id) => {
     // set trạng thái loading của nút là true
     setLoadingButtonsCar((prevLoadings) => {
@@ -161,10 +205,19 @@ function BookingPropertyDetail(props) {
         newLoadings[index] = false;
         return newLoadings;
       });
-      setPriceDiscountCar(0);
       setChoosedIdCar(-1);
     }, 3000);
   };
+  if(choosedIdCar != -1){
+    form.setFieldsValue({
+      discountCarId: choosedIdCar, // phiếu giảm giá xe
+    })
+  }
+  if(choosedId != -1){
+    form.setFieldsValue({
+      discountHotelId: choosedId, // phiếu giảm giá khách sạn
+    })
+  }
   return (
     <>
       {contextHolder}
@@ -289,8 +342,8 @@ function BookingPropertyDetail(props) {
           <div className="price__total">
             <div className="price__total-old">
               <p>
-                <b>Tổng tiền ban đầu: </b>
-                <span className="">{getFormatPrice(totalOrderOld)}</span>
+                <b>Tổng tiền khách sạn: </b>
+                {getFormatPrice(totalPaymentHotel)}
               </p>
               {priceCar > 0 && (
                 <p>
@@ -307,7 +360,12 @@ function BookingPropertyDetail(props) {
               <p>
                 <b>Giảm giá đặt xe: </b>- {getFormatPrice(priceDiscountCar)}
               </p>
+              <p>
+                <b>Tổng tiền ban đầu: </b>
+                <span className="">{getFormatPrice(totalOrderOld)}</span>
+              </p>
             </div>
+
             <p>
               <b>Tổng tiền: </b>
               {getFormatPrice(totalOrderNew)}

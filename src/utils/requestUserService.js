@@ -1,4 +1,4 @@
-export const API_DOMAIN="http://localhost:8072/bookinghotel/users/api";
+export const API_DOMAIN="http://localhost:8072/bookinghotel/users/api/users";
 export const getCredentials = async(path)=>{
   const response =await fetch(`${API_DOMAIN}/${path}`,{
     method:"GET",
