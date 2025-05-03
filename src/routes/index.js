@@ -8,6 +8,7 @@ import CallBackPage from "../pages/CallBackPage";
 import PropertiesTym from "../pages/PropertiesTym";
 import Booking from "../pages/Booking";
 import PrivateRoute from "../components/PrivateRoutes";
+import PaymentCallBack from "../pages/PaymentCallBack";
 export const routes=[
   {
     path:"/",
@@ -47,6 +48,10 @@ export const routes=[
           {
             path:"/booking",
             element: <Booking/>
+          },
+          {
+            path:"/payments",
+            element: <PaymentCallBack/>
           }
         ]
       }

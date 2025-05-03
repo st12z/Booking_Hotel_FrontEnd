@@ -66,7 +66,7 @@ function BookingCustomerDetail() {
   const handlePayment = async(e)=>{
     try{
       const res = await confirmBooking(e);
-      window.open(res.data, "_blank");
+      window.open(res.data, "_self");
     }catch(err){
       console.error(err);
     }

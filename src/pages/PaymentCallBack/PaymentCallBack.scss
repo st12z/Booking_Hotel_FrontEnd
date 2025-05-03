@@ -1,0 +1,33 @@
+.payment{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  &__item{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 500px;
+    border: 1px solid #ddd;
+    height: 400px;
+    box-shadow: rgb(0, 0, 0,0.2);
+    border-radius: 10px;
+    padding-bottom: 40px;
+    &__header{
+      border-bottom: 1px solid #ddd;
+    }
+    &__content{
+      img{
+        background-color: white;
+        width: 100px;
+      }
+    }
+    &__footer{
+      button{
+        font-size: 15px;
+        margin: 20px;
+        padding: 5px;
+        border: 1px solid #ddd;
+      }
+    }
+  }
+}
