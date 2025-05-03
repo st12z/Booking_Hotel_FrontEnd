@@ -30,7 +30,6 @@ function RoomAvailability(props) {
   const params = useParams();
 
   const [roomTypes, setRoomTypes] = useState(props.roomTypes);
-
   const [checkIn, setCheckIn] = useState();
 
   const [checkOut, setCheckOut] = useState();
@@ -57,6 +56,7 @@ function RoomAvailability(props) {
     {
       roomTypeId: -1,
       quantity: -1,
+      propertyId: roomTypes[0]?.propertyId,
     },
   ]);
 
@@ -111,11 +111,13 @@ function RoomAvailability(props) {
 
   // Hàm kiểm tra có đủ số lượng phòng để đặt
   const fetchApi = async (id) => {
+    console.log(quantityRooms);
     let room = quantityRooms?.find((room) => room.roomTypeId == id);
     if (!room) {
       room = {
         roomTypeId: id,
         quantity: 1,
+        propertyId: roomTypes[0].propertyId,
       };
     }
     let checkRequest = {
@@ -127,6 +129,7 @@ function RoomAvailability(props) {
     setCheckRequest(checkRequest);
     try {
       const res = await checkEnoughQuantityRooms("check-room", checkRequest);
+      console.log(checkRequest);
       if (res.code == 200) {
         const data = res.data;
         if (data < checkRequest.quantity) {
@@ -203,6 +206,7 @@ function RoomAvailability(props) {
           : {
               roomTypeId: id,
               quantity: value,
+              propertyId: roomTypes[0].propertyId,
             }
       )
     );

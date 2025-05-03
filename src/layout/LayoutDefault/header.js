@@ -1,43 +1,50 @@
 import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import "./header.scss";
 import { DownOutlined, HomeOutlined } from "@ant-design/icons";
-import { DatePicker, Space ,Dropdown} from "antd";
+import { DatePicker, Space, Dropdown } from "antd";
 import { formatLocalDateTime } from "../../utils/format";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getDestinationsBySearch } from "../../service/RoomService/DestinationService";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../service/UserService/AuthService";
-import {HeartFilled} from "@ant-design/icons";
+import { HeartFilled } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { login } from "../../action/login";
+import { addParamIfExists } from "../../utils/appendParams";
+import { SearchContext } from ".";
 
 const { RangePicker } = DatePicker;
 
 function Header() {
   const [searchParams] = useSearchParams();
   const nav = useNavigate();
-  const [destination, setDestination] = useState(
-    searchParams.get("destination") ? searchParams.get("destination") : ""
-  );
-  const [checkIn, setCheckIn] = useState(
-    searchParams.get("checkIn") ? searchParams.get("checkIn") : ""
-  );
-  const [checkOut, setcheckOut] = useState(
-    searchParams.get("checkOut") ? searchParams.get("checkOut") : ""
-  );
-  const [quantityBeds, setQuantityBeds] = useState(
-    searchParams.get("quantityBeds") ? searchParams.get("quantityBeds") : ""
-  );
+  const [destination, setDestination] = useState();
+  const [checkIn, setCheckIn] = useState();
+  const [checkOut, setCheckOut] = useState();
+  const [quantityBeds, setQuantityBeds] = useState();
+  const { searchTrigger, setSearchTrigger } = useContext(SearchContext);
+  useEffect(() => {
+    setDestination(searchParams.get("destination") || null);
+    setCheckIn(searchParams.get("checkIn") || null);
+    setCheckOut(searchParams.get("checkOut") || null);
+    setQuantityBeds(searchParams.get("quantityBeds") || null);
+  }, [searchParams]);
+
   const dispatch = useDispatch();
   const [dataDestinations, setDataDestinations] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const isLogin = useSelector((state) => state.login);
   const user = useSelector((state) => state.user);
-  
+
   const handleChange = (e) => {
-    const destination = e.target.value;
-    setDestination(destination);
-    setShowSearch(true);
+    if (e.target.value.length > 0) {
+      const destination = e.target.value;
+      setDestination(destination);
+      setShowSearch(true);
+    } else {
+      setShowSearch(false);
+      setDestination("");
+    }
   };
   const handleClickDestination = (destination) => {
     setDestination(destination);
@@ -55,7 +62,7 @@ function Header() {
     }
   };
   useEffect(() => {
-    if (destination.length > 0) {
+    if (destination?.length > 0) {
       const timeOut = setTimeout(() => {
         fetchApi();
       }, 1000);
@@ -64,18 +71,28 @@ function Header() {
     }
   }, [destination]);
 
-  const params = new URLSearchParams();
-  // kiểm tra nếu tồn tại giá trị thì add thêm params
-  const addParamIfExists = (key, value) => {
-    if (value) params.append(key, value);
-  };
+  let params = new URLSearchParams();
+
   // form tìm kiếm
   const handleSubmit = (e) => {
+    setSearchTrigger(!searchTrigger);
     e.preventDefault();
-    addParamIfExists("destination", e.target[0].value);
-    addParamIfExists("checkIn", formatLocalDateTime(e.target[1].value || ""));
-    addParamIfExists("checkOut", formatLocalDateTime(e.target[2].value || ""));
-    addParamIfExists("quantityBeds", e.target[3].value);
+    params = addParamIfExists(params, "destination", e.target[0].value.trim());
+    params = addParamIfExists(
+      params,
+      "checkIn",
+      formatLocalDateTime(e.target[1].value.trim() || null)
+    );
+    params = addParamIfExists(
+      params,
+      "checkOut",
+      formatLocalDateTime(e.target[2].value.trim() || null)
+    );
+    params = addParamIfExists(
+      params,
+      "quantityBeds",
+      e.target[3].value.trim() || null
+    );
     setShowSearch(false);
     const destinationArray = localStorage.getItem("destinations")
       ? JSON.parse(localStorage.getItem("destinations"))
@@ -88,12 +105,10 @@ function Header() {
         destinationArray.push(e.target[0].value);
       }
     }
-    localStorage.setItem("destinations", JSON.stringify(destinationArray));
-    window.location.href = `/search?${params.toString()}`;
+    nav(`/search?${params.toString()}`);
   };
   // Đăng xuất
   const handleLogout = () => {
-    
     const fetchApi = async () => {
       try {
         const res = await logout("logout");
@@ -111,22 +126,22 @@ function Header() {
   const items = [
     {
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="https://www.antgroup.com">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://www.antgroup.com"
+        >
           Setting
         </a>
       ),
-      key: '0',
+      key: "0",
     },
     {
-      label: (
-        <span  onClick={handleLogout}>
-          Đăng xuất
-        </span>
-      ),
-      key: '1',
+      label: <span onClick={handleLogout}>Đăng xuất</span>,
+      key: "1",
     },
     {
-      type: 'divider',
+      type: "divider",
     },
   ];
   return (
@@ -144,12 +159,11 @@ function Header() {
                 </li>
                 <li>
                   <NavLink to="/properties-tym">
-                    Yêu thích <HeartFilled style={{color:"red"}}/>
+                    Yêu thích <HeartFilled style={{ color: "red" }} />
                   </NavLink>
                 </li>
                 {isLogin ? (
                   <li className="user-log">
-                    
                     <Dropdown menu={{ items }}>
                       <a onClick={(e) => e.preventDefault()}>
                         <Space>
@@ -158,7 +172,6 @@ function Header() {
                         </Space>
                       </a>
                     </Dropdown>
-                    
                   </li>
                 ) : (
                   <>
@@ -203,10 +216,16 @@ function Header() {
                 )}
               </div>
               <div className="header__bottom__search__timeline">
-                <RangePicker  defaultValue={[
-                              checkIn ?dayjs(checkIn):null,
-                              checkOut?dayjs(checkOut):null
-                            ]}/>
+                <RangePicker
+                  value={[
+                    checkIn ? dayjs(checkIn) : null,
+                    checkOut ? dayjs(checkOut) : null,
+                  ]}
+                  onChange={(dates) => {
+                    setCheckIn(dates?.[0]?.toISOString() || null);
+                    setCheckOut(dates?.[1]?.toISOString() || null);
+                  }}
+                />
               </div>
               <div className="header__bottom__search__quantity">
                 <input
@@ -215,6 +234,9 @@ function Header() {
                   name="quantityBeds"
                   max={4}
                   value={quantityBeds}
+                  onChange={(e) => {
+                    setQuantityBeds(e.target.value);
+                  }}
                 />
               </div>
               <div className="header__bottom__search__button">

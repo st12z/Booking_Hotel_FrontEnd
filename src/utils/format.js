@@ -1,5 +1,8 @@
 export const formatLocalDateTime = (value) => {
   if (!value) return "";
+  if (typeof value === "string") {
+    value = value.trim(); // <-- Thêm dòng này
+  }
   if (typeof value.format === "function") {
     return value.format("YYYY-MM-DDTHH:mm:ss");
   }
@@ -12,6 +15,7 @@ export const formatLocalDateTime = (value) => {
     date.getSeconds()
   )}`;
 };
+
 
 export const getDate = (dateString) => {
   const date = new Date(dateString);

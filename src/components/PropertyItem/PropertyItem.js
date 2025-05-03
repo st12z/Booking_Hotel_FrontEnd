@@ -12,7 +12,6 @@ function PropertyItem(props){
     if(index!==-1) setTym(true);
   },[tym]);
   const {item} = props;
-  console.log(tym);
   const handleAddPropertiesLocal=(slug)=>{
     let properties = localStorage.getItem("properties") ? JSON.parse(localStorage.getItem("properties")) : [];
     if(properties.length== 0){

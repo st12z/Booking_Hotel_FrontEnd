@@ -17,9 +17,9 @@ function BookingPropertyDetail(props) {
   const [api, contextHolder] = notification.useNotification();
   const [priceDiscount, setPriceDiscount] = useState(0);
   // discount hotel được chọn
-  const [choosedId, setChoosedId] = useState(false);
+  const [choosedId, setChoosedId] = useState(-1);
   // discount car được chọn
-  const [choosedIdCar, setChoosedIdCar] = useState(false);
+  const [choosedIdCar, setChoosedIdCar] = useState(-1);
   const [loadingButtons, setLoadingButtons] = useState([]);
   const [loadingButtonsCar, setLoadingButtonsCar] = useState([]);
   
