@@ -9,6 +9,8 @@ import PropertiesTym from "../pages/PropertiesTym";
 import Booking from "../pages/Booking";
 import PrivateRoute from "../components/PrivateRoutes";
 import PaymentCallBack from "../pages/PaymentCallBack";
+import MyBill from "../pages/MyBill";
+import BillDetail from "../pages/BillDetail";
 export const routes=[
   {
     path:"/",
@@ -52,6 +54,14 @@ export const routes=[
           {
             path:"/payments",
             element: <PaymentCallBack/>
+          },
+          {
+            path:"/bills",
+            element: <MyBill />
+          },
+          {
+            path:"/bills/:billCode",
+            element: <BillDetail/>
           }
         ]
       }

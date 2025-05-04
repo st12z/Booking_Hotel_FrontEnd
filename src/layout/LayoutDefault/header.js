@@ -154,25 +154,29 @@ function Header() {
             </div>
             <div className="header__top__menu">
               <ul>
-                <li>
-                  <NavLink to="/your-rooms">Danh sách phòng của bạn</NavLink>
-                </li>
+                {isLogin && (
+                  <li>
+                    <NavLink to="/bills">Thông tin đặt phòng</NavLink>
+                  </li>
+                )}
                 <li>
                   <NavLink to="/properties-tym">
                     Yêu thích <HeartFilled style={{ color: "red" }} />
                   </NavLink>
                 </li>
                 {isLogin ? (
-                  <li className="user-log">
-                    <Dropdown menu={{ items }}>
-                      <a onClick={(e) => e.preventDefault()}>
-                        <Space>
-                          {user?.lastName}
-                          <DownOutlined />
-                        </Space>
-                      </a>
-                    </Dropdown>
-                  </li>
+                  <>
+                    <li className="user-log">
+                      <Dropdown menu={{ items }}>
+                        <a onClick={(e) => e.preventDefault()}>
+                          <Space>
+                            {user?.lastName}
+                            <DownOutlined />
+                          </Space>
+                        </a>
+                      </Dropdown>
+                    </li>
+                  </>
                 ) : (
                   <>
                     <li className="user-log">

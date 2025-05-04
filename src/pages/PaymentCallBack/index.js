@@ -21,7 +21,7 @@ function PaymentCallBack() {
             </div>
             <div className="payment__item__footer">
               <Button icon={<ContainerOutlined />}>
-                <Link to={`/bill/${billCode}`}>Xem chi tiết hóa đơn</Link>
+                <Link to={`/bills/${billCode}`}>Xem chi tiết hóa đơn</Link>
               </Button>
               <Button icon={<HomeOutlined />}>
                 <Link to="/">Trở về trang chủ</Link>

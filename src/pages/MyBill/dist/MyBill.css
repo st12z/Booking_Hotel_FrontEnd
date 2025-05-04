@@ -1,0 +1,31 @@
+.form-search {
+  margin-bottom: 10px;
+  display: flex;
+}
+.form-search .input-search {
+  position: relative;
+}
+.form-search .input-search input {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 250px;
+  height: 40px;
+  box-shadow: rgba(0, 0, 0, 0.2);
+  margin-right: 5px;
+}
+.form-search .input-search .icon-search {
+  right: 10px;
+  font-size: 18px;
+  top: 50%;
+  bottom: 50%;
+  position: absolute;
+}
+.form-search button {
+  border-radius: 5px;
+  padding: 10px;
+  width: 100px;
+  background-color: #0932A0;
+  color: white;
+  font-size: 600;
+  cursor: pointer;
+}
