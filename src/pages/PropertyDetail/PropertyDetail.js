@@ -7,6 +7,7 @@ import { Card, Col, Row } from "antd";
 import RoomAvailability from "../../components/RoomAvailability";
 import { getPropertyBySlug } from "../../service/RoomService/PropertyService";
 import { getRoomTypesBySlugProperty } from "../../service/RoomService/RoomTypeService";
+import Review from "../../components/Review";
 function PropertyDetail(){
   const [item,setItem] = useState();
   const [tym,setTym] = useState(false);
@@ -119,8 +120,8 @@ function PropertyDetail(){
                 </div>
               </Col>
               <Col span={20}>
-                <div className="property__body__overview">
-                  <p>{item.overview}</p>
+                <div className="property__body__overview" >
+                  <p >{item.overview}</p>
                 </div>
               </Col>
               <Col span={4} >
@@ -154,6 +155,9 @@ function PropertyDetail(){
               <Col span={24}>
                 {/* Đặt phòng */}
                 <RoomAvailability roomTypes={roomTypes}/>
+              </Col>
+              <Col span={24}>
+                <Review />
               </Col>
             </Row>
           </div>

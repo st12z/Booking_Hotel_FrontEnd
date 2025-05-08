@@ -1,0 +1,142 @@
+.header {
+  background-color: #0932A0;
+  position: relative;
+  margin-bottom: 50px;
+}
+.header__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0 20px 0;
+}
+.header__top__logo a {
+  font-size: 30px;
+  text-decoration: none;
+  font-weight: 700;
+  color: white;
+}
+.header__top__menu ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+.header__top__menu ul .user-log {
+  display: inline-block;
+}
+.header__top__menu ul .user-log a {
+  color: #0932A0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+.header__top__menu ul li {
+  margin-right: 20px;
+}
+.header__top__menu ul li a {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+}
+.header__bottom {
+  padding: 20px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+}
+.header__bottom__content {
+  margin-bottom: 40px;
+}
+.header__bottom__content h1 {
+  font-size: 40px;
+}
+.header__bottom__search {
+  background-color: #F5AC0E;
+  position: absolute;
+  bottom: -20px;
+  width: 80%;
+  display: flex;
+  padding: 5px;
+}
+.header__bottom__search__input {
+  width: 30%;
+  position: relative;
+}
+.header__bottom__search__input input {
+  width: 100%;
+  padding: 15px 10px 15px 40px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+}
+.header__bottom__search__input .search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: black;
+  font-size: 20px;
+}
+.header__bottom__search__input__data {
+  position: absolute;
+  bottom: -105px;
+  background-color: white;
+  width: 350px;
+  border: 1px solid #F5AC0E;
+  max-height: 500px;
+  height: 100px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  z-index: 999;
+}
+.header__bottom__search__input__data ul {
+  list-style: none;
+  padding-left: 5px;
+  margin: 0;
+  padding: 0;
+}
+.header__bottom__search__input__data ul li {
+  color: black;
+  border-bottom: 1px solid #F5AC0E;
+  cursor: pointer;
+  padding: 8px;
+  transition: background-color 0.2s;
+}
+.header__bottom__search__input__data ul li:hover {
+  background-color: #F5AC0E;
+  color: white;
+}
+.header__bottom__search__timeline {
+  margin-left: 5px;
+  width: 30%;
+}
+.header__bottom__search__timeline div {
+  width: 100%;
+  padding: 6.8px;
+}
+.header__bottom__search__quantity {
+  width: 25%;
+  margin-left: 5px;
+}
+.header__bottom__search__quantity input {
+  width: 100%;
+  padding: 15px 10px 15px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+}
+.header__bottom__search__button {
+  width: 20%;
+  margin-left: 25px;
+}
+.header__bottom__search__button button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  background-color: #0932A0;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}

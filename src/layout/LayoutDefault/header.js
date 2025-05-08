@@ -1,4 +1,4 @@
-import { NavLink, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import "./header.scss";
 import { DownOutlined, HomeOutlined } from "@ant-design/icons";
 import { DatePicker, Space, Dropdown } from "antd";
@@ -35,7 +35,6 @@ function Header() {
   const [showSearch, setShowSearch] = useState(false);
   const isLogin = useSelector((state) => state.login);
   const user = useSelector((state) => state.user);
-
   const handleChange = (e) => {
     if (e.target.value.length > 0) {
       const destination = e.target.value;
@@ -126,24 +125,25 @@ function Header() {
   const items = [
     {
       label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://www.antgroup.com"
-        >
-          Setting
-        </a>
+        <span>{user.lastName}</span>
       ),
       key: "0",
     },
     {
-      label: <span onClick={handleLogout}>Đăng xuất</span>,
+      label: (
+        <Link to="user-setting">Cài đặt chung</Link>
+      ),
       key: "1",
+    },
+    {
+      label: <span onClick={handleLogout}>Đăng xuất</span>,
+      key: "2",
     },
     {
       type: "divider",
     },
   ];
+  console.log(isLogin);
   return (
     <>
       <div className="header">
@@ -166,11 +166,11 @@ function Header() {
                 </li>
                 {isLogin ? (
                   <>
-                    <li className="user-log">
+                    <li className="">
                       <Dropdown menu={{ items }}>
                         <a onClick={(e) => e.preventDefault()}>
                           <Space>
-                            {user?.lastName}
+                            <img src={user?.avatar} style={{width:"50px",height:"50px",borderRadius:"50%",objectFit:"contain"}}/>
                             <DownOutlined />
                           </Space>
                         </a>
@@ -179,10 +179,10 @@ function Header() {
                   </>
                 ) : (
                   <>
-                    <li className="user-log">
+                    <li className="">
                       <NavLink to="/login">Đăng nhập</NavLink>
                     </li>
-                    <li className="user-log">
+                    <li className="">
                       <NavLink to="/register">Đăng ký</NavLink>
                     </li>
                   </>

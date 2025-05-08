@@ -10,6 +10,7 @@ import { getFormatPrice } from "../../utils/format";
 import { EyeOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import "./MyBill.scss";
+import { getPropertyId } from "../../service/RoomService/PropertyService";
 function MyBill() {
   const user = useSelector((state) => state.user);
   const [data, setData] = useState([]);
@@ -22,11 +23,23 @@ function MyBill() {
       setLoading(true);
       try {
         const res = await getMyBills(user.email, pageNo, pageSize);
+        console.log(res);
         if (res.code == 200) {
-          setData(res.data.dataPage);
+          const resData = res.data.dataPage;
+          let newData=[];
           setPageNo(res.data.pageNo);
           setPageSize(res.data.pageSize);
           setTotal(res.data.total);
+          for(const item of resData){
+            const resProperty= await getPropertyId(item.propertyId);
+            if(resProperty.code==200){
+              newData.push({
+                ...item,
+                property:resProperty.data
+              })
+            }
+          }
+          setData(newData);
         }
       } catch (error) {
         console.error(error);
@@ -50,6 +63,23 @@ function MyBill() {
           <p>
             <b>{record.billCode}</b>
           </p>
+        </>
+      ),
+    },
+    {
+      title: "Khách sạn",
+      key: "billcode",
+      render: (_, record) => (
+        <>
+          <div 
+            style={{ 
+              display:"flex",
+              flexDirection:"column"
+            }}
+          >
+            <b>{record.property.name}</b>
+            <img src={record.property.images} style={{width:"150px",borderRadius:"5px"}}/>
+          </div>
         </>
       ),
     },
@@ -113,7 +143,7 @@ function MyBill() {
       title: "Hành động",
       key: "payment",
       render: (_, record) => (
-        <>
+        <div style={{display:"flex"}}>
           <Button style={{ marginRight: "10px" }}>
             <Link to={`/bills/${record.billCode}`}>{<EyeOutlined />}</Link>
           </Button>
@@ -124,7 +154,7 @@ function MyBill() {
           >
             <Button icon={<DeleteOutlined />} />
           </Popconfirm>
-        </>
+        </div>
       ),
     },
   ];
