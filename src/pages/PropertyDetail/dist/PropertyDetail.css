@@ -1,0 +1,65 @@
+@charset "UTF-8";
+.property__header__content {
+  position: relative;
+}
+.property__header__content__address {
+  display: flex;
+}
+.property__header__content__address img {
+  width: 30px;
+  object-fit: cover;
+  margin-right: 10px;
+}
+.property__header__content .icon {
+  position: absolute;
+  font-size: 32px;
+  right: 40px;
+  top: 10px;
+}
+.property__header__content .icon--active {
+  color: red;
+}
+.property__body__overview p {
+  font-size: 18px;
+}
+.property__body__facilities {
+  position: relative;
+}
+.property__body__facilities p {
+  color: blue;
+  right: 5px;
+  bottom: 0px;
+}
+.property__body__facilities p:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  /* Hoặc 'line-through', tùy theo mục đích */
+}
+
+.card_reviews {
+  position: relative;
+}
+.card_reviews span {
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+.card_reviews span:hover {
+  background-color: #ddd;
+}
+.card_reviews .arrow-left {
+  position: absolute;
+  bottom: 45%;
+  left: -24px;
+}
+.card_reviews .arrow-right {
+  position: absolute;
+  bottom: 45%;
+  right: -24px;
+}

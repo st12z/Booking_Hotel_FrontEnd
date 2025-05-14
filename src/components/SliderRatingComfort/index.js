@@ -4,8 +4,8 @@ import { useState } from "react";
 import { FrownOutlined, SmileOutlined } from '@ant-design/icons';
 
 function SliderRatingComfort(props){
-  const {ratingClean,onSetRating,title}=props;
-  const value=ratingClean;
+  const {ratingComfort,onSetRating,title}=props;
+  const value=ratingComfort;
   return(
     <>
       <h3 style={{margin:"0"}}>{title}</h3>

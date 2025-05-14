@@ -1,47 +1,87 @@
 .property {
   &__header {
-    &__content{
+    &__content {
       position: relative;
+
       &__address {
-        
+
         display: flex;
+
         img {
           width: 30px;
           object-fit: cover;
           margin-right: 10px;
         }
       }
-      .icon{
+
+      .icon {
         position: absolute;
         font-size: 32px;
         right: 40px;
         top: 10px;
-        &--active{
+
+        &--active {
           color: red;
         }
       }
     }
-    
+
   }
-  &__body{
-    &__overview{
-      p{
+
+  &__body {
+    &__overview {
+      p {
         font-size: 18px;
       }
     }
-    &__facilities{
+
+    &__facilities {
       position: relative;
-      p{
+
+      p {
         color: blue;
         right: 5px;
         bottom: 0px;
       }
+
       p:hover {
         cursor: pointer;
-        text-decoration: underline; /* Hoặc 'line-through', tùy theo mục đích */
-        
+        text-decoration: underline;
+        /* Hoặc 'line-through', tùy theo mục đích */
+
 
       }
     }
+  }
+}
+
+.card_reviews {
+  position: relative;
+  span {
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  span:hover {
+    background-color: #ddd;
+  }
+
+  .arrow-left {
+    position: absolute;
+    bottom: 45%;
+    left: -24px;
+  }
+
+  .arrow-right {
+    position: absolute;
+    bottom: 45%;
+    right: -24px;
   }
 }

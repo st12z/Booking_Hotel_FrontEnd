@@ -1,0 +1,121 @@
+.chat {
+  border-radius: 10px;
+  border: 1px solid #ADC0EA;
+  width: 500px;
+  padding: 10px;
+  height: 450px;
+  overflow-y: scroll;
+}
+.chat__header {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #ddd;
+  margin: 0;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+.chat__send {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.chat__send__info {
+  display: flex;
+  align-items: center;
+}
+.chat__send__info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.chat__send__info p {
+  margin: 0;
+  font-weight: 600;
+  font-size: 18px;
+}
+.chat__send__content {
+  background-color: #69B1FF;
+  color: white;
+  font-weight: 600;
+  border-radius: 12px;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-top: 10px;
+  width: fit-content;
+  flex-wrap: wrap;
+  word-wrap: break-word;
+  white-space: normal;
+  max-width: 70%;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+.chat__accept {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.chat__accept__info {
+  display: flex;
+  align-items: center;
+}
+.chat__accept__info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.chat__accept__info p {
+  margin: 0;
+  font-weight: 600;
+  font-size: 18px;
+}
+.chat__accept__content {
+  background-color: #006CE4;
+  color: white;
+  font-weight: 600;
+  border-radius: 12px;
+  padding-right: 10px;
+  padding-left: 10px;
+  margin-top: 10px;
+  width: fit-content;
+  flex-wrap: wrap;
+  word-wrap: break-word;
+  white-space: normal;
+  max-width: 70%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.chat__input-send {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  position: relative;
+}
+.chat__input-send input {
+  width: 90%;
+  border-radius: 10px;
+  height: auto;
+}
+.chat__input-send .icon {
+  font-size: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 10px;
+}
+.chat__input-send .emoji {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+}
+.chat__input-send .custom-file-container {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+}
+.chat__input-send .custom-file-container.hidden {
+  display: none;
+}

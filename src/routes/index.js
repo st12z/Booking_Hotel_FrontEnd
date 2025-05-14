@@ -12,6 +12,7 @@ import PaymentCallBack from "../pages/PaymentCallBack";
 import MyBill from "../pages/MyBill";
 import BillDetail from "../pages/BillDetail";
 import NotFound404 from "../pages/NotFound404";
+import Chat from "../pages/Chat";
 export const routes=[
   {
     path:"/",
@@ -67,6 +68,10 @@ export const routes=[
           {
             path:"/bills/:billCode",
             element: <BillDetail/>
+          },
+          {
+            path:"/chats",
+            element: <Chat/>
           }
         ]
       }

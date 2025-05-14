@@ -1,0 +1,1 @@
+export const API_DOMAIN_SOCKET = "http://localhost:8080";

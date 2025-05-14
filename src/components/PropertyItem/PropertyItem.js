@@ -62,7 +62,7 @@ function PropertyItem(props){
               <p>{item.numReviews} reviews</p>
             </div>
             <div className="property__item__content__review__com2">
-              <span>{item.avgReviewScore}</span>
+              <span>{item.avgReviewScore.toFixed(1)}</span>
             </div>
           </div>
         </div>

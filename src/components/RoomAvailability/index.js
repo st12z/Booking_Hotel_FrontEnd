@@ -56,7 +56,7 @@ function RoomAvailability(props) {
     {
       roomTypeId: -1,
       quantity: -1,
-      propertyId: roomTypes[0]?.propertyId,
+      propertyId: roomTypes.length>0&& roomTypes[0]?.propertyId,
     },
   ]);
 

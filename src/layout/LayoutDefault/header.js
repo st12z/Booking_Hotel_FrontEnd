@@ -124,16 +124,8 @@ function Header() {
   };
   const items = [
     {
-      label: (
-        <span>{user.lastName}</span>
-      ),
+      label: <span>{user.lastName}</span>,
       key: "0",
-    },
-    {
-      label: (
-        <Link to="user-setting">Cài đặt chung</Link>
-      ),
-      key: "1",
     },
     {
       label: <span onClick={handleLogout}>Đăng xuất</span>,
@@ -155,9 +147,14 @@ function Header() {
             <div className="header__top__menu">
               <ul>
                 {isLogin && (
-                  <li>
-                    <NavLink to="/bills">Thông tin đặt phòng</NavLink>
-                  </li>
+                  <>
+                    <li>
+                      <NavLink to="/bills">Thông tin đặt phòng</NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/chats">Liên hệ</NavLink>
+                    </li>
+                  </>
                 )}
                 <li>
                   <NavLink to="/properties-tym">
@@ -170,7 +167,15 @@ function Header() {
                       <Dropdown menu={{ items }}>
                         <a onClick={(e) => e.preventDefault()}>
                           <Space>
-                            <img src={user?.avatar} style={{width:"50px",height:"50px",borderRadius:"50%",objectFit:"contain"}}/>
+                            <img
+                              src={user?.avatar}
+                              style={{
+                                width: "50px",
+                                height: "50px",
+                                borderRadius: "50%",
+                                objectFit: "contain",
+                              }}
+                            />
                             <DownOutlined />
                           </Space>
                         </a>

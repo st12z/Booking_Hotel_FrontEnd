@@ -1,0 +1,26 @@
+.score {
+  display: flex;
+  align-items: center;
+}
+.score p:first-child {
+  margin: 0;
+  background-color: #0932A0;
+  padding: 10px;
+  border-radius: 5px;
+  color: white;
+  font-size: 700;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+}
+.score p:nth-child(2) {
+  font-size: 700;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.ant-progress-text {
+  font-size: 16px;
+  font-weight: 600;
+}

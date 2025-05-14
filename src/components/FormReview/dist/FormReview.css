@@ -1,0 +1,12 @@
+.icon-wrapper {
+  display: flex;
+}
+.icon-wrapper .slide {
+  width: 300px;
+}
+.icon-wrapper .icon {
+  color: rgba(0, 0, 0, 0.25);
+}
+.icon-wrapper .icon--active {
+  color: blue;
+}

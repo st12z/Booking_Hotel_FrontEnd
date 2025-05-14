@@ -20,3 +20,7 @@ export const getInfoUser = async () => {
   const result = await getAuthorization("info-user");
   return result;
 }
+export const getInfoUserById = async(id)=>{
+  const result = await get(`get-user/${id}`);
+  return result;
+}
