@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
+exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
 
 var _requestUserService = require("../../utils/requestUserService");
 
@@ -144,3 +144,26 @@ var getInfoUserById = function getInfoUserById(id) {
 };
 
 exports.getInfoUserById = getInfoUserById;
+
+var createRoomChats = function createRoomChats(data) {
+  var result;
+  return regeneratorRuntime.async(function createRoomChats$(_context7) {
+    while (1) {
+      switch (_context7.prev = _context7.next) {
+        case 0:
+          _context7.next = 2;
+          return regeneratorRuntime.awrap((0, _requestUserService.post)("create-rooms", data));
+
+        case 2:
+          result = _context7.sent;
+          return _context7.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context7.stop();
+      }
+    }
+  });
+};
+
+exports.createRoomChats = createRoomChats;

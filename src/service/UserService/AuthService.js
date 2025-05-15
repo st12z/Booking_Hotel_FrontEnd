@@ -24,3 +24,7 @@ export const getInfoUserById = async(id)=>{
   const result = await get(`get-user/${id}`);
   return result;
 }
+export const createRoomChats=async(data)=>{
+  const result = await post(`create-rooms`,data);
+  return result;
+}

@@ -12,7 +12,7 @@ import {
   Upload,
   Image,
 } from "antd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SliderRatingStaff from "../SliderRatingStaff";
 import "./FormReview.scss";
 import SliderRatingFacilities from "../SliderRatingFacilities";
@@ -21,9 +21,15 @@ import SliderRatingWifi from "../SliderRatingWifi";
 import SliderRatingComfort from "../SliderRatingComfort";
 import SliderRatingLocation from "../SliderRatingLocation";
 import { useSelector } from "react-redux";
-import { createReview, createView } from "../../service/RoomService/ReviewService";
+import {
+  createReview,
+  createView,
+} from "../../service/RoomService/ReviewService";
 import { PlusOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
+import { API_DOMAIN_SOCKET } from "../../utils/variable";
 var __awaiter =
   (this && this.__awaiter) ||
   function (thisArg, _arguments, P, generator) {
@@ -66,7 +72,7 @@ const getBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
-function FormReview({propertyId}) {
+function FormReview({ propertyId }) {
   const user = useSelector((state) => state.user);
   const [ratingStaff, setRatingStaff] = useState(10);
   const [ratingFacilities, setRatingFacilities] = useState(10);
@@ -77,6 +83,7 @@ function FormReview({propertyId}) {
   const [loading, setLoading] = useState(false);
   const [ratingProperty, setRatingProperty] = useState(5);
   const [api, contextHolder] = notification.useNotification();
+  const [stompClient, setStompClient] = useState(null);
   const openNotification = (placement, message, color, onClose) => {
     api.info({
       message: `Thông báo`,
@@ -89,6 +96,23 @@ function FormReview({propertyId}) {
       duration: 5,
     });
   };
+  // socket message gửi tin nhắn
+  useEffect(() => {
+    const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
+    const client = Stomp.over(socket);
+    console.log(socket);
+    client.connect({}, () => {
+      console.log("Connected to stomp");
+      setStompClient(client);
+    });
+
+    return () => {
+      if (client) {
+        console.log("disconnected");
+        client.disconnect();
+      }
+    };
+  }, []);
   const [form] = useForm();
   // Upload ảnh
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -113,7 +137,7 @@ function FormReview({propertyId}) {
     </button>
   );
   // end upload image
-  
+
   const fetchApi = async (data) => {
     setLoading(true);
     try {
@@ -146,7 +170,7 @@ function FormReview({propertyId}) {
     formData.append(
       "reviewDto",
       JSON.stringify({
-        email: user.email,
+        userId: user.id,
         content: e.content,
         ratingClean: ratingClean,
         ratingStaff: ratingStaff,
@@ -155,7 +179,7 @@ function FormReview({propertyId}) {
         ratingWifi: ratingWifi,
         ratingLocation: ratingLocation,
         ratingProperty: ratingProperty,
-        propertyId:propertyId
+        propertyId: propertyId,
       })
     );
     if (fileList.length > 0) {
@@ -163,12 +187,19 @@ function FormReview({propertyId}) {
         formData.append("images", file.originFileObj); // Lấy đúng File object
       });
     }
-    if(fileList.length==0){
+    if (fileList.length == 0) {
       setLoading(true);
-      setTimeout(()=>{
+      setTimeout(() => {
         fetchApi(formData);
+        stompClient.send(
+          "/app/sendNotification",
+          {},
+          JSON.stringify({
+            content: `${user.email} đã đánh giá khách sạn ${propertyId}!`,
+          })
+        );
         setLoading(false);
-      },1000);
+      }, 1000);
       return;
     }
     fetchApi(formData);

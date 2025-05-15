@@ -1,0 +1,39 @@
+.roomchats {
+  border: 1px solid #0057B8;
+  width: 300px;
+  padding: 10px 0px 10px 0px;
+  border-radius: 10px;
+  max-height: 500px;
+  overflow-y: auto;
+  &__item {
+    border-bottom: 2px solid #ddd;
+    display: flex;
+    margin-bottom: 10px;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: rgb(0, 0, 0,0.2);
+    &__image {
+      img {
+        width: 60px;
+        display: inline-block;
+        border: 50%;
+        height: 60px;
+      }
+      margin-right: 20px;
+    }
+    &__content{
+      width: 120px;
+      margin-right: 40px;
+      color: black;
+      font-size: 14px;
+      font-weight: 600;
+      p:last-child{
+        color: #0057B8;
+      }
+    }
+  }
+  &__item:hover{
+    background-color: #ddd;
+  }
+
+}

@@ -12,7 +12,7 @@ import {
 } from "antd";
 import moment from "moment";
 import { useState } from "react";
-import { registerUser } from "../../service/UserService/AuthService";
+import { createRoomChats, registerUser } from "../../service/UserService/AuthService";
 
 function Register() {
   const [form] = Form.useForm();
@@ -56,6 +56,11 @@ function Register() {
         console.log(res);
         if (res.code === 201) {
           openNotification("topRight", "Đăng ký thành công!", "green");
+          const data={
+            userAId:res.data.id
+          }
+          const resRoomChats= await createRoomChats(data);
+          console.log(resRoomChats);
         } else {
           openNotification("topRight", "Đăng ký không thành công!", "red");
         }
@@ -168,7 +173,13 @@ function Register() {
                   <Form.Item
                     label="Password"
                     name="password"
-                    rules={rules}
+                    rules={[
+                      {
+                        required:true,
+                        message:"Vui lòng nhập password ít nhất 6 kí tự",
+                        min:6
+                      }
+                    ]}
                     hasFeedback
                   >
                     <Input.Password />

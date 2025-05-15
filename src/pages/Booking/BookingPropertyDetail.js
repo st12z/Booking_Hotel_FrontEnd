@@ -235,7 +235,7 @@ function BookingPropertyDetail(props) {
             </div>
           </div>
           <div className="booking-property__reviews">
-            <p className="score">{property.avgReviewScore}</p>
+            <p className="score">{property.avgReviewScore.toFixed(1)}</p>
             <p className="review">{property.numReviews} reviews</p>
           </div>
           <div className="booking-property__facilities">

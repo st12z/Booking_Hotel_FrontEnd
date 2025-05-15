@@ -1,0 +1,38 @@
+.roomchats {
+  border: 1px solid #0057B8;
+  width: 300px;
+  padding: 10px 0px 10px 0px;
+  border-radius: 10px;
+  max-height: 500px;
+  overflow-y: auto;
+}
+.roomchats__item {
+  border-bottom: 2px solid #ddd;
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: rgba(0, 0, 0, 0.2);
+}
+.roomchats__item__image {
+  margin-right: 20px;
+}
+.roomchats__item__image img {
+  width: 60px;
+  display: inline-block;
+  border: 50%;
+  height: 60px;
+}
+.roomchats__item__content {
+  width: 120px;
+  margin-right: 40px;
+  color: black;
+  font-size: 14px;
+  font-weight: 600;
+}
+.roomchats__item__content p:last-child {
+  color: #0057B8;
+}
+.roomchats__item:hover {
+  background-color: #ddd;
+}

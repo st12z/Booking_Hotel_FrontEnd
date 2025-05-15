@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { isTokenExpired } from "../../utils/checkTokenExpired";
 import { getCredentials } from "../../utils/requestUserService";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../action/login";
 import { notification, Skeleton } from "antd";
+import NotFound404 from "../../pages/NotFound404";
 
-function PrivateRoute() {
+function AdminRoute() {
   const [auth, setAuth] = useState(false);
-  const [loading,setLoading]= useState(true);
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   useEffect(() => {
     setLoading(true);
     const fetchApi = async () => {
@@ -17,8 +19,7 @@ function PrivateRoute() {
       if (access_token && !isTokenExpired(access_token)) {
         setAuth(true);
         dispatch(login("LOGIN"));
-        
-        setLoading(false); 
+        setLoading(false);
         return;
       }
       if (access_token && isTokenExpired(access_token)) {
@@ -28,30 +29,34 @@ function PrivateRoute() {
             const newToken = refreshApi.data.access_token;
             localStorage.setItem("access_token", newToken);
             dispatch(login("LOGIN"));
-            setAuth(true);
           } else {
             localStorage.removeItem("access_token");
             dispatch(login("LOGOUT"));
-            dispatch({type:"DELETE_USER"});
+            dispatch({ type: "DELETE_USER" });
             setAuth(false);
           }
         } catch (err) {
           setAuth(false);
           console.error("Error refreshing token", err);
-        }finally{
+        } finally {
           setLoading(false);
         }
       }
     };
     fetchApi();
   }, []);
-  return <>
-    {loading ? (
-      <Skeleton active/>
-    ) : (
-      auth ? <Outlet /> : <Navigate to="/" />
-    )}
-    
-  </>;
+  return (
+    <>
+      {loading ? (
+        <Skeleton active />
+      ) : ["MANAGER", "ADMIN", "STAFF"].some((role) =>
+          user.roles?.includes(role)
+        ) ? (
+        <Outlet />
+      ) : (
+        <NotFound404/>
+      )}
+    </>
+  );
 }
-export default PrivateRoute;
+export default AdminRoute;

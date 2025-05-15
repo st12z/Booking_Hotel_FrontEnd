@@ -5,17 +5,15 @@ import { FileUploadWithPreview } from "file-upload-with-preview";
 import { useEffect, useRef, useState } from "react";
 import "file-upload-with-preview/dist/style.css";
 import { useSelector } from "react-redux";
-import {
-  getChatsByRoomChatId,
-  
-} from "../../service/RoomService/ChatService";
-import { getInfoUserById } from "../../service/UserService/AuthService";
-import { uploadImages } from "../../service/RoomService/UploadService";
 import SockJS from "sockjs-client";
-import { API_DOMAIN_SOCKET } from "../../utils/variable";
 import { Stomp } from "@stomp/stompjs";
-import { getRoomChatsOfUser } from "../../service/RoomService/RoomChatsService";
-function Chat() {
+import { useParams } from "react-router-dom";
+import { getRoomChatsId } from "../../../service/RoomService/RoomChatsService";
+import { getChatsByRoomChatId } from "../../../service/RoomService/ChatService";
+import { getInfoUserById } from "../../../service/UserService/AuthService";
+import { uploadImages } from "../../../service/RoomService/UploadService";
+import { API_DOMAIN_SOCKET } from "../../../utils/variable";
+function Chats() {
   const user = useSelector((state) => state.user);
   const [showEmoji, setShowEmoji] = useState(false);
   const [showImage, setShowImage] = useState(false);
@@ -23,7 +21,8 @@ function Chat() {
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const [userB, setUserB] = useState();
-  const [roomChatId, setRoomChatId] = useState();
+  const params = useParams();
+  const roomChatId=params.id;
   const [stompClient, setStompClient] = useState(null);
   const handleClickEmoji = () => {
     setShowEmoji(!showEmoji);
@@ -56,17 +55,14 @@ function Chat() {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const res = await getRoomChatsOfUser(user.id);
-        console.log(res);
+        const res = await getRoomChatsId(roomChatId);
         if (res.code == 200) {
-          const roomChatId = res.data[0]?.id;
-          setRoomChatId(roomChatId);
           let userBId;
-          if (res.data[0].userAId !== user.id) {
-            userBId = res.data[0].userAId;
+          if (res.data.userAId !== user.id) {
+            userBId = res.data.userAId;
           }
-          if (res.data[0].userBId !== user.id) {
-            userBId = res.data[0].userBId;
+          if (res.data.userBId !== user.id) {
+            userBId = res.data.userBId;
           }
           fetchUserB(userBId);
           const resChats = await getChatsByRoomChatId(roomChatId);
@@ -154,9 +150,6 @@ function Chat() {
           {},
           JSON.stringify(data)
         );
-        stompClient.send(`/app/sendNotification`,{},JSON.stringify({
-          content: `${user.email} đã gửi tin nhắn!`,
-        }))
         setInputText("");
       }
     } else {
@@ -227,4 +220,4 @@ function Chat() {
     </div>
   );
 }
-export default Chat;
+export default Chats;

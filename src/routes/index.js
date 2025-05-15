@@ -13,69 +13,97 @@ import MyBill from "../pages/MyBill";
 import BillDetail from "../pages/BillDetail";
 import NotFound404 from "../pages/NotFound404";
 import Chat from "../pages/Chat";
-export const routes=[
+import AdminRoute from "../components/AdminRoute";
+import AdminBoard from "../pages/Admin/AdminBoard";
+import LayoutAdmin from "../layout/LayoutAdmin";
+import RoomChats from "../pages/Admin/RoomChats";
+import Chats from "../pages/Admin/Chats";
+export const routes = [
   {
-    path:"/",
-    element: <LayoutDefault/>,
-    children:[
+    path: "/",
+    element: <LayoutDefault />,
+    children: [
       {
-        path:"",
-        element:<Home/>
+        path: "",
+        element: <Home />,
       },
       {
-        path:"/search",
-        element:<Search/>
+        path: "/search",
+        element: <Search />,
       },
       {
-        path:"/properties/:slug",
-        element: <PropertyDetail/>
+        path: "/properties/:slug",
+        element: <PropertyDetail />,
       },
       {
-        path:"/register",
-        element: <Register/>
+        path: "/register",
+        element: <Register />,
       },
       {
-        path:"/login",
-        element: <Login/>
+        path: "/login",
+        element: <Login />,
       },
       {
-        path:"/callback",
-        element:<CallBackPage/>
+        path: "/callback",
+        element: <CallBackPage />,
       },
       {
-        path:"/properties-tym",
-        element: <PropertiesTym/>
+        path: "/properties-tym",
+        element: <PropertiesTym />,
       },
       {
-        path:"*",
-        element:<NotFound404/>
+        path: "*",
+        element: <NotFound404 />,
       },
       {
-        element:<PrivateRoute/>,
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: "/booking",
+            element: <Booking />,
+          },
+          {
+            path: "/payments",
+            element: <PaymentCallBack />,
+          },
+          {
+            path: "/bills",
+            element: <MyBill />,
+          },
+          {
+            path: "/bills/:billCode",
+            element: <BillDetail />,
+          },
+          {
+            path: "/chats",
+            element: <Chat />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    element: <AdminRoute />,
+    children: [
+      {
+        path: "/admin",
+        element: <LayoutAdmin />,
         children:[
           {
-            path:"/booking",
-            element: <Booking/>
+            path:"",
+            element: <AdminBoard/>
           },
           {
-            path:"/payments",
-            element: <PaymentCallBack/>
+            path: "room-chats",
+            element: <RoomChats/>
           },
           {
-            path:"/bills",
-            element: <MyBill />
-          },
-          {
-            path:"/bills/:billCode",
-            element: <BillDetail/>
-          },
-          {
-            path:"/chats",
-            element: <Chat/>
+            path: "room-chats/:id",
+            element: <Chats/>
           }
+
         ]
-      }
+      },
     ],
-    
-  }
-]
+  },
+];

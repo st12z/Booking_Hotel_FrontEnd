@@ -3,7 +3,7 @@ import "./header.scss";
 import { DownOutlined, HomeOutlined } from "@ant-design/icons";
 import { DatePicker, Space, Dropdown } from "antd";
 import { formatLocalDateTime } from "../../utils/format";
-import { useContext, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { getDestinationsBySearch } from "../../service/RoomService/DestinationService";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../service/UserService/AuthService";
@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import { login } from "../../action/login";
 import { addParamIfExists } from "../../utils/appendParams";
 import { SearchContext } from ".";
+import { SaveUser } from "../../reducers/SaveUserReducer";
 
 const { RangePicker } = DatePicker;
 
@@ -71,7 +72,6 @@ function Header() {
   }, [destination]);
 
   let params = new URLSearchParams();
-
   // form tìm kiếm
   const handleSubmit = (e) => {
     setSearchTrigger(!searchTrigger);
@@ -113,6 +113,7 @@ function Header() {
         const res = await logout("logout");
         if (res.code == 200) {
           dispatch(login("LOGOUT"));
+          dispatch({ type: "DELETE_USER" });
           localStorage.removeItem("access_token");
           window.location.href = "/login";
         }
@@ -148,12 +149,22 @@ function Header() {
               <ul>
                 {isLogin && (
                   <>
-                    <li>
-                      <NavLink to="/bills">Thông tin đặt phòng</NavLink>
-                    </li>
-                    <li>
-                      <NavLink to="/chats">Liên hệ</NavLink>
-                    </li>
+                    {["MANAGER", "ADMIN", "STAFF"].some((role) =>
+                      user.roles?.includes(role)
+                    ) ? (
+                      <li>
+                        <NavLink to="/admin">Quản lý</NavLink>
+                      </li>
+                    ) : (
+                      <>
+                        <li>
+                          <NavLink to="/bills">Thông tin đặt phòng</NavLink>
+                        </li>
+                        <li>
+                          <NavLink to="/chats">Liên hệ</NavLink>
+                        </li>
+                      </>
+                    )}
                   </>
                 )}
                 <li>
@@ -161,6 +172,7 @@ function Header() {
                     Yêu thích <HeartFilled style={{ color: "red" }} />
                   </NavLink>
                 </li>
+
                 {isLogin ? (
                   <>
                     <li className="">

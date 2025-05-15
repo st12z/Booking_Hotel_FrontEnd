@@ -1,0 +1,74 @@
+.header-admin {
+  background-color: #C5D3DA;
+  border-bottom: 1px solid #ddd;
+  padding: 0;
+  margin-bottom: 0px;
+}
+.header-admin__logo {
+  border-right: 2px solid white;
+  width: 240px;
+  height: 100%;
+  padding: 10px;
+}
+.header-admin__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.header-admin__menu {
+  padding: 10px;
+}
+.header-admin__menu ul {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+}
+.header-admin__menu ul li {
+  list-style-type: none;
+  display: flex;
+  flex: 1;
+  font-weight: 500;
+  font-size: 24px;
+  color: white;
+}
+.header-admin__menu .menu_chats {
+  margin-right: 30px;
+}
+.header-admin__menu .menu_notificatons {
+  margin-right: 30px;
+  position: relative;
+}
+.header-admin__menu .menu_notificatons .icon-notification {
+  color: black;
+}
+.header-admin__menu .menu_notificatons .count-notification {
+  color: red;
+  font-weight: 600;
+  font-size: 16px;
+  position: absolute;
+  top: -5px;
+  left: 20px;
+}
+
+.item-notification {
+  display: flex;
+  align-items: center;
+}
+.item-notification span {
+  margin-right: 30px;
+}
+.item-notification .dot {
+  padding: 2px;
+  background-color: red;
+  border-radius: 50%;
+  width: 5px;
+  height: 5px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.ant-dropdown-menu {
+  max-height: 300px;
+  overflow-y: auto;
+}
