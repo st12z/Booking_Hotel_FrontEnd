@@ -16,7 +16,7 @@ function StatisticView() {
     };
   });
   const [currentMonth, setCurrentMonth] = useState(1);
-  const [data, setData] = useState();
+  const [data, setData] = useState([{day:1,amount:0}]);
   const [reload, setReload] = useState();
   const user = useSelector(state=>state.user);
   useEffect(() => {
@@ -71,7 +71,7 @@ function StatisticView() {
         console.error(e);
       }
     },
-    width: 500,
+    width: 600,
     height: 500,
   };
   const handleChange = (e) => {

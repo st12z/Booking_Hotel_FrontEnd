@@ -28,3 +28,7 @@ export const getAmountBillsByMonth=async(month)=>{
   const result = await get(`bills/amount-bills-month?month=${month}`);
   return result;
 }
+export const getAmountRevenueByMonth=async(month)=>{
+  const result = await get(`bills/amount-revenue-month?month=${month}`);
+  return result;
+}
