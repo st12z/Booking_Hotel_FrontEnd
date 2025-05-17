@@ -22,12 +22,15 @@ import { useSelector } from "react-redux";
 import SockJS from "sockjs-client";
 import { API_DOMAIN_SOCKET } from "../../../utils/variable";
 import { getAmountProperties } from "../../../service/RoomService/PropertyService";
-import { getAmountBills } from "../../../service/BookingService/BillService";
+import { getAmountBills, getAmountRevenueToday } from "../../../service/BookingService/BillService";
+import { getAmountReviews } from "../../../service/RoomService/ReviewService";
 function AdminBoard() {
   const [amountVisits,setAmountVisits]=useState();
   const [amountUsers,setAmountUsers]=useState();
   const [amountProperties,setAmountProperties]=useState();
   const [amountBills,setAmountBills]=useState();
+  const [amountReviews,setAmountReviews]=useState();
+  const [amountRevenueToday,setAmountRevenueToday]=useState();
   const user = useSelector(state=>state.user);
   useEffect(()=>{
     const fetchApi=async()=>{
@@ -36,6 +39,8 @@ function AdminBoard() {
         const resAmountUsers = await getAmountUsers();
         const resAmountProperties = await getAmountProperties();
         const resAmountBills = await getAmountBills();
+        const resAmountRevenueToday = await getAmountRevenueToday();
+        const resAmountReviews = await getAmountReviews();
         if(resAmountVisits.code==200){
           setAmountVisits(resAmountVisits.data);
         }
@@ -47,6 +52,12 @@ function AdminBoard() {
         }
         if(resAmountBills.code==200){
           setAmountBills(resAmountBills.data);
+        }
+        if(resAmountRevenueToday.code==200){
+          setAmountRevenueToday(resAmountRevenueToday.data);
+        }
+        if(resAmountReviews.code==200){
+          setAmountReviews(resAmountReviews.data);
         }
       }catch(error){
         console.error(error);
@@ -88,6 +99,24 @@ function AdminBoard() {
           const message = JSON.parse(returnMessage.body);
           console.log(message);
           setAmountBills(message);
+          
+        }
+      );
+      client.subscribe(
+        `/user/${user.email}/queue/amount-reviews`,
+        (returnMessage) => {
+          const message = JSON.parse(returnMessage.body);
+          console.log(message);
+          setAmountReviews(message);
+          
+        }
+      );
+      client.subscribe(
+        `/user/${user.email}/queue/amount-revenue-today`,
+        (returnMessage) => {
+          const message = JSON.parse(returnMessage.body);
+          console.log(message);
+          setAmountRevenueToday(message);
           
         }
       );
@@ -146,7 +175,7 @@ function AdminBoard() {
             <DashBoardItem
               icon=<CommentOutlined />
               title="Tổng số đánh giá"
-              value={40}
+              value={amountReviews}
               color={"#E32323"}
             />
           </Col>
@@ -154,7 +183,7 @@ function AdminBoard() {
             <DashBoardItem
               icon=<LineChartOutlined />
               title="Doanh thu hôm nay"
-              value={getFormatPrice(40)}
+              value={getFormatPrice(amountRevenueToday)}
               color={"#FFD86B"}
             />
           </Col>

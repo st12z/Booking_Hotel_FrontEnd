@@ -12,3 +12,7 @@ export const getReviewsByPropertyId=async(propertyId)=>{
   const res= await get(`reviews?propertyId=${propertyId}`);
   return res;
 }
+export const getAmountReviews = async()=>{
+  const result = await get(`reviews/amount-reviews`);
+  return result;
+}

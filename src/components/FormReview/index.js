@@ -24,12 +24,14 @@ import { useSelector } from "react-redux";
 import {
   createReview,
   createView,
+  getAmountReviews,
 } from "../../service/RoomService/ReviewService";
 import { PlusOutlined } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import { API_DOMAIN_SOCKET } from "../../utils/variable";
+import { connectStomp } from "../../utils/connectStomp";
 var __awaiter =
   (this && this.__awaiter) ||
   function (thisArg, _arguments, P, generator) {
@@ -144,6 +146,10 @@ function FormReview({ propertyId }) {
       const res = await createReview(data);
       if (res.code == 201) {
         openNotification("topRight", "Gửi đánh giá thành công!", "green");
+        const resAmountReviews = await getAmountReviews();
+        if(resAmountReviews.code==200){
+          connectStomp("/app/sendAmountReviews",resAmountReviews.data);
+        }
       } else {
         openNotification("topRight", "Gửi đánh giá thất bại!", "red");
       }
