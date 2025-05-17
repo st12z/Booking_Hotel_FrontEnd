@@ -12,3 +12,7 @@ export const getBillByBillCode = async(billCode)=>{
   const res= await get(`bills/${billCode}`);
   return res;
 }
+export const getAmountBills = async()=>{
+   const res= await get(`bills/amount-bills`);
+  return res;
+}

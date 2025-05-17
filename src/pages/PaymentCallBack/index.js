@@ -6,41 +6,29 @@ import { ContainerOutlined, HomeOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import SockJS from "sockjs-client";
-import { API_DOMAIN_SOCKET } from "../../utils/variable";
-import { Stomp } from "@stomp/stompjs";
+import { connectStomp } from "../../utils/connectStomp";
+import { getAmountBills } from "../../service/BookingService/BillService";
 function PaymentCallBack() {
   const [searchParams] = useSearchParams();
   const billCode = searchParams.get("billCode");
   const status = searchParams.get("status");
   const user = useSelector((state) => state.user);
   useEffect(() => {
-    const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
-    const client = Stomp.over(socket);
-
+    const fetchApi = async()=>{
+      try{
+        const res= await getAmountBills();
+        if(res.code==200){
+          connectStomp("/app/sendAmountBills",  res.data );
+        }
+      }catch(error){
+        console.error(error);
+      }
+    }
+    fetchApi();
     // Kết nối
-    client.connect({}, () => {
-      console.log("Đã kết nối");
-
-      if (status == 200) {
-        // Gửi message tại đây sau khi connect thành công
-        client.send(
-          "/app/sendNotification",
-          {},
-          JSON.stringify({
-            content: `${user.email} đã hoàn thành hóa đơn ${billCode}!`,
-          })
-        );
-      }
-    });
-
-    return () => {
-      if (client && client.connected) {
-        client.disconnect(() => {
-          console.log("Đã ngắt kết nối");
-        });
-      }
-    };
+    if(status==200){
+      connectStomp("/app/sendNotification",{content:`${user.email} đã hoàn thành hóa đơn ${billCode}!`});
+    }
   }, []);
   return (
     <>

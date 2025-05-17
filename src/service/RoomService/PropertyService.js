@@ -12,3 +12,7 @@ export const getPropertyId = async(id)=>{
   const result = await get(`properties/id/${id}`);
   return result;
 }
+export const getAmountProperties=async(id)=>{
+  const result = await get(`properties/amount-properties`);
+  return result;
+}

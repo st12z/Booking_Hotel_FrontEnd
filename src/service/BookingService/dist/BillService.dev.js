@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getBillByBillCode = exports.getBillByKeyword = exports.getMyBills = void 0;
+exports.getAmountBills = exports.getBillByBillCode = exports.getBillByKeyword = exports.getMyBills = void 0;
 
 var _requestBookingService = require("../../utils/requestBookingService");
 
@@ -80,3 +80,26 @@ var getBillByBillCode = function getBillByBillCode(billCode) {
 };
 
 exports.getBillByBillCode = getBillByBillCode;
+
+var getAmountBills = function getAmountBills() {
+  var res;
+  return regeneratorRuntime.async(function getAmountBills$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
+          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/amount-bills"));
+
+        case 2:
+          res = _context4.sent;
+          return _context4.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  });
+};
+
+exports.getAmountBills = getAmountBills;

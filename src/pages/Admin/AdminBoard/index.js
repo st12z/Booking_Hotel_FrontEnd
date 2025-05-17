@@ -21,20 +21,32 @@ import { Stomp } from "@stomp/stompjs";
 import { useSelector } from "react-redux";
 import SockJS from "sockjs-client";
 import { API_DOMAIN_SOCKET } from "../../../utils/variable";
+import { getAmountProperties } from "../../../service/RoomService/PropertyService";
+import { getAmountBills } from "../../../service/BookingService/BillService";
 function AdminBoard() {
   const [amountVisits,setAmountVisits]=useState();
   const [amountUsers,setAmountUsers]=useState();
+  const [amountProperties,setAmountProperties]=useState();
+  const [amountBills,setAmountBills]=useState();
   const user = useSelector(state=>state.user);
   useEffect(()=>{
     const fetchApi=async()=>{
       try{
         const resAmountVisits = await getAmountVisits();
         const resAmountUsers = await getAmountUsers();
+        const resAmountProperties = await getAmountProperties();
+        const resAmountBills = await getAmountBills();
         if(resAmountVisits.code==200){
           setAmountVisits(resAmountVisits.data);
         }
         if(resAmountUsers.code==200){
           setAmountUsers(resAmountUsers.data);
+        }
+        if(resAmountProperties.code==200){
+          setAmountProperties(resAmountProperties.data);
+        }
+        if(resAmountBills.code==200){
+          setAmountBills(resAmountBills.data);
         }
       }catch(error){
         console.error(error);
@@ -70,6 +82,15 @@ function AdminBoard() {
           
         }
       );
+      client.subscribe(
+        `/user/${user.email}/queue/amount-bills`,
+        (returnMessage) => {
+          const message = JSON.parse(returnMessage.body);
+          console.log(message);
+          setAmountBills(message);
+          
+        }
+      );
     });
 
     return () => {
@@ -101,7 +122,7 @@ function AdminBoard() {
             <DashBoardItem
               icon=<HomeOutlined />
               title="Khách sạn"
-              value={20}
+              value={amountProperties}
               color={"#44A1EB"}
             />
           </Col>
@@ -109,7 +130,7 @@ function AdminBoard() {
             <DashBoardItem
               icon=<CarryOutOutlined />
               title="Hóa đơn hôm nay"
-              value={20}
+              value={amountBills}
               color={"#5DD5C7"}
             />
           </Col>
@@ -119,14 +140,6 @@ function AdminBoard() {
               title="Số lượng truy cập hôm nay"
               value={amountVisits}
               color={"#FE9596"}
-            />
-          </Col>
-          <Col span={8}>
-            <DashBoardItem
-              icon=<HomeOutlined />
-              title="Đặt phòng hôm nay"
-              value={40}
-              color={"#6DB9F0"}
             />
           </Col>
           <Col span={8}>
