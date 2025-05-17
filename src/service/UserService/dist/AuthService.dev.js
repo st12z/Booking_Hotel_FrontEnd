@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAmountVisits = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
+exports.getAmountUsers = exports.getAmountVisits = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
 
 var _requestUserService = require("../../utils/requestUserService");
 
@@ -214,3 +214,26 @@ var getAmountVisits = function getAmountVisits() {
 };
 
 exports.getAmountVisits = getAmountVisits;
+
+var getAmountUsers = function getAmountUsers() {
+  var result;
+  return regeneratorRuntime.async(function getAmountUsers$(_context10) {
+    while (1) {
+      switch (_context10.prev = _context10.next) {
+        case 0:
+          _context10.next = 2;
+          return regeneratorRuntime.awrap((0, _requestUserService.get)("amount-users"));
+
+        case 2:
+          result = _context10.sent;
+          return _context10.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context10.stop();
+      }
+    }
+  });
+};
+
+exports.getAmountUsers = getAmountUsers;

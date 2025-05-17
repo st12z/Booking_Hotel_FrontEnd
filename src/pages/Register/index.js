@@ -12,8 +12,12 @@ import {
 } from "antd";
 import moment from "moment";
 import { useState } from "react";
-import { createRoomChats, registerUser } from "../../service/UserService/AuthService";
-
+import {
+  createRoomChats,
+  getAmountUsers,
+  registerUser,
+} from "../../service/UserService/AuthService";
+import { connectStomp } from "../../utils/connectStomp";
 function Register() {
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
@@ -49,6 +53,7 @@ function Register() {
       district: e.district,
       city: e.city,
       address: e.address,
+      avatar:"https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg"
     };
     const fetchApi = async () => {
       try {
@@ -56,10 +61,15 @@ function Register() {
         console.log(res);
         if (res.code === 201) {
           openNotification("topRight", "Đăng ký thành công!", "green");
-          const data={
-            userAId:res.data.id
+          const resAmountUsers = await getAmountUsers();
+          if (resAmountUsers.code == 200) {
+            connectStomp("/app/sendAmountUsers", resAmountUsers.data);
           }
-          const resRoomChats= await createRoomChats(data);
+
+          const data = {
+            userAId: res.data.id,
+          };
+          const resRoomChats = await createRoomChats(data);
           console.log(resRoomChats);
         } else {
           openNotification("topRight", "Đăng ký không thành công!", "red");
@@ -175,10 +185,10 @@ function Register() {
                     name="password"
                     rules={[
                       {
-                        required:true,
-                        message:"Vui lòng nhập password ít nhất 6 kí tự",
-                        min:6
-                      }
+                        required: true,
+                        message: "Vui lòng nhập password ít nhất 6 kí tự",
+                        min: 6,
+                      },
                     ]}
                     hasFeedback
                   >

@@ -10,6 +10,7 @@ import { updateVisits } from "../../service/UserService/AuthService";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import { API_DOMAIN_SOCKET } from "../../utils/variable";
+import { connectStomp } from "../../utils/connectStomp";
 function Home() {
   const user = useSelector((state) => state.user);
   useEffect(() => {
@@ -17,22 +18,7 @@ function Home() {
       try {
         const res = await updateVisits(user.id);
         console.log(res);
-        const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
-        const client = Stomp.over(socket);
-
-        // Kết nối
-        client.connect({}, () => {
-          console.log("Đã kết nối");
-          client.send("/app/sendUpdateVisits", {}, JSON.stringify(res.data));
-        });
-
-        return () => {
-          if (client && client.connected) {
-            client.disconnect(() => {
-              console.log("Đã ngắt kết nối");
-            });
-          }
-        };
+        connectStomp("/app/sendUpdateVisits",res.data)
       } catch (error) {
         console.log(error);
       }

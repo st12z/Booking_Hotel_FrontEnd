@@ -37,3 +37,7 @@ export const getAmountVisits=async()=>{
   const result= await get(`amount-visits`);
   return result;
 }
+export const getAmountUsers = async()=>{
+  const result= await get(`amount-users`);
+  return result;
+}

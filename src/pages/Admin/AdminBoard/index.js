@@ -16,20 +16,25 @@ import StatisticView from "../../../components/StatisticView";
 import StatisticRevenue from "../../../components/StatisticRevenue";
 import ListBillRecently from "../../../components/ListBillRecently";
 import { useEffect, useState } from "react";
-import { getAmountVisits } from "../../../service/UserService/AuthService";
+import { getAmountUsers, getAmountVisits } from "../../../service/UserService/AuthService";
 import { Stomp } from "@stomp/stompjs";
 import { useSelector } from "react-redux";
 import SockJS from "sockjs-client";
 import { API_DOMAIN_SOCKET } from "../../../utils/variable";
 function AdminBoard() {
   const [amountVisits,setAmountVisits]=useState();
+  const [amountUsers,setAmountUsers]=useState();
   const user = useSelector(state=>state.user);
   useEffect(()=>{
     const fetchApi=async()=>{
       try{
-        const res = await getAmountVisits();
-        if(res.code==200){
-          setAmountVisits(res.data);
+        const resAmountVisits = await getAmountVisits();
+        const resAmountUsers = await getAmountUsers();
+        if(resAmountVisits.code==200){
+          setAmountVisits(resAmountVisits.data);
+        }
+        if(resAmountUsers.code==200){
+          setAmountUsers(resAmountUsers.data);
         }
       }catch(error){
         console.error(error);
@@ -56,6 +61,15 @@ function AdminBoard() {
           
         }
       );
+      client.subscribe(
+        `/user/${user.email}/queue/amount-users`,
+        (returnMessage) => {
+          const message = JSON.parse(returnMessage.body);
+          console.log(message);
+          setAmountUsers(message);
+          
+        }
+      );
     });
 
     return () => {
@@ -79,7 +93,7 @@ function AdminBoard() {
             <DashBoardItem
               icon=<UserOutlined />
               title="Người dùng"
-              value={20}
+              value={amountUsers}
               color={"#FE96AB"}
             />
           </Col>
