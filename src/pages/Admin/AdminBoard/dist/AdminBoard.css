@@ -1,0 +1,63 @@
+.dashboard-icon {
+  margin-bottom: 20px;
+}
+.dashboard-icon .span-icon {
+  background-color: #0057B8;
+  padding: 10px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+.dashboard-icon .span-icon .icon {
+  color: white;
+  font-weight: 600;
+}
+.dashboard-icon span:last-child {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dashboard-panel {
+  margin-bottom: 30px;
+}
+.dashboard-panel__item {
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.dashboard-panel__item__circle1 {
+  display: inline-block;
+  background-color: white;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  opacity: 0.3;
+  position: absolute;
+  right: -10px;
+  bottom: -60px;
+  clip-path: inset(0 0 30% 0);
+}
+.dashboard-panel__item__circle2 {
+  display: inline-block;
+  background-color: white;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  opacity: 0.3;
+  position: absolute;
+  right: -50px;
+  bottom: 30px;
+  clip-path: inset(0 30% 0 0);
+}
+.dashboard-panel__item__title p:first-child {
+  font-size: 22px;
+  font-weight: 600;
+  color: white;
+}
+.dashboard-panel__item__value p:first-child {
+  font-size: 24px;
+  font-weight: 600;
+}
+.dashboard-panel__item .icon {
+  font-size: 18px;
+}

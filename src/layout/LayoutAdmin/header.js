@@ -7,7 +7,7 @@ import { logout } from "../../service/UserService/AuthService";
 import logo from "../../images/logo (1).png";
 import { useEffect, useState } from "react";
 import { getAllNotifications } from "../../service/RoomService/NotificationService";
-import { getTime } from "../../utils/format";
+import { getDate, getTime } from "../../utils/format";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import { API_DOMAIN_SOCKET } from "../../utils/variable";
@@ -16,9 +16,6 @@ function HeaderAdmin() {
   const [notifications, setNotifications] = useState([]);
   const dispatch = useDispatch();
   const [messageApi, contextHolder] = message.useMessage();
-  const info = () => {
-    messageApi.info("Hello, Ant Design!");
-  };
   // Đăng xuất
   const handleLogout = () => {
     const fetchApi = async () => {
@@ -63,7 +60,7 @@ function HeaderAdmin() {
                     <span>{item.content}</span>
                   </div>
                   <p>
-                    <span>{getTime(item.createdAt)}</span>
+                    <span>{getTime(item.createdAt)} {getDate(item.createdAt)}</span>
                   </p>
                 </>
               ),
@@ -77,7 +74,7 @@ function HeaderAdmin() {
     };
     fetchpApi();
   }, []);
-
+// Kết nối websocket
   useEffect(() => {
     if (!user?.email) return;
 
@@ -86,7 +83,7 @@ function HeaderAdmin() {
 
     client.connect({}, () => {
       console.log("Connected to stomp");
-
+      // lắng nghe thông báo
       client.subscribe(
         `/user/${user.email}/queue/messages`,
         (returnMessage) => {
@@ -102,7 +99,7 @@ function HeaderAdmin() {
                     <span>{message.content}</span>
                   </div>
                   <p>
-                    <span>{getTime(message.createdAt)}</span>
+                    <span>{getTime(message.createdAt)} {getDate(message.createdAt)}</span>
                   </p>
                 </>
               ),
@@ -111,6 +108,7 @@ function HeaderAdmin() {
           ]);
         }
       );
+      
     });
 
     return () => {
@@ -120,7 +118,7 @@ function HeaderAdmin() {
       }
     };
   }, [user.email]);
-  // Kết nối websocket
+  
   return (
     <>
       {contextHolder}

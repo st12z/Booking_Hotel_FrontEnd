@@ -1,0 +1,68 @@
+.dashboard-icon{
+  margin-bottom: 20px;
+  .span-icon{
+    background-color: #0057B8;
+    padding: 10px;
+    border-radius: 10px;
+    margin-right: 10px;
+    .icon{
+      color: white;
+      font-weight: 600;
+    }
+  }
+  span:last-child{
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
+.dashboard-panel{
+  margin-bottom: 30px;
+  &__item{
+    border-radius: 10px;
+    padding: 20px;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
+    &__circle1{
+      display: inline-block;
+      background-color: white;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      opacity: 0.3;
+      position: absolute;
+      right: -10px;
+      bottom: -60px;
+      clip-path: inset(0 0 30% 0);
+    }
+    &__circle2{
+      display: inline-block;
+      background-color: white;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      opacity: 0.3;
+      position: absolute;
+      right: -50px;
+      bottom: 30px;
+      clip-path: inset(0 30% 0 0);
+    }
+    &__title{
+      p:first-child{
+        font-size: 22px;
+        font-weight: 600;
+        color: white;
+      }
+    }
+    &__value{
+      p:first-child{
+        font-size: 24px;
+        font-weight: 600;
+      }
+    }
+    .icon{
+      font-size: 18px;
+    }
+
+  }
+}

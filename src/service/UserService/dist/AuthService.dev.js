@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
+exports.getAmountVisits = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
 
 var _requestUserService = require("../../utils/requestUserService");
 
@@ -167,3 +167,50 @@ var createRoomChats = function createRoomChats(data) {
 };
 
 exports.createRoomChats = createRoomChats;
+
+var updateVisits = function updateVisits(userId) {
+  var url, result;
+  return regeneratorRuntime.async(function updateVisits$(_context8) {
+    while (1) {
+      switch (_context8.prev = _context8.next) {
+        case 0:
+          url = userId ? "update-visits?userId=".concat(userId) : "update-visits";
+          _context8.next = 3;
+          return regeneratorRuntime.awrap((0, _requestUserService.get)(url));
+
+        case 3:
+          result = _context8.sent;
+          return _context8.abrupt("return", result);
+
+        case 5:
+        case "end":
+          return _context8.stop();
+      }
+    }
+  });
+};
+
+exports.updateVisits = updateVisits;
+
+var getAmountVisits = function getAmountVisits() {
+  var result;
+  return regeneratorRuntime.async(function getAmountVisits$(_context9) {
+    while (1) {
+      switch (_context9.prev = _context9.next) {
+        case 0:
+          _context9.next = 2;
+          return regeneratorRuntime.awrap((0, _requestUserService.get)("amount-visits"));
+
+        case 2:
+          result = _context9.sent;
+          return _context9.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context9.stop();
+      }
+    }
+  });
+};
+
+exports.getAmountVisits = getAmountVisits;

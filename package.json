@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/charts": "^2.2.7",
-    "@ant-design/plots": "^2.3.3",
+    "@ant-design/plots": "^2.4.0",
     "@stomp/stompjs": "^7.1.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",

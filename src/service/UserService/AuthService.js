@@ -28,3 +28,12 @@ export const createRoomChats=async(data)=>{
   const result = await post(`create-rooms`,data);
   return result;
 }
+export const updateVisits = async(userId)=>{
+  const url=userId ? `update-visits?userId=${userId}`:`update-visits`;
+  const result= await get(url);
+  return result;
+}
+export const getAmountVisits=async()=>{
+  const result= await get(`amount-visits`);
+  return result;
+}
