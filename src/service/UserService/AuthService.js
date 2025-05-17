@@ -41,3 +41,7 @@ export const getAmountUsers = async()=>{
   const result= await get(`amount-users`);
   return result;
 }
+export const getAmountVisitsByMonth=async(month)=>{
+  const result= await get(`amount-visits-month?month=${month}`);
+  return result;
+}

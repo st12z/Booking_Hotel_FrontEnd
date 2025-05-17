@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAmountUsers = exports.getAmountVisits = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
+exports.getAmountVisitsByMonth = exports.getAmountUsers = exports.getAmountVisits = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
 
 var _requestUserService = require("../../utils/requestUserService");
 
@@ -237,3 +237,26 @@ var getAmountUsers = function getAmountUsers() {
 };
 
 exports.getAmountUsers = getAmountUsers;
+
+var getAmountVisitsByMonth = function getAmountVisitsByMonth(month) {
+  var result;
+  return regeneratorRuntime.async(function getAmountVisitsByMonth$(_context11) {
+    while (1) {
+      switch (_context11.prev = _context11.next) {
+        case 0:
+          _context11.next = 2;
+          return regeneratorRuntime.awrap((0, _requestUserService.get)("amount-visits-month?month=".concat(month)));
+
+        case 2:
+          result = _context11.sent;
+          return _context11.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context11.stop();
+      }
+    }
+  });
+};
+
+exports.getAmountVisitsByMonth = getAmountVisitsByMonth;

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAmountRevenueToday = exports.getAmountBills = exports.getBillByBillCode = exports.getBillByKeyword = exports.getMyBills = void 0;
+exports.getAmountBillsByMonth = exports.getAmountRevenueToday = exports.getAmountBills = exports.getBillByBillCode = exports.getBillByKeyword = exports.getMyBills = void 0;
 
 var _requestBookingService = require("../../utils/requestBookingService");
 
@@ -126,3 +126,26 @@ var getAmountRevenueToday = function getAmountRevenueToday() {
 };
 
 exports.getAmountRevenueToday = getAmountRevenueToday;
+
+var getAmountBillsByMonth = function getAmountBillsByMonth(month) {
+  var result;
+  return regeneratorRuntime.async(function getAmountBillsByMonth$(_context6) {
+    while (1) {
+      switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.next = 2;
+          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/amount-bills-month?month=".concat(month)));
+
+        case 2:
+          result = _context6.sent;
+          return _context6.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context6.stop();
+      }
+    }
+  });
+};
+
+exports.getAmountBillsByMonth = getAmountBillsByMonth;

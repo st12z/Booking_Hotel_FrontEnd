@@ -24,3 +24,7 @@ export const getAmountRevenueToday = async () => {
   const res = await get(`bills/amount-revenue`);
   return res;
 };
+export const getAmountBillsByMonth=async(month)=>{
+  const result = await get(`bills/amount-bills-month?month=${month}`);
+  return result;
+}

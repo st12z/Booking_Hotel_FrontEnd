@@ -1,49 +1,60 @@
 import { Column } from "@ant-design/plots";
 import "./StatisticView.scss";
 import { Select } from "antd";
+import { useEffect, useState } from "react";
+import { getAmountVisitsByMonth } from "../../service/UserService/AuthService";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
+import { API_DOMAIN_SOCKET } from "../../utils/variable";
+import { useSelector } from "react-redux";
 function StatisticView() {
-  const monthArr=[1,2,3,4,5,6,7,8,9,10,11,12];
-  const options=monthArr.map(item=>{
-    return{
-      value:item,
-      label:`Tháng ${item}`
-    }
+  const monthArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const options = monthArr.map((item) => {
+    return {
+      value: item,
+      label: `Tháng ${item}`,
+    };
   });
-   const data = [
-    { letter: "01", frequency: 8167 },
-    { letter: "02", frequency: 1492 },
-    { letter: "03", frequency: 2782 },
-    { letter: "04", frequency: 4253 },
-    { letter: "05", frequency: 12702 },
-    { letter: "06", frequency: 8167 },
-    { letter: "07", frequency: 1492 },
-    { letter: "08", frequency: 2782 },
-    { letter: "09", frequency: 4253 },
-    { letter: "10", frequency: 12702 },
-    { letter: "11", frequency: 8167 },
-    { letter: "12", frequency: 1492 },
-    { letter: "13", frequency: 2782 },
-    { letter: "14", frequency: 4253 },
-    { letter: "15", frequency: 12702 },
-    { letter: "15", frequency: 12702 },
-    { letter: "16", frequency: 12702 },
-    { letter: "17", frequency: 12702 },
-    { letter: "18", frequency: 1492 },
-    { letter: "19", frequency: 2782 },
-    { letter: "20", frequency: 4253 },
-    { letter: "21", frequency: 12702 },
-    { letter: "22", frequency: 12702 },
-    { letter: "23", frequency: 12702 },
-    { letter: "24", frequency: 12702 },
-  ];
+  const [currentMonth, setCurrentMonth] = useState(1);
+  const [data, setData] = useState();
+  const [reload, setReload] = useState();
+  const user = useSelector(state=>state.user);
+  useEffect(() => {
+    const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
+    const client = Stomp.over(socket);
+    client.connect({}, () => {
+      console.log("Connected to stomp");
+      // lắng nghe thông báo
+      client.subscribe(
+        `/user/${user.email}/queue/update-visits`,
+        (returnMessage) => {
+          setReload(Date.now())
+        }
+      );
+    });
+  }, []);
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const res = await getAmountVisitsByMonth(currentMonth);
+        if (res.code == 200) {
+          setData(res.data);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchApi();
+  }, [currentMonth, reload]);
+
   const config = {
     data,
-    xField: "letter",
-    yField: "frequency",
+    xField: "day",
+    yField: "amount",
     onReady: ({ chart }) => {
       try {
         const { height } = chart._container.getBoundingClientRect();
-        const tooltipItem = data[Math.floor(Math.random() * data.length)];
+        const tooltipItem = data[Math.floor(Math.random() * data?.length)];
         chart.on(
           "afterrender",
           () => {
@@ -63,9 +74,9 @@ function StatisticView() {
     width: 500,
     height: 500,
   };
-  const handleChange=()=>{
-    
-  }
+  const handleChange = (e) => {
+    setCurrentMonth(e);
+  };
   return (
     <>
       <div className="statistic-view">
