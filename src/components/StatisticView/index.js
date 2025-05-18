@@ -15,7 +15,7 @@ function StatisticView() {
       label: `Tháng ${item}`,
     };
   });
-  const [currentMonth, setCurrentMonth] = useState(1);
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
   const [data, setData] = useState([{day:1,amount:0}]);
   const [reload, setReload] = useState();
   const user = useSelector(state=>state.user);
@@ -82,7 +82,7 @@ function StatisticView() {
       <div className="statistic-view">
         <p>Biểu đồ lượng truy cập</p>
         <Select
-          defaultValue={1}
+          defaultValue={currentMonth}
           style={{ width: 120 }}
           onChange={handleChange}
           options={options}

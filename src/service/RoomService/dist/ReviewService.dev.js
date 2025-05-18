@@ -7,6 +7,8 @@ exports.getAmountReviews = exports.getReviewsByPropertyId = exports.deleteReview
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
+var _getAuthorization = require("../getAuthorization");
+
 var createReview = function createReview(data) {
   var res;
   return regeneratorRuntime.async(function createReview$(_context) {
@@ -83,7 +85,7 @@ var getAmountReviews = function getAmountReviews() {
       switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("reviews/amount-reviews"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/reviews/amount-reviews"));
 
         case 2:
           result = _context4.sent;

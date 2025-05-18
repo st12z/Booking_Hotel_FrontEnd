@@ -3,31 +3,56 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAmountRevenueByMonth = exports.getAmountBillsByMonth = exports.getAmountRevenueToday = exports.getAmountBills = exports.getBillByBillCode = exports.getBillByKeyword = exports.getMyBills = void 0;
+exports.getAmountRevenueByMonth = exports.getAmountBillsByMonth = exports.getAmountRevenueToday = exports.getAmountBills = exports.getBillByBillCode = exports.getBillByKeyword = exports.getMyBills = exports.getAllBills = void 0;
 
 var _requestBookingService = require("../../utils/requestBookingService");
+
+var _getAuthorization = require("../getAuthorization");
+
+var getAllBills = function getAllBills() {
+  var res;
+  return regeneratorRuntime.async(function getAllBills$(_context) {
+    while (1) {
+      switch (_context.prev = _context.next) {
+        case 0:
+          _context.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/all"));
+
+        case 2:
+          res = _context.sent;
+          return _context.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context.stop();
+      }
+    }
+  });
+};
+
+exports.getAllBills = getAllBills;
 
 var getMyBills = function getMyBills(email) {
   var pageNo,
       pageSize,
       res,
-      _args = arguments;
-  return regeneratorRuntime.async(function getMyBills$(_context) {
+      _args2 = arguments;
+  return regeneratorRuntime.async(function getMyBills$(_context2) {
     while (1) {
-      switch (_context.prev = _context.next) {
+      switch (_context2.prev = _context2.next) {
         case 0:
-          pageNo = _args.length > 1 && _args[1] !== undefined ? _args[1] : 1;
-          pageSize = _args.length > 2 && _args[2] !== undefined ? _args[2] : 5;
-          _context.next = 4;
+          pageNo = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : 1;
+          pageSize = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : 5;
+          _context2.next = 4;
           return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills?email=".concat(email, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize)));
 
         case 4:
-          res = _context.sent;
-          return _context.abrupt("return", res);
+          res = _context2.sent;
+          return _context2.abrupt("return", res);
 
         case 6:
         case "end":
-          return _context.stop();
+          return _context2.stop();
       }
     }
   });
@@ -37,35 +62,12 @@ exports.getMyBills = getMyBills;
 
 var getBillByKeyword = function getBillByKeyword(email, pageNo, pageSize, keyword) {
   var res;
-  return regeneratorRuntime.async(function getBillByKeyword$(_context2) {
-    while (1) {
-      switch (_context2.prev = _context2.next) {
-        case 0:
-          _context2.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/search?email=".concat(email, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize, "&keyword=").concat(keyword)));
-
-        case 2:
-          res = _context2.sent;
-          return _context2.abrupt("return", res);
-
-        case 4:
-        case "end":
-          return _context2.stop();
-      }
-    }
-  });
-};
-
-exports.getBillByKeyword = getBillByKeyword;
-
-var getBillByBillCode = function getBillByBillCode(billCode) {
-  var res;
-  return regeneratorRuntime.async(function getBillByBillCode$(_context3) {
+  return regeneratorRuntime.async(function getBillByKeyword$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/".concat(billCode)));
+          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/search?email=".concat(email, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize, "&keyword=").concat(keyword)));
 
         case 2:
           res = _context3.sent;
@@ -79,16 +81,16 @@ var getBillByBillCode = function getBillByBillCode(billCode) {
   });
 };
 
-exports.getBillByBillCode = getBillByBillCode;
+exports.getBillByKeyword = getBillByKeyword;
 
-var getAmountBills = function getAmountBills() {
+var getBillByBillCode = function getBillByBillCode(billCode) {
   var res;
-  return regeneratorRuntime.async(function getAmountBills$(_context4) {
+  return regeneratorRuntime.async(function getBillByBillCode$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/amount-bills"));
+          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/".concat(billCode)));
 
         case 2:
           res = _context4.sent;
@@ -102,16 +104,16 @@ var getAmountBills = function getAmountBills() {
   });
 };
 
-exports.getAmountBills = getAmountBills;
+exports.getBillByBillCode = getBillByBillCode;
 
-var getAmountRevenueToday = function getAmountRevenueToday() {
+var getAmountBills = function getAmountBills() {
   var res;
-  return regeneratorRuntime.async(function getAmountRevenueToday$(_context5) {
+  return regeneratorRuntime.async(function getAmountBills$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
           _context5.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/amount-revenue"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/amount-bills"));
 
         case 2:
           res = _context5.sent;
@@ -125,20 +127,20 @@ var getAmountRevenueToday = function getAmountRevenueToday() {
   });
 };
 
-exports.getAmountRevenueToday = getAmountRevenueToday;
+exports.getAmountBills = getAmountBills;
 
-var getAmountBillsByMonth = function getAmountBillsByMonth(month) {
-  var result;
-  return regeneratorRuntime.async(function getAmountBillsByMonth$(_context6) {
+var getAmountRevenueToday = function getAmountRevenueToday() {
+  var res;
+  return regeneratorRuntime.async(function getAmountRevenueToday$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
           _context6.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/amount-bills-month?month=".concat(month)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/amount-revenue"));
 
         case 2:
-          result = _context6.sent;
-          return _context6.abrupt("return", result);
+          res = _context6.sent;
+          return _context6.abrupt("return", res);
 
         case 4:
         case "end":
@@ -148,16 +150,16 @@ var getAmountBillsByMonth = function getAmountBillsByMonth(month) {
   });
 };
 
-exports.getAmountBillsByMonth = getAmountBillsByMonth;
+exports.getAmountRevenueToday = getAmountRevenueToday;
 
-var getAmountRevenueByMonth = function getAmountRevenueByMonth(month) {
+var getAmountBillsByMonth = function getAmountBillsByMonth(month) {
   var result;
-  return regeneratorRuntime.async(function getAmountRevenueByMonth$(_context7) {
+  return regeneratorRuntime.async(function getAmountBillsByMonth$(_context7) {
     while (1) {
       switch (_context7.prev = _context7.next) {
         case 0:
           _context7.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/amount-revenue-month?month=".concat(month)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/amount-bills-month?month=".concat(month)));
 
         case 2:
           result = _context7.sent;
@@ -166,6 +168,29 @@ var getAmountRevenueByMonth = function getAmountRevenueByMonth(month) {
         case 4:
         case "end":
           return _context7.stop();
+      }
+    }
+  });
+};
+
+exports.getAmountBillsByMonth = getAmountBillsByMonth;
+
+var getAmountRevenueByMonth = function getAmountRevenueByMonth(month) {
+  var result;
+  return regeneratorRuntime.async(function getAmountRevenueByMonth$(_context8) {
+    while (1) {
+      switch (_context8.prev = _context8.next) {
+        case 0:
+          _context8.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/amount-revenue-month?month=".concat(month)));
+
+        case 2:
+          result = _context8.sent;
+          return _context8.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context8.stop();
       }
     }
   });

@@ -7,16 +7,7 @@ export const getCredentials = async(path)=>{
   const result = await response.json();
   return result;
 }
-export const getAuthorization = async(path)=>{
-  const response =await fetch(`${API_DOMAIN}/${path}`,{
-    method:"GET",
-    headers:{
-      Authorization:`Bearer ${localStorage.getItem("access_token")}`
-    }
-  });
-  const result = await response.json();
-  return result;
-}
+
 export const get = async(path)=>{
   const response =await fetch(`${API_DOMAIN}/${path}`)
   const result =await response.json();

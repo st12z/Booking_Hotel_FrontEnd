@@ -1,4 +1,5 @@
-import { get, getAuthorization, getCredentials, post } from "../../utils/requestUserService";
+import { get, getCredentials, post } from "../../utils/requestUserService";
+import { getAuthorization } from "../getAuthorization";
 
 export const registerUser = async (data) => {
   const res = await post("register", data);
@@ -17,7 +18,7 @@ export const logout = async (query) => {
   return res;
 }
 export const getInfoUser = async () => {
-  const result = await getAuthorization("info-user");
+  const result = await getAuthorization("users/api/users/info-user");
   return result;
 }
 export const getInfoUserById = async(id)=>{
@@ -34,14 +35,14 @@ export const updateVisits = async(userId)=>{
   return result;
 }
 export const getAmountVisits=async()=>{
-  const result= await get(`amount-visits`);
+  const result= await getAuthorization(`users/api/users/amount-visits`);
   return result;
 }
 export const getAmountUsers = async()=>{
-  const result= await get(`amount-users`);
+  const result= await getAuthorization(`users/api/users/amount-users`);
   return result;
 }
 export const getAmountVisitsByMonth=async(month)=>{
-  const result= await get(`amount-visits-month?month=${month}`);
+  const result= await getAuthorization(`users/api/users/amount-visits-month?month=${month}`);
   return result;
 }

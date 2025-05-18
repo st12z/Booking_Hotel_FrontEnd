@@ -8,12 +8,19 @@ import { AppstoreOutlined,UserOutlined,
     SketchOutlined
    } from '@ant-design/icons';
 import { Link } from "react-router-dom";
+import { FaCity } from "react-icons/fa";
+
 function MenuSider(){
   const items=[
     {
       key:"/dashboard",
       label:<Link to="">Dashboard</Link>,
       icon:<HomeOutlined />,
+    },
+    {
+      key:"/properties",
+      label:<Link to="/admin/properties">Quản lý khách sạn</Link>,
+      icon:<FaCity />,
     },
   ]
   return(

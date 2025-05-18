@@ -1,4 +1,5 @@
 import {  postImages,get } from "../../utils/requestRoomService"
+import { getAuthorization } from "../getAuthorization";
 
 export const createReview = async(data)=>{
   const res = await postImages("reviews",data);
@@ -13,6 +14,6 @@ export const getReviewsByPropertyId=async(propertyId)=>{
   return res;
 }
 export const getAmountReviews = async()=>{
-  const result = await get(`reviews/amount-reviews`);
+  const result = await getAuthorization(`rooms/api/reviews/amount-reviews`);
   return result;
 }

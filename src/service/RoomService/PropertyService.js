@@ -1,4 +1,5 @@
 import { get, post } from "../../utils/requestRoomService";
+import { getAuthorization } from "../getAuthorization";
 
 export const getPropertyBySlug=async(path)=>{
   const result = await get(`properties/slug/${path}`);
@@ -13,6 +14,10 @@ export const getPropertyId = async(id)=>{
   return result;
 }
 export const getAmountProperties=async(id)=>{
-  const result = await get(`properties/amount-properties`);
+  const result = await getAuthorization(`rooms/api/properties/amount-properties`);
+  return result;
+}
+export const getAllProperties = async()=>{
+  const result = await get(`properties/all`);
   return result;
 }

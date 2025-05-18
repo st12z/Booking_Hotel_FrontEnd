@@ -7,6 +7,8 @@ exports.getAmountVisitsByMonth = exports.getAmountUsers = exports.getAmountVisit
 
 var _requestUserService = require("../../utils/requestUserService");
 
+var _getAuthorization = require("../getAuthorization");
+
 var registerUser = function registerUser(data) {
   var res;
   return regeneratorRuntime.async(function registerUser$(_context) {
@@ -106,7 +108,7 @@ var getInfoUser = function getInfoUser() {
       switch (_context5.prev = _context5.next) {
         case 0:
           _context5.next = 2;
-          return regeneratorRuntime.awrap((0, _requestUserService.getAuthorization)("info-user"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("users/api/users/info-user"));
 
         case 2:
           result = _context5.sent;
@@ -199,7 +201,7 @@ var getAmountVisits = function getAmountVisits() {
       switch (_context9.prev = _context9.next) {
         case 0:
           _context9.next = 2;
-          return regeneratorRuntime.awrap((0, _requestUserService.get)("amount-visits"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("users/api/users/amount-visits"));
 
         case 2:
           result = _context9.sent;
@@ -222,7 +224,7 @@ var getAmountUsers = function getAmountUsers() {
       switch (_context10.prev = _context10.next) {
         case 0:
           _context10.next = 2;
-          return regeneratorRuntime.awrap((0, _requestUserService.get)("amount-users"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("users/api/users/amount-users"));
 
         case 2:
           result = _context10.sent;
@@ -245,7 +247,7 @@ var getAmountVisitsByMonth = function getAmountVisitsByMonth(month) {
       switch (_context11.prev = _context11.next) {
         case 0:
           _context11.next = 2;
-          return regeneratorRuntime.awrap((0, _requestUserService.get)("amount-visits-month?month=".concat(month)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("users/api/users/amount-visits-month?month=".concat(month)));
 
         case 2:
           result = _context11.sent;

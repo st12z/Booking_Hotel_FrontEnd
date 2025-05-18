@@ -47,9 +47,7 @@ function AdminRoute() {
   }, []);
   return (
     <>
-      {loading ? (
-        <Skeleton active />
-      ) : ["MANAGER", "ADMIN", "STAFF"].some((role) =>
+      { ["MANAGER", "ADMIN", "STAFF"].some((role) =>
           user.roles?.includes(role)
         ) ? (
         <Outlet />

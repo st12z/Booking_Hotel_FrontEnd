@@ -1,27 +1,40 @@
 import { Space, Table, Tag } from "antd";
 import "./ListBillRecently.scss";
-import { getMyBills } from "../../service/BookingService/BillService";
+import { getAllBills, getMyBills } from "../../service/BookingService/BillService";
 import { getPropertyId } from "../../service/RoomService/PropertyService";
 import { useEffect, useState } from "react";
 import { getFormatPrice } from "../../utils/format";
+import { useSelector } from "react-redux";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
+import { API_DOMAIN_SOCKET } from "../../utils/variable";
 function ListBillRecently() {
   const [data, setData] = useState([]);
-  const [pageNo, setPageNo] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
-  const [total, setTotal] = useState();
-  const [loading, setLoading] = useState(false);
+  const [reload,setReload] = useState();
+  const user = useSelector((state) => state.user);
+  useEffect(() => {
+    const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
+    const client = Stomp.over(socket);
+    client.connect({}, () => {
+      console.log("Connected to stomp");
+      // lắng nghe thông báo
+      client.subscribe(
+        `/user/${user.email}/queue/amount-bills`,
+        (returnMessage) => {
+          const message = JSON.parse(returnMessage.body);
+          setReload(Date.now());
+        }
+      );
+    });
+  }, []);
   useEffect(() => {
     const fetchApi = async () => {
-      setLoading(true);
       try {
-        const res = await getMyBills("ckp2004vn@gmail.com", pageNo, pageSize);
+        const res = await getAllBills();
         console.log(res);
         if (res.code == 200) {
-          const resData = res.data.dataPage;
+          const resData = res.data;
           let newData=[];
-          setPageNo(res.data.pageNo);
-          setPageSize(res.data.pageSize);
-          setTotal(res.data.total);
           for(const item of resData){
             const resProperty= await getPropertyId(item.propertyId);
             if(resProperty.code==200){
@@ -35,14 +48,10 @@ function ListBillRecently() {
         }
       } catch (error) {
         console.error(error);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
-      }
+      } 
     };
     fetchApi();
-  }, [pageNo]);
+  }, [reload]);
   const columns = [
     {
       title: "Mã đặt phòng",
@@ -136,15 +145,6 @@ function ListBillRecently() {
         <Table
           dataSource={data}
           columns={columns}
-          pagination={{
-            current: pageNo,
-            pageSize: pageSize,
-            total: total,
-            onChange: (page, pageSize) => {
-              setPageNo(page);
-              setPageSize(pageSize);
-            },
-          }}
         />
       </div>
     </>

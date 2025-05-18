@@ -18,6 +18,7 @@ import AdminBoard from "../pages/Admin/AdminBoard";
 import LayoutAdmin from "../layout/LayoutAdmin";
 import RoomChats from "../pages/Admin/RoomChats";
 import Chats from "../pages/Admin/Chats";
+import Properties from "../pages/Admin/Properties";
 export const routes = [
   {
     path: "/",
@@ -92,6 +93,10 @@ export const routes = [
           {
             path:"",
             element: <AdminBoard/>
+          },
+          {
+            path:"properties",
+            element: <Properties/>
           },
           {
             path: "room-chats",

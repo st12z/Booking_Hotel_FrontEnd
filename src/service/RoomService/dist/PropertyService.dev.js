@@ -3,9 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = void 0;
+exports.getAllProperties = exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
+
+var _getAuthorization = require("../getAuthorization");
 
 var getPropertyBySlug = function getPropertyBySlug(path) {
   var result;
@@ -83,7 +85,7 @@ var getAmountProperties = function getAmountProperties(id) {
       switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("properties/amount-properties"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/properties/amount-properties"));
 
         case 2:
           result = _context4.sent;
@@ -98,3 +100,26 @@ var getAmountProperties = function getAmountProperties(id) {
 };
 
 exports.getAmountProperties = getAmountProperties;
+
+var getAllProperties = function getAllProperties() {
+  var result;
+  return regeneratorRuntime.async(function getAllProperties$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.next = 2;
+          return regeneratorRuntime.awrap((0, _requestRoomService.get)("properties/all"));
+
+        case 2:
+          result = _context5.sent;
+          return _context5.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context5.stop();
+      }
+    }
+  });
+};
+
+exports.getAllProperties = getAllProperties;
