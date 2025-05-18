@@ -1,6 +1,6 @@
 // components/AuthWatcher.jsx
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { notification } from "antd";
 import { useNavigate } from "react-router-dom";
 import { isTokenExpired } from "../../utils/checkTokenExpired";
@@ -13,6 +13,7 @@ function AuthWatcher() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [api, contextHolder] = notification.useNotification();
+  const user = useSelector(state=>state.user);
   const openNotification = (placement, message, color, onClose) => {
     api.info({
       message: `Thông báo`,
@@ -59,7 +60,7 @@ function AuthWatcher() {
   useEffect(() => {
     fetchApi();
     const interval = setInterval(() => {
-      fetchApi();
+      if(user) fetchApi();
     }, 60000); // mỗi 60s kiểm tra
 
     return () => clearInterval(interval);
