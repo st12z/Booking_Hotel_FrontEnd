@@ -34,8 +34,8 @@ export const updateVisits = async(userId)=>{
   const result= await get(url);
   return result;
 }
-export const getAmountVisits=async()=>{
-  const result= await getAuthorization(`users/api/users/amount-visits`);
+export const getAmountVisitsToday=async()=>{
+  const result= await getAuthorization(`users/api/users/amount-visits-today`);
   return result;
 }
 export const getAmountUsers = async()=>{

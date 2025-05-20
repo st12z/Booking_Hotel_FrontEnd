@@ -3,20 +3,20 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getChatsByRoomChatId = void 0;
+exports.callBackPayment = void 0;
 
-var _requestRoomService = require("../../utils/requestRoomService");
+var _requestPaymentService = require("../../utils/requestPaymentService");
 
 var _getAuthorization = require("../getAuthorization");
 
-var getChatsByRoomChatId = function getChatsByRoomChatId(roomChatId) {
+var callBackPayment = function callBackPayment() {
   var res;
-  return regeneratorRuntime.async(function getChatsByRoomChatId$(_context) {
+  return regeneratorRuntime.async(function callBackPayment$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/chats/messages/".concat(roomChatId)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("payments/api/payments/vn-pay-callback"));
 
         case 2:
           res = _context.sent;
@@ -30,4 +30,4 @@ var getChatsByRoomChatId = function getChatsByRoomChatId(roomChatId) {
   });
 };
 
-exports.getChatsByRoomChatId = getChatsByRoomChatId;
+exports.callBackPayment = callBackPayment;

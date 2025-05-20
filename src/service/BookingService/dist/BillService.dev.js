@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAmountRevenueByMonth = exports.getAmountBillsByMonth = exports.getAmountRevenueToday = exports.getAmountBills = exports.getBillByBillCode = exports.getBillByKeyword = exports.getMyBills = exports.getAllBills = void 0;
+exports.getAmountRevenueByMonth = exports.getAmountBillsByMonth = exports.getAmountRevenueToday = exports.getAmountBillsToday = exports.getBillByBillCode = exports.getBillByKeyword = exports.getMyBills = exports.getAllBills = void 0;
 
 var _requestBookingService = require("../../utils/requestBookingService");
 
@@ -35,6 +35,7 @@ exports.getAllBills = getAllBills;
 var getMyBills = function getMyBills(email) {
   var pageNo,
       pageSize,
+      keyword,
       res,
       _args2 = arguments;
   return regeneratorRuntime.async(function getMyBills$(_context2) {
@@ -43,14 +44,15 @@ var getMyBills = function getMyBills(email) {
         case 0:
           pageNo = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : 1;
           pageSize = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : 5;
-          _context2.next = 4;
-          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills?email=".concat(email, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize)));
+          keyword = _args2.length > 3 ? _args2[3] : undefined;
+          _context2.next = 5;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills?email=".concat(email, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize, "&keyword=").concat(keyword)));
 
-        case 4:
+        case 5:
           res = _context2.sent;
           return _context2.abrupt("return", res);
 
-        case 6:
+        case 7:
         case "end":
           return _context2.stop();
       }
@@ -67,7 +69,7 @@ var getBillByKeyword = function getBillByKeyword(email, pageNo, pageSize, keywor
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/search?email=".concat(email, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize, "&keyword=").concat(keyword)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/search?email=".concat(email, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize, "&keyword=").concat(keyword)));
 
         case 2:
           res = _context3.sent;
@@ -90,7 +92,7 @@ var getBillByBillCode = function getBillByBillCode(billCode) {
       switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.get)("bills/".concat(billCode)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/".concat(billCode)));
 
         case 2:
           res = _context4.sent;
@@ -106,14 +108,14 @@ var getBillByBillCode = function getBillByBillCode(billCode) {
 
 exports.getBillByBillCode = getBillByBillCode;
 
-var getAmountBills = function getAmountBills() {
+var getAmountBillsToday = function getAmountBillsToday() {
   var res;
-  return regeneratorRuntime.async(function getAmountBills$(_context5) {
+  return regeneratorRuntime.async(function getAmountBillsToday$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
           _context5.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/amount-bills"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/amount-bills-today"));
 
         case 2:
           res = _context5.sent;
@@ -127,7 +129,7 @@ var getAmountBills = function getAmountBills() {
   });
 };
 
-exports.getAmountBills = getAmountBills;
+exports.getAmountBillsToday = getAmountBillsToday;
 
 var getAmountRevenueToday = function getAmountRevenueToday() {
   var res;
@@ -136,7 +138,7 @@ var getAmountRevenueToday = function getAmountRevenueToday() {
       switch (_context6.prev = _context6.next) {
         case 0:
           _context6.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/amount-revenue"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/bills/amount-revenue-today"));
 
         case 2:
           res = _context6.sent;

@@ -28,7 +28,7 @@ function StatisticRevenue() {
       console.log("Connected to stomp");
       // lắng nghe thông báo
       client.subscribe(
-        `/user/${user.email}/queue/amount-bills`,
+        `/user/${user.email}/queue/amount-bills-today`,
         (returnMessage) => {
           const message = JSON.parse(returnMessage.body);
           setReload(Date.now());

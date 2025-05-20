@@ -9,3 +9,25 @@ export const getAuthorization = async(path)=>{
   const result = await response.json();
   return result;
 }
+export const postAuthorization = async(path,data)=>{
+  const response =await fetch(`${API_DOMAIN}/${path}`,{
+    method:"POST",
+    headers:{
+      Authorization:`Bearer ${localStorage.getItem("access_token")}`
+    },
+    body:JSON.stringify(data)
+  });
+  const result = await response.json();
+  return result;
+}
+export const postImagesAuthorization =async(path,data)=>{
+  const response =await fetch(`${API_DOMAIN}/${path}`,{
+    method:"POST",
+    headers:{
+      Authorization:`Bearer ${localStorage.getItem("access_token")}`
+    },
+    body:data
+  });
+  const result = await response.json();
+  return result;
+}

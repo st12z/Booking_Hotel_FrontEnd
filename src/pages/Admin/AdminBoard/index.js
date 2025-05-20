@@ -16,55 +16,61 @@ import StatisticView from "../../../components/StatisticView";
 import StatisticRevenue from "../../../components/StatisticRevenue";
 import ListBillRecently from "../../../components/ListBillRecently";
 import { useEffect, useState } from "react";
-import { getAmountUsers, getAmountVisits } from "../../../service/UserService/AuthService";
+import {
+  getAmountUsers,
+  getAmountVisitsToday,
+} from "../../../service/UserService/AuthService";
 import { Stomp } from "@stomp/stompjs";
 import { useSelector } from "react-redux";
 import SockJS from "sockjs-client";
 import { API_DOMAIN_SOCKET } from "../../../utils/variable";
 import { getAmountProperties } from "../../../service/RoomService/PropertyService";
-import { getAmountBills, getAmountRevenueToday } from "../../../service/BookingService/BillService";
+import {
+  getAmountBillsToday,
+  getAmountRevenueToday,
+} from "../../../service/BookingService/BillService";
 import { getAmountReviews } from "../../../service/RoomService/ReviewService";
 function AdminBoard() {
-  const [amountVisits,setAmountVisits]=useState();
-  const [amountUsers,setAmountUsers]=useState();
-  const [amountProperties,setAmountProperties]=useState();
-  const [amountBills,setAmountBills]=useState();
-  const [amountReviews,setAmountReviews]=useState();
-  const [amountRevenueToday,setAmountRevenueToday]=useState();
-  const user = useSelector(state=>state.user);
-  useEffect(()=>{
-    const fetchApi=async()=>{
-      try{
-        const resAmountVisits = await getAmountVisits();
+  const [amountVisitsToday, setAmountVisitsToday] = useState(0);
+  const [amountUsers, setAmountUsers] = useState(0);
+  const [amountProperties, setAmountProperties] = useState(0);
+  const [amountBillsToday, setAmountBillsToday] = useState(0);
+  const [amountReviews, setAmountReviews] = useState(0);
+  const [amountRevenueToday, setAmountRevenueToday] = useState(0);
+  const user = useSelector((state) => state.user);
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const resAmountVisitsToday = await getAmountVisitsToday();
         const resAmountUsers = await getAmountUsers();
         const resAmountProperties = await getAmountProperties();
-        const resAmountBills = await getAmountBills();
+        const resAmountBillsToday = await getAmountBillsToday();
         const resAmountRevenueToday = await getAmountRevenueToday();
         const resAmountReviews = await getAmountReviews();
-        if(resAmountVisits.code==200){
-          setAmountVisits(resAmountVisits.data);
+        if (resAmountVisitsToday.code == 200) {
+          setAmountVisitsToday(resAmountVisitsToday.data);
         }
-        if(resAmountUsers.code==200){
+        if (resAmountUsers.code == 200) {
           setAmountUsers(resAmountUsers.data);
         }
-        if(resAmountProperties.code==200){
+        if (resAmountProperties.code == 200) {
           setAmountProperties(resAmountProperties.data);
         }
-        if(resAmountBills.code==200){
-          setAmountBills(resAmountBills.data);
+        if (resAmountBillsToday.code == 200) {
+          setAmountBillsToday(resAmountBillsToday.data);
         }
-        if(resAmountRevenueToday.code==200){
+        if (resAmountRevenueToday.code == 200) {
           setAmountRevenueToday(resAmountRevenueToday.data);
         }
-        if(resAmountReviews.code==200){
+        if (resAmountReviews.code == 200) {
           setAmountReviews(resAmountReviews.data);
         }
-      }catch(error){
+      } catch (error) {
         console.error(error);
       }
-    }
+    };
     fetchApi();
-  },[]);
+  }, []);
   // Kết nối websocket
   useEffect(() => {
     if (!user?.email) return;
@@ -79,36 +85,28 @@ function AdminBoard() {
         `/user/${user.email}/queue/update-visits`,
         (returnMessage) => {
           const message = JSON.parse(returnMessage.body);
-          console.log(message);
-          setAmountVisits(message);
-          
+          setAmountVisitsToday(message);
         }
       );
       client.subscribe(
         `/user/${user.email}/queue/amount-users`,
         (returnMessage) => {
-          const message = JSON.parse(returnMessage.body);
-          console.log(message);
-          setAmountUsers(message);
-          
+          console.log("Received message: ", returnMessage.body);
+          setAmountUsers(amountUsers=>amountUsers+1);
         }
       );
       client.subscribe(
-        `/user/${user.email}/queue/amount-bills`,
+        `/user/${user.email}/queue/amount-bills-today`,
         (returnMessage) => {
-          const message = JSON.parse(returnMessage.body);
-          console.log(message);
-          setAmountBills(message);
-          
+          console.log("Received message: ", returnMessage.body);
+          setAmountBillsToday(amountBillsToday=>amountBillsToday+1);
         }
       );
       client.subscribe(
         `/user/${user.email}/queue/amount-reviews`,
         (returnMessage) => {
-          const message = JSON.parse(returnMessage.body);
-          console.log(message);
-          setAmountReviews(message);
-          
+          console.log("Received message: ", returnMessage.body);
+          setAmountReviews(amountReviews=>amountReviews+1);
         }
       );
       client.subscribe(
@@ -116,8 +114,7 @@ function AdminBoard() {
         (returnMessage) => {
           const message = JSON.parse(returnMessage.body);
           console.log(message);
-          setAmountRevenueToday(message);
-          
+          setAmountRevenueToday(amountRevenueToday=>amountRevenueToday + message);
         }
       );
     });
@@ -159,7 +156,7 @@ function AdminBoard() {
             <DashBoardItem
               icon=<CarryOutOutlined />
               title="Hóa đơn hôm nay"
-              value={amountBills}
+              value={amountBillsToday}
               color={"#5DD5C7"}
             />
           </Col>
@@ -167,7 +164,7 @@ function AdminBoard() {
             <DashBoardItem
               icon=<EyeOutlined />
               title="Số lượng truy cập hôm nay"
-              value={amountVisits}
+              value={amountVisitsToday}
               color={"#FE9596"}
             />
           </Col>

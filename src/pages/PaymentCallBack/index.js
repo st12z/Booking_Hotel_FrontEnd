@@ -7,41 +7,34 @@ import { Button } from "antd";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { connectStomp } from "../../utils/connectStomp";
-import { getAmountBills, getAmountRevenueToday } from "../../service/BookingService/BillService";
+import {
+  getAmountBillsToday,
+  getAmountRevenueToday,
+  getBillByBillCode,
+} from "../../service/BookingService/BillService";
 function PaymentCallBack() {
   const [searchParams] = useSearchParams();
   const billCode = searchParams.get("billCode");
   const status = searchParams.get("status");
   const user = useSelector((state) => state.user);
-  const fetchBills = async()=>{
-      try{
-        const res= await getAmountBills();
-        if(res.code==200){
-          connectStomp("/app/sendAmountBills",  res.data );
-        }
-      }catch(error){
+
+  useEffect(() => {
+    const fetchBills = async () => {
+      try {
+        const res = await getBillByBillCode(billCode);
+        connectStomp("/app/sendNotification", {
+          content: `${user.email} đã hoàn thành hóa đơn ${billCode}!`,
+        });
+        connectStomp(
+          "/app/sendAmountBillsToday",
+          `Hoá đơn ${billCode} đã được thanh toán thàn công!`
+        );
+        connectStomp("/app/sendAmountRevenueToday", res.data.newTotalPayment);
+      } catch (error) {
         console.error(error);
       }
-  }
-  const fetchAmountRevenue=async()=>{
-    try{
-      const res = await getAmountRevenueToday();
-      if(res.code==200){
-        connectStomp("/app/sendAmountRevenueToday",res.data);
-      }
-    }catch(error){
-      console.error(error);
-    }
-  }
-  useEffect(() => {
-    
-    // Kết nối
-    if(status==200){
-      fetchBills();
-      fetchAmountRevenue();
-      connectStomp("/app/sendNotification",{content:`${user.email} đã hoàn thành hóa đơn ${billCode}!`});
-      
-    }
+    };
+    if(status==200) fetchBills();
   }, []);
   return (
     <>

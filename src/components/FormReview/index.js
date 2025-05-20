@@ -146,10 +146,7 @@ function FormReview({ propertyId }) {
       const res = await createReview(data);
       if (res.code == 201) {
         openNotification("topRight", "Gửi đánh giá thành công!", "green");
-        const resAmountReviews = await getAmountReviews();
-        if(resAmountReviews.code==200){
-          connectStomp("/app/sendAmountReviews",resAmountReviews.data);
-        }
+          connectStomp("/app/sendAmountReviews",`Tài khoản ${user.email} vừa đánh giá thành công!`);
       } else {
         openNotification("topRight", "Gửi đánh giá thất bại!", "red");
       }

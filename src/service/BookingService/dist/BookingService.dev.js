@@ -3,20 +3,20 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getChatsByRoomChatId = void 0;
+exports.confirmBooking = void 0;
 
-var _requestRoomService = require("../../utils/requestRoomService");
+var _requestBookingService = require("../../utils/requestBookingService");
 
 var _getAuthorization = require("../getAuthorization");
 
-var getChatsByRoomChatId = function getChatsByRoomChatId(roomChatId) {
+var confirmBooking = function confirmBooking(data) {
   var res;
-  return regeneratorRuntime.async(function getChatsByRoomChatId$(_context) {
+  return regeneratorRuntime.async(function confirmBooking$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/chats/messages/".concat(roomChatId)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("bookings/api/bookings/confirm", data));
 
         case 2:
           res = _context.sent;
@@ -30,4 +30,4 @@ var getChatsByRoomChatId = function getChatsByRoomChatId(roomChatId) {
   });
 };
 
-exports.getChatsByRoomChatId = getChatsByRoomChatId;
+exports.confirmBooking = confirmBooking;

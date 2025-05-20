@@ -7,6 +7,8 @@ exports.getRoomChatsId = exports.getRoomChatsOfUser = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
+var _getAuthorization = require("../getAuthorization");
+
 var getRoomChatsOfUser = function getRoomChatsOfUser(userId) {
   var res;
   return regeneratorRuntime.async(function getRoomChatsOfUser$(_context) {
@@ -14,7 +16,7 @@ var getRoomChatsOfUser = function getRoomChatsOfUser(userId) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("room-chats/rooms/".concat(userId)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/room-chats/rooms/".concat(userId)));
 
         case 2:
           res = _context.sent;
@@ -37,7 +39,7 @@ var getRoomChatsId = function getRoomChatsId(id) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("room-chats/".concat(id)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/room-chats/".concat(id)));
 
         case 2:
           res = _context2.sent;

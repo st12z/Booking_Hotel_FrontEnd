@@ -111,11 +111,12 @@ function Header() {
     const fetchApi = async () => {
       try {
         const res = await logout("logout");
+        console.log(res);
         if (res.code == 200) {
           dispatch(login("LOGOUT"));
-          dispatch({ type: "DELETE_USER" });
+          dispatch({ type: "SAVE_USER", data: {} });
           localStorage.removeItem("access_token");
-          window.location.href = "/login";
+          
         }
       } catch (error) {
         console.error(error);
@@ -143,7 +144,7 @@ function Header() {
         <div className="container">
           <div className="header__top">
             <div className="header__top__logo">
-              <a href="/">Booking.com</a>
+              <NavLink href="/">Booking.com</NavLink>
             </div>
             <div className="header__top__menu">
               <ul>

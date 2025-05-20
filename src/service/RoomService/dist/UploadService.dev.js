@@ -7,6 +7,8 @@ exports.uploadImages = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
+var _getAuthorization = require("../getAuthorization");
+
 var uploadImages = function uploadImages(data) {
   var res;
   return regeneratorRuntime.async(function uploadImages$(_context) {
@@ -14,7 +16,7 @@ var uploadImages = function uploadImages(data) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.postImages)("upload", data));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postImagesAuthorization)("rooms/api/upload", data));
 
         case 2:
           res = _context.sent;

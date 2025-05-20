@@ -5,28 +5,28 @@ export const getAllBills = async()=>{
   const res = await getAuthorization(`bookings/api/bills/all`);
   return res;
 }
-export const getMyBills = async (email, pageNo = 1, pageSize = 5) => {
-  const res = await get(
-    `bills?email=${email}&pageNo=${pageNo}&pageSize=${pageSize}`
+export const getMyBills = async (email, pageNo = 1, pageSize = 5,keyword) => {
+  const res = await getAuthorization(
+    `bookings/api/bills?email=${email}&pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`
   );
   return res;
 };
 export const getBillByKeyword = async (email, pageNo, pageSize, keyword) => {
-  const res = await get(
-    `bills/search?email=${email}&pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`
+  const res = await getAuthorization(
+    `bookings/api/bills/search?email=${email}&pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`
   );
   return res;
 };
 export const getBillByBillCode = async (billCode) => {
-  const res = await get(`bills/${billCode}`);
+  const res = await getAuthorization(`bookings/api/bills/${billCode}`);
   return res;
 };
-export const getAmountBills = async () => {
-  const res = await getAuthorization(`bookings/api/bills/amount-bills`);
+export const getAmountBillsToday = async () => {
+  const res = await getAuthorization(`bookings/api/bills/amount-bills-today`);
   return res;
 };
 export const getAmountRevenueToday = async () => {
-  const res = await getAuthorization(`bookings/api/bills/amount-revenue`);
+  const res = await getAuthorization(`bookings/api/bills/amount-revenue-today`);
   return res;
 };
 export const getAmountBillsByMonth=async(month)=>{

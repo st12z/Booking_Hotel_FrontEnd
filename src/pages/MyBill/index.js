@@ -18,25 +18,26 @@ function MyBill() {
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState();
   const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState([]);
   useEffect(() => {
     const fetchApi = async () => {
       setLoading(true);
       try {
-        const res = await getMyBills(user.email, pageNo, pageSize);
+        const res = await getMyBills(user.email, pageNo, pageSize, keyword);
         console.log(res);
         if (res.code == 200) {
           const resData = res.data.dataPage;
-          let newData=[];
+          let newData = [];
           setPageNo(res.data.pageNo);
           setPageSize(res.data.pageSize);
           setTotal(res.data.total);
-          for(const item of resData){
-            const resProperty= await getPropertyId(item.propertyId);
-            if(resProperty.code==200){
+          for (const item of resData) {
+            const resProperty = await getPropertyId(item.propertyId);
+            if (resProperty.code == 200) {
               newData.push({
                 ...item,
-                property:resProperty.data
-              })
+                property: resProperty.data,
+              });
             }
           }
           setData(newData);
@@ -50,7 +51,8 @@ function MyBill() {
       }
     };
     fetchApi();
-  }, [pageNo]);
+  }, [pageNo, keyword]);
+  // hủy phòng
   const handleCancelBooking = (billCode) => {
     console.log(billCode);
   };
@@ -71,14 +73,17 @@ function MyBill() {
       key: "billcode",
       render: (_, record) => (
         <>
-          <div 
-            style={{ 
-              display:"flex",
-              flexDirection:"column"
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <b>{record.property.name}</b>
-            <img src={record.property.images} style={{width:"150px",borderRadius:"5px"}}/>
+            <img
+              src={record.property.images}
+              style={{ width: "150px", borderRadius: "5px" }}
+            />
           </div>
         </>
       ),
@@ -143,7 +148,7 @@ function MyBill() {
       title: "Hành động",
       key: "payment",
       render: (_, record) => (
-        <div style={{display:"flex"}}>
+        <div style={{ display: "flex" }}>
           <Button style={{ marginRight: "10px" }}>
             <Link to={`/bills/${record.billCode}`}>{<EyeOutlined />}</Link>
           </Button>
@@ -158,35 +163,12 @@ function MyBill() {
       ),
     },
   ];
-  // handleSearch
-  const fetchSearch = async (keyword) => {
-    try {
-      const res = await getBillByKeyword(user.email,pageNo,pageSize,keyword);
-      if(res.code==200){
-        setData(res.data.dataPage);
-        setPageNo(res.data.pageNo);
-        setPageSize(res.data.pageSize);
-        setTotal(res.data.total);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const handleSearch = (e) => {
-    const keyword = e.target.value;
-    setLoading(true);
-    const timeout = setTimeout(() => {
-      fetchSearch(keyword);
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timeout);
-  };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const keyword = e.target[0].value;
+    const keyword = e.target[0].value || "";
     setLoading(true);
     const timeout = setTimeout(() => {
-      fetchSearch(keyword);
+      setKeyword(keyword);
       setLoading(false);
     }, 2000);
     return () => clearTimeout(timeout);
@@ -195,7 +177,7 @@ function MyBill() {
     <>
       <form className="form-search" onSubmit={handleSubmit}>
         <div className="input-search">
-          <input name="keyword" onChange={(e) => handleSearch(e)} />
+          <input name="keyword" />
           <SearchOutlined className="icon-search" />
         </div>
         <button type="submit">Tìm kiếm</button>

@@ -21,6 +21,7 @@ import { connectStomp } from "../../utils/connectStomp";
 function Register() {
   const [form] = Form.useForm();
   const [api, contextHolder] = notification.useNotification();
+  const [loading,setLoading]=useState(false);
   const openNotification = (placement, message, color) => {
     api.info({
       message: `Thông báo`,
@@ -39,7 +40,8 @@ function Register() {
     },
   ];
   const handleSubmit = (e) => {
-    form.resetFields();
+    setLoading(true);
+    
     e.birthDay = moment(e.birthDay).format("YYYY-MM-DD");
     const data = {
       email: e.email,
@@ -53,7 +55,8 @@ function Register() {
       district: e.district,
       city: e.city,
       address: e.address,
-      avatar:"https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg"
+      avatar:
+        "https://as2.ftcdn.net/v2/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg",
     };
     const fetchApi = async () => {
       try {
@@ -61,15 +64,14 @@ function Register() {
         console.log(res);
         if (res.code === 201) {
           openNotification("topRight", "Đăng ký thành công!", "green");
-          const resAmountUsers = await getAmountUsers();
-          if (resAmountUsers.code == 200) {
-            connectStomp("/app/sendAmountUsers", resAmountUsers.data);
-          }
-
-          const data = {
+          connectStomp("/app/sendAmountUsers", `Tài khoản ${data.email} đăng kí thành công`);
+          connectStomp("/app/sendNotification",{content: `Tài khoản ${data.email} đăng kí thành công`});
+          form.resetFields();
+          
+          const roomData = {
             userAId: res.data.id,
           };
-          const resRoomChats = await createRoomChats(data);
+          const resRoomChats = await createRoomChats(roomData);
           console.log(resRoomChats);
         } else {
           openNotification("topRight", "Đăng ký không thành công!", "red");
@@ -77,9 +79,15 @@ function Register() {
       } catch (error) {
         console.error("Error:", error);
         openNotification("topRight", "Đăng ký không thành công!", "red");
+      }finally{
+        form.resetFields();
+        setLoading(false);
       }
     };
-    fetchApi();
+    setTimeout(()=>{
+      fetchApi();
+      
+    },1000)
   };
 
   return (
@@ -88,7 +96,7 @@ function Register() {
       <Row justify="center" style={{ marginTop: "20px" }}>
         <Col span={16}>
           <Card title="Đăng ký" bordered={false} style={{ width: "100%" }}>
-            <Form onFinish={handleSubmit}>
+            <Form onFinish={handleSubmit} form={form}>
               <Row>
                 <Col span={12}>
                   <Form.Item label="Họ tên" name="firstName" rules={rules}>
@@ -225,7 +233,7 @@ function Register() {
                 </Col>
                 <Col span={24} style={{ justifyItems: "center" }}>
                   <Form.Item>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={loading}>
                       Đăng kí
                     </Button>
                   </Form.Item>

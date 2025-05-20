@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAmountVisitsByMonth = exports.getAmountUsers = exports.getAmountVisits = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
+exports.getAmountVisitsByMonth = exports.getAmountUsers = exports.getAmountVisitsToday = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
 
 var _requestUserService = require("../../utils/requestUserService");
 
@@ -194,14 +194,14 @@ var updateVisits = function updateVisits(userId) {
 
 exports.updateVisits = updateVisits;
 
-var getAmountVisits = function getAmountVisits() {
+var getAmountVisitsToday = function getAmountVisitsToday() {
   var result;
-  return regeneratorRuntime.async(function getAmountVisits$(_context9) {
+  return regeneratorRuntime.async(function getAmountVisitsToday$(_context9) {
     while (1) {
       switch (_context9.prev = _context9.next) {
         case 0:
           _context9.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("users/api/users/amount-visits"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("users/api/users/amount-visits-today"));
 
         case 2:
           result = _context9.sent;
@@ -215,7 +215,7 @@ var getAmountVisits = function getAmountVisits() {
   });
 };
 
-exports.getAmountVisits = getAmountVisits;
+exports.getAmountVisitsToday = getAmountVisitsToday;
 
 var getAmountUsers = function getAmountUsers() {
   var result;

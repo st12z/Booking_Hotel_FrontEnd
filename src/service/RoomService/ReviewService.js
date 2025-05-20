@@ -1,16 +1,15 @@
-import {  postImages,get } from "../../utils/requestRoomService"
-import { getAuthorization } from "../getAuthorization";
+import { getAuthorization, postImagesAuthorization } from "../getAuthorization";
 
 export const createReview = async(data)=>{
-  const res = await postImages("reviews",data);
+  const res = await postImagesAuthorization("rooms/api/reviews",data);
   return res;
 }
 export const deleteReview=async(id)=>{
-  const res= await get(`reviews/delete/${id}`);
+  const res= await getAuthorization(`rooms/api/reviews/delete/${id}`);
   return res;
 }
 export const getReviewsByPropertyId=async(propertyId)=>{
-  const res= await get(`reviews?propertyId=${propertyId}`);
+  const res= await getAuthorization(`rooms/api/reviews?propertyId=${propertyId}`);
   return res;
 }
 export const getAmountReviews = async()=>{

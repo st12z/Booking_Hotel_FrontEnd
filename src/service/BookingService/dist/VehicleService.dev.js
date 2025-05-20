@@ -7,6 +7,8 @@ exports.checkBookingVehicle = exports.cancelVehicle = exports.holdVehicle = expo
 
 var _requestBookingService = require("../../utils/requestBookingService");
 
+var _getAuthorization = require("../getAuthorization");
+
 var getAllVehicles = function getAllVehicles(data) {
   var result;
   return regeneratorRuntime.async(function getAllVehicles$(_context) {
@@ -14,7 +16,7 @@ var getAllVehicles = function getAllVehicles(data) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.post)("vehicles", data));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("bookings/api/vehicles", data));
 
         case 2:
           result = _context.sent;
@@ -37,7 +39,7 @@ var holdVehicle = function holdVehicle(data) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.post)("vehicles/hold", data));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("bookings/api/vehicles/hold", data));
 
         case 2:
           result = _context2.sent;
@@ -60,7 +62,7 @@ var cancelVehicle = function cancelVehicle(data) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.post)("vehicles/cancel", data));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("bookings/api/vehicles/cancel", data));
 
         case 2:
           result = _context3.sent;
@@ -83,7 +85,7 @@ var checkBookingVehicle = function checkBookingVehicle(data) {
       switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return regeneratorRuntime.awrap((0, _requestBookingService.post)("vehicles/check", data));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("bookings/api/vehicles/check", data));
 
         case 2:
           result = _context4.sent;

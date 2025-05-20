@@ -52,18 +52,7 @@ export const post =async(path,data)=>{
   const result=await response.json();
   return result;
 }
-export const postImages =async(path,data)=>{
-  const response =await fetch(`${API_DOMAIN}/${path}`,{
-    method:"POST",
-    headers:{
-      Accept:"application/json",
-    },
-    body: data
-    
-  })
-  const result=await response.json();
-  return result;
-}
+
 
 export const del = async(path)=>{
   const access_token=localStorage.getItem("access_token");
@@ -72,7 +61,6 @@ export const del = async(path)=>{
     headers:{
       Authorization:`Bearer ${access_token}`
     },
-    credentials:"include"
   });
   const result=await response.json();
   return result;
@@ -87,7 +75,6 @@ export const patch =async(path,data)=>{
       Authorization:`Bearer ${access_token}`
     },
     body:JSON.stringify(data),
-    credentials:"include"
   })
   const result=await response.json();
   return result;

@@ -5,8 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.getAmountReviews = exports.getReviewsByPropertyId = exports.deleteReview = exports.createReview = void 0;
 
-var _requestRoomService = require("../../utils/requestRoomService");
-
 var _getAuthorization = require("../getAuthorization");
 
 var createReview = function createReview(data) {
@@ -16,7 +14,7 @@ var createReview = function createReview(data) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.postImages)("reviews", data));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postImagesAuthorization)("rooms/api/reviews", data));
 
         case 2:
           res = _context.sent;
@@ -39,7 +37,7 @@ var deleteReview = function deleteReview(id) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("reviews/delete/".concat(id)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/reviews/delete/".concat(id)));
 
         case 2:
           res = _context2.sent;
@@ -62,7 +60,7 @@ var getReviewsByPropertyId = function getReviewsByPropertyId(propertyId) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("reviews?propertyId=".concat(propertyId)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/reviews?propertyId=".concat(propertyId)));
 
         case 2:
           res = _context3.sent;

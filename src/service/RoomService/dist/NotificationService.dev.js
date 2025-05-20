@@ -7,6 +7,8 @@ exports.getAllNotifications = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
+var _getAuthorization = require("../getAuthorization");
+
 var getAllNotifications = function getAllNotifications() {
   var res;
   return regeneratorRuntime.async(function getAllNotifications$(_context) {
@@ -14,7 +16,7 @@ var getAllNotifications = function getAllNotifications() {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("notifications"));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/notifications"));
 
         case 2:
           res = _context.sent;
