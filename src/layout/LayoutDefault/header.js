@@ -116,7 +116,7 @@ function Header() {
           dispatch(login("LOGOUT"));
           dispatch({ type: "SAVE_USER", data: {} });
           localStorage.removeItem("access_token");
-          
+          nav("/")
         }
       } catch (error) {
         console.error(error);

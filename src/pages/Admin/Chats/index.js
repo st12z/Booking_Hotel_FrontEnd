@@ -24,6 +24,7 @@ function Chats() {
   const params = useParams();
   const roomChatId=params.id;
   const [stompClient, setStompClient] = useState(null);
+  
   const handleClickEmoji = () => {
     setShowEmoji(!showEmoji);
     setShowImage(false);
@@ -108,6 +109,7 @@ function Chats() {
             },
           ]);
         });
+        
         setStompClient(client);
       });
       

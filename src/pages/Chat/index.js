@@ -156,6 +156,9 @@ function Chat() {
         );
         stompClient.send(`/app/sendNotification`,{},JSON.stringify({
           content: `${user.email} đã gửi tin nhắn!`,
+        }));
+        stompClient.send(`/app/sendNotifyMessage`,{},JSON.stringify({
+          content: `${user.email} đã gửi tin nhắn!`,
         }))
         setInputText("");
       }

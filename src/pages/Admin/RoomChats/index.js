@@ -5,14 +5,17 @@ import { getChatsByRoomChatId } from "../../../service/RoomService/ChatService";
 import RoomChatItem from "../../../components/RoomChatItem";
 import "./RoomChats.scss";
 import { Link } from "react-router-dom";
+import SockJS from "sockjs-client";
+import { Stomp } from "@stomp/stompjs";
+import { API_DOMAIN_SOCKET } from "../../../utils/variable";
 function RoomChats() {
   const [roomChats, setRoomChats] = useState([]);
   const user = useSelector((state) => state.user);
+  const [reload, setReload] = useState();
   useEffect(() => {
     const fetchApi = async () => {
       try {
         const res = await getRoomChatsOfUser(user.id);
-        console.log(res);
         if (res.code == 200) {
           const newData = [];
           for (const item of res.data) {
@@ -35,14 +38,29 @@ function RoomChats() {
       }
     };
     fetchApi();
-  }, []);
+  }, [reload]);
+  useEffect(() => {
+    const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
+
+    const client = Stomp.over(socket);
+    console.log(socket);
+    client.connect({}, () => {
+      console.log("Connected to stomp");
+      client.subscribe(
+        `/user/${user.email}/queue/notifymessage`,
+        (returnMessage) => {
+          setReload(Date.now());
+        }
+      );
+    });
+  },[]);
   return (
     <>
       <div className="roomchats">
         {roomChats.length > 0 &&
           roomChats.map((item, index) => (
-            <Link to={`/admin/room-chats/${item.id}`}>
-              <RoomChatItem item={item} key={index} />
+            <Link to={`/admin/room-chats/${item.id}`} key={item.id}>
+              <RoomChatItem item={item} />
             </Link>
           ))}
       </div>

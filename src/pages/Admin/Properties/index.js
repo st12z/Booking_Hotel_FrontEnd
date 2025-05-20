@@ -13,10 +13,11 @@ function Properties() {
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState();
   const [keyword, setKeyword] = useState("");
-  const [rateStar,setRateStar]=useState();
-  const [topBill,setTopBill]=useState();
-  const [topRevenue,setTopRevenue] = useState();
-  const [propertyType,setPropertyType]=useState();
+  const [rateStar,setRateStar]=useState(0);
+  const [topBill,setTopBill]=useState(0);
+  const [topRevenue,setTopRevenue] = useState(0);
+  const [propertyType,setPropertyType]=useState("");
+
   const filter=useMemo(()=>({
     rateStar:rateStar,
     keyword: keyword,
@@ -28,8 +29,8 @@ function Properties() {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        
-        const  res = await getPropertiesByKeyword(keyword, pageNo, pageSize);
+        console.log(filter);
+        const  res = await getPropertiesByKeyword(keyword, pageNo, pageSize,filter);
         console.log(res);
         if (res.code == 200) {
           setTotal(res.data.total);
@@ -40,7 +41,7 @@ function Properties() {
       }
     };
     fetchApi();
-  }, [pageNo, keyword]);
+  }, [pageNo, filter]);
   const columns = [
     {
       title: "Mã khách sạn",
