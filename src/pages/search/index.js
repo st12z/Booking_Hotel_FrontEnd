@@ -148,6 +148,7 @@ function Search() {
     setLoading(true);
     const fetchApi = async () => {
       try {
+        console.log(filter);
         const result = await getPropertiesFilterAfterSearch(
           params.toString(),
           filter
@@ -169,7 +170,7 @@ function Search() {
       prevFilter.current = filter;
       setTimeout(() => {
         fetchApi();
-      }, 3000);
+      }, 1000);
     } else {
       setLoading(false);
     }
@@ -269,8 +270,8 @@ function Search() {
                 >
                   {(showMore ? facilities : facilities.slice(0, 3)).map(
                     (item, index) => (
-                      <Checkbox key={index} value={item}>
-                        {item}
+                      <Checkbox key={index} value={item.id}>
+                        {item.name}
                       </Checkbox>
                     )
                   )}

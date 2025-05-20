@@ -144,7 +144,7 @@ function Header() {
         <div className="container">
           <div className="header__top">
             <div className="header__top__logo">
-              <NavLink href="/">Booking.com</NavLink>
+              <NavLink to="/">Booking.com</NavLink>
             </div>
             <div className="header__top__menu">
               <ul>

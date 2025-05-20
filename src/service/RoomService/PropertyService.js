@@ -17,11 +17,7 @@ export const getAmountProperties=async(id)=>{
   const result = await getAuthorization(`rooms/api/properties/amount-properties`);
   return result;
 }
-export const getAllProperties = async(pageNo,pageSize)=>{
-  const result = await get(`properties/all?pageNo=${pageNo}&pageSize=${pageSize}`);
-  return result;
-}
 export const  getPropertiesByKeyword = async(keyword,pageNo,pageSize)=>{
-  const result = await get(`properties/search?keyword=${keyword}&pageNo=${pageNo}&pageSize=${pageSize}`);
+  const result = await getAuthorization(`rooms/api/properties/search?keyword=${keyword}&pageNo=${pageNo}&pageSize=${pageSize}`);
   return result;
 }

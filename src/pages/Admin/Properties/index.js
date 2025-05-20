@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   getAllProperties,
   getPropertiesByKeyword,
 } from "../../../service/RoomService/PropertyService";
 import { Button, Input, Rate, Select, Table } from "antd";
-import { EyeOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
+import { EyeOutlined, DeleteOutlined, SearchOutlined,FilterOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { get } from "../../../utils/requestRoomService";
 function Properties() {
@@ -12,16 +12,24 @@ function Properties() {
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState();
-  const [keyword, setKeyword] = useState();
+  const [keyword, setKeyword] = useState("");
+  const [rateStar,setRateStar]=useState();
+  const [topBill,setTopBill]=useState();
+  const [topRevenue,setTopRevenue] = useState();
+  const [propertyType,setPropertyType]=useState();
+  const filter=useMemo(()=>({
+    rateStar:rateStar,
+    keyword: keyword,
+    topBill:topBill,
+    topRevenue:topRevenue,
+    propertyType:propertyType
+  }),[keyword,rateStar,topBill,topRevenue,propertyType]);
+  
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        let res;
-        if (keyword) {
-          res = await getPropertiesByKeyword(keyword, pageNo, pageSize);
-        } else {
-          res = await getAllProperties(pageNo, pageSize);
-        }
+        
+        const  res = await getPropertiesByKeyword(keyword, pageNo, pageSize);
         console.log(res);
         if (res.code == 200) {
           setTotal(res.data.total);
@@ -119,18 +127,19 @@ function Properties() {
   };
   // Xử lý select change
   const handleChangeRateStar = (e) => {
-    console.log(e);
+    setRateStar(e);
   };
   // Xử lý top bills
   const handleChangeTopBill=(e)=>{
-    console.log(e);
+    setTopBill(e);
   }
   // Xử lý top payments
-  const handleChangeTopPayment=(e)=>{
-    console.log(e);
+  const handleChangeTopRevenue=(e)=>{
+    setTopRevenue(e);
   }
+  // Xử lý loại khách sạn
   const handleChangePropertyType=(e)=>{
-    console.log(e);
+    setPropertyType(e);
   }
   return (
     <>
@@ -177,7 +186,7 @@ function Properties() {
         <Select
           defaultValue="0"
           style={{ width: 240,marginRight:"20px" }}
-          onChange={handleChangeTopPayment}
+          onChange={handleChangeTopRevenue}
           options={[
             { value: "0", label: "Top khách sạn theo tiền thu" },
             { value: "5", label: "Top 5 khách sạn theo tiền thu" },
@@ -199,6 +208,10 @@ function Properties() {
             { value: "Homestay", label: "Homestay" },
           ]}
         />
+        <Button type="primary">
+          <FilterOutlined />
+          Lọc
+        </Button>
       </div>
       <Table
         dataSource={data}

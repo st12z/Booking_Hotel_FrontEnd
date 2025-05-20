@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getPropertiesByKeyword = exports.getAllProperties = exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = void 0;
+exports.getPropertiesByKeyword = exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
@@ -101,14 +101,14 @@ var getAmountProperties = function getAmountProperties(id) {
 
 exports.getAmountProperties = getAmountProperties;
 
-var getAllProperties = function getAllProperties(pageNo, pageSize) {
+var getPropertiesByKeyword = function getPropertiesByKeyword(keyword, pageNo, pageSize) {
   var result;
-  return regeneratorRuntime.async(function getAllProperties$(_context5) {
+  return regeneratorRuntime.async(function getPropertiesByKeyword$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
           _context5.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("properties/all?pageNo=".concat(pageNo, "&pageSize=").concat(pageSize)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/properties/search?keyword=".concat(keyword, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize)));
 
         case 2:
           result = _context5.sent;
@@ -117,29 +117,6 @@ var getAllProperties = function getAllProperties(pageNo, pageSize) {
         case 4:
         case "end":
           return _context5.stop();
-      }
-    }
-  });
-};
-
-exports.getAllProperties = getAllProperties;
-
-var getPropertiesByKeyword = function getPropertiesByKeyword(keyword, pageNo, pageSize) {
-  var result;
-  return regeneratorRuntime.async(function getPropertiesByKeyword$(_context6) {
-    while (1) {
-      switch (_context6.prev = _context6.next) {
-        case 0:
-          _context6.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("properties/search?keyword=".concat(keyword, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize)));
-
-        case 2:
-          result = _context6.sent;
-          return _context6.abrupt("return", result);
-
-        case 4:
-        case "end":
-          return _context6.stop();
       }
     }
   });
