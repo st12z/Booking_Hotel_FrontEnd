@@ -9,11 +9,12 @@ import {
   DeleteOutlined,
   SearchOutlined,
   FilterOutlined,
-  PrinterOutlined
+  PrinterOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { get } from "../../../utils/requestRoomService";
 import { getFormatPrice } from "../../../utils/format";
+import { exportPropertiesRevenue } from "../../../service/RoomService/ExportFileService";
 function Properties() {
   const [data, setData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
@@ -179,16 +180,26 @@ function Properties() {
   const handleChangePropertyType = (e) => {
     setPropertyType(e);
   };
-  const handleFilter=async()=>{
+  const handleFilter = async () => {
     fetchApi();
-  }
-  const handlePrint =async()=>{
-    try{
-      const res = await getPrintFile();
-    }catch(error){
+  };
+  const handleExport = async () => {
+    try {
+      const blob = await exportPropertiesRevenue();
+      const url = window.URL.createObjectURL(blob);
+      console.log(url);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "properties_revenue.xls";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
       console.error(error);
     }
-  }
+  };
   return (
     <>
       <div className="" style={{ marginBottom: "20px", position: "relative" }}>
@@ -256,11 +267,15 @@ function Properties() {
             { value: "Homestay", label: "Homestay" },
           ]}
         />
-        <Button type="primary" onClick={handleFilter} style={{marginRight:"20px"}}>
+        <Button
+          type="primary"
+          onClick={handleFilter}
+          style={{ marginRight: "20px" }}
+        >
           <FilterOutlined />
           Lọc
         </Button>
-        <Button color="cyan" variant="outlined" onClick={handlePrint}>
+        <Button color="cyan" variant="outlined" onClick={handleExport}>
           <PrinterOutlined />
           Xuất
         </Button>

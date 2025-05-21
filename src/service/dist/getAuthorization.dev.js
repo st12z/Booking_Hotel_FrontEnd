@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.postImagesAuthorization = exports.postAuthorization = exports.getAuthorization = void 0;
+exports.postImagesAuthorization = exports.postAuthorization = exports.getAuthorizationBlob = exports.getAuthorization = void 0;
 var API_DOMAIN = "http://localhost:8072/bookinghotel";
 
 var getAuthorization = function getAuthorization(path) {
@@ -39,26 +39,24 @@ var getAuthorization = function getAuthorization(path) {
 
 exports.getAuthorization = getAuthorization;
 
-var postAuthorization = function postAuthorization(path, data) {
+var getAuthorizationBlob = function getAuthorizationBlob(path) {
   var response, result;
-  return regeneratorRuntime.async(function postAuthorization$(_context2) {
+  return regeneratorRuntime.async(function getAuthorizationBlob$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
           return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
-            method: "POST",
+            method: "GET",
             headers: {
-              "Content-type": "application/json",
               Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
-            },
-            body: JSON.stringify(data)
+            }
           }));
 
         case 2:
           response = _context2.sent;
           _context2.next = 5;
-          return regeneratorRuntime.awrap(response.json());
+          return regeneratorRuntime.awrap(response.blob());
 
         case 5:
           result = _context2.sent;
@@ -72,11 +70,11 @@ var postAuthorization = function postAuthorization(path, data) {
   });
 };
 
-exports.postAuthorization = postAuthorization;
+exports.getAuthorizationBlob = getAuthorizationBlob;
 
-var postImagesAuthorization = function postImagesAuthorization(path, data) {
+var postAuthorization = function postAuthorization(path, data) {
   var response, result;
-  return regeneratorRuntime.async(function postImagesAuthorization$(_context3) {
+  return regeneratorRuntime.async(function postAuthorization$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
@@ -84,9 +82,10 @@ var postImagesAuthorization = function postImagesAuthorization(path, data) {
           return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
             method: "POST",
             headers: {
+              "Content-type": "application/json",
               Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
             },
-            body: data
+            body: JSON.stringify(data)
           }));
 
         case 2:
@@ -101,6 +100,40 @@ var postImagesAuthorization = function postImagesAuthorization(path, data) {
         case 7:
         case "end":
           return _context3.stop();
+      }
+    }
+  });
+};
+
+exports.postAuthorization = postAuthorization;
+
+var postImagesAuthorization = function postImagesAuthorization(path, data) {
+  var response, result;
+  return regeneratorRuntime.async(function postImagesAuthorization$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
+          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+            method: "POST",
+            headers: {
+              Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
+            },
+            body: data
+          }));
+
+        case 2:
+          response = _context4.sent;
+          _context4.next = 5;
+          return regeneratorRuntime.awrap(response.json());
+
+        case 5:
+          result = _context4.sent;
+          return _context4.abrupt("return", result);
+
+        case 7:
+        case "end":
+          return _context4.stop();
       }
     }
   });
