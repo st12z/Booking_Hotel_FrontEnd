@@ -13,6 +13,7 @@ export const postAuthorization = async(path,data)=>{
   const response =await fetch(`${API_DOMAIN}/${path}`,{
     method:"POST",
     headers:{
+      "Content-type":"application/json",
       Authorization:`Bearer ${localStorage.getItem("access_token")}`
     },
     body:JSON.stringify(data)

@@ -4,51 +4,62 @@ import {
   getPropertiesByKeyword,
 } from "../../../service/RoomService/PropertyService";
 import { Button, Input, Rate, Select, Table } from "antd";
-import { EyeOutlined, DeleteOutlined, SearchOutlined,FilterOutlined } from "@ant-design/icons";
+import {
+  EyeOutlined,
+  DeleteOutlined,
+  SearchOutlined,
+  FilterOutlined,
+  PrinterOutlined
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { get } from "../../../utils/requestRoomService";
+import { getFormatPrice } from "../../../utils/format";
 function Properties() {
   const [data, setData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState();
   const [keyword, setKeyword] = useState("");
-  const [rateStar,setRateStar]=useState(0);
-  const [topBill,setTopBill]=useState(0);
-  const [topRevenue,setTopRevenue] = useState(0);
-  const [propertyType,setPropertyType]=useState("");
+  const [rateStar, setRateStar] = useState(0);
+  const [topBill, setTopBill] = useState(0);
+  const [topRevenue, setTopRevenue] = useState(0);
+  const [propertyType, setPropertyType] = useState("");
 
-  const filter=useMemo(()=>({
-    rateStar:rateStar,
-    keyword: keyword,
-    topBill:topBill,
-    topRevenue:topRevenue,
-    propertyType:propertyType
-  }),[keyword,rateStar,topBill,topRevenue,propertyType]);
-  
-  useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        console.log(filter);
-        const  res = await getPropertiesByKeyword(keyword, pageNo, pageSize,filter);
-        console.log(res);
-        if (res.code == 200) {
-          setTotal(res.data.total);
-          setData(res.data.dataPage);
-        }
-      } catch (error) {
-        console.error(error);
+  const filter = useMemo(
+    () => ({
+      rateStar: rateStar,
+      keyword: keyword,
+      topBill: topBill,
+      topRevenue: topRevenue,
+      propertyType: propertyType,
+      pageNo: pageNo,
+      pageSize: pageSize,
+    }),
+    [keyword, rateStar, topBill, topRevenue, propertyType, pageNo, pageSize]
+  );
+  const fetchApi = async () => {
+    try {
+      console.log(filter);
+      const res = await getPropertiesByKeyword(filter);
+      console.log(res);
+      if (res.code == 200) {
+        setTotal(res.data.total);
+        setData(res.data.dataPage);
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
     fetchApi();
-  }, [pageNo, filter]);
+  }, []);
   const columns = [
     {
       title: "Mã khách sạn",
       key: "id",
       render: (_, record) => (
         <>
-          <p>
+          <p style={{ color: "#0057B8", fontWeight: 600 }}>
             <b>{record.id}</b>
           </p>
         </>
@@ -65,7 +76,7 @@ function Properties() {
               flexDirection: "column",
             }}
           >
-            <b>{record.name}</b>
+            <b style={{ color: "#0057B8", fontWeight: 600 }}>{record.name}</b>
             <img
               src={record.images[0]}
               style={{ width: "150px", borderRadius: "5px" }}
@@ -80,7 +91,7 @@ function Properties() {
       key: "address",
       render: (_, record) => (
         <>
-          <p>{record.address}</p>
+          <p style={{ color: "#0057B8", fontWeight: 600 }}>{record.address}</p>
         </>
       ),
       width: 200,
@@ -90,7 +101,9 @@ function Properties() {
       key: "propertyType",
       render: (_, record) => (
         <>
-          <p>{record.propertyType}</p>
+          <p style={{ color: "#0057B8", fontWeight: 600 }}>
+            {record.propertyType}
+          </p>
         </>
       ),
     },
@@ -99,8 +112,30 @@ function Properties() {
       key: "propertyType",
       render: (_, record) => (
         <>
-          <p>
+          <p style={{ color: "red", fontWeight: 600 }}>
             <Rate value={record.ratingStar} disabled={true} />
+          </p>
+        </>
+      ),
+    },
+    {
+      title: "Hoá đơn",
+      key: "total-bills",
+      render: (_, record) => (
+        <>
+          <p style={{ color: "#0057B8", fontWeight: 600 }}>
+            {record.totalBills}
+          </p>
+        </>
+      ),
+    },
+    {
+      title: "Tổng thu",
+      key: "total-payments",
+      render: (_, record) => (
+        <>
+          <p style={{ color: "red", fontWeight: 600 }}>
+            {getFormatPrice(record.totalPayments)}
           </p>
         </>
       ),
@@ -131,16 +166,28 @@ function Properties() {
     setRateStar(e);
   };
   // Xử lý top bills
-  const handleChangeTopBill=(e)=>{
+  const handleChangeTopBill = (e) => {
     setTopBill(e);
-  }
+    setTopRevenue(0);
+  };
   // Xử lý top payments
-  const handleChangeTopRevenue=(e)=>{
+  const handleChangeTopRevenue = (e) => {
     setTopRevenue(e);
-  }
+    setTopBill(0);
+  };
   // Xử lý loại khách sạn
-  const handleChangePropertyType=(e)=>{
+  const handleChangePropertyType = (e) => {
     setPropertyType(e);
+  };
+  const handleFilter=async()=>{
+    fetchApi();
+  }
+  const handlePrint =async()=>{
+    try{
+      const res = await getPrintFile();
+    }catch(error){
+      console.error(error);
+    }
   }
   return (
     <>
@@ -158,50 +205,50 @@ function Properties() {
           }}
         />
       </div>
-      <div style={{marginBottom:"20px"}}>
+      <div style={{ marginBottom: "20px" }}>
         <Select
-          defaultValue="0"
-          style={{ width: 120,marginRight:"20px" }}
+          value={rateStar}
+          style={{ width: 120, marginRight: "20px" }}
           onChange={handleChangeRateStar}
           options={[
-            { value: "0", label: "Đánh giá" },
-            { value: "1", label: "1 sao" },
-            { value: "2", label: "2 sao" },
-            { value: "3", label: "3 sao" },
-            { value: "4", label: "4 sao" },
-            { value: "5", label: "5 sao" },
+            { value: 0, label: "Đánh giá" },
+            { value: 1, label: "1 sao" },
+            { value: 2, label: "2 sao" },
+            { value: 3, label: "3 sao" },
+            { value: 4, label: "4 sao" },
+            { value: 5, label: "5 sao" },
           ]}
         />
         <Select
-          defaultValue="0"
-          style={{ width: 240,marginRight:"20px" }}
+          value={topBill}
+          style={{ width: 240, marginRight: "20px" }}
           onChange={handleChangeTopBill}
           options={[
-            { value: "0", label: "Top khách sạn theo hóa đơn" },
-            { value: "5", label: "Top 5 khách sạn theo hóa đơn" },
-            { value: "10", label: "Top 10 khách sạn theo hóa đơn" },
-            { value: "30", label: "Top 30 khách sạn theo hóa đơn" },
-            { value: "50", label: "Top 50 khách sạn theo hóa đơn" },
+            { value: 0, label: "Top khách sạn theo hóa đơn" },
+            { value: 5, label: "Top 5 khách sạn theo hóa đơn" },
+            { value: 10, label: "Top 10 khách sạn theo hóa đơn" },
+            { value: 30, label: "Top 30 khách sạn theo hóa đơn" },
+            { value: 50, label: "Top 50 khách sạn theo hóa đơn" },
           ]}
         />
         <Select
-          defaultValue="0"
-          style={{ width: 240,marginRight:"20px" }}
+          value={topRevenue}
+          style={{ width: 240, marginRight: "20px" }}
           onChange={handleChangeTopRevenue}
           options={[
-            { value: "0", label: "Top khách sạn theo tiền thu" },
-            { value: "5", label: "Top 5 khách sạn theo tiền thu" },
-            { value: "10", label: "Top 10 khách sạn theo tiền thu" },
-            { value: "30", label: "Top 30 khách sạn theo tiền thu" },
-            { value: "50", label: "Top 50 khách sạn theo tiền thu" },
+            { value: 0, label: "Top khách sạn theo tiền thu" },
+            { value: 5, label: "Top 5 khách sạn theo tiền thu" },
+            { value: 10, label: "Top 10 khách sạn theo tiền thu" },
+            { value: 30, label: "Top 30 khách sạn theo tiền thu" },
+            { value: 50, label: "Top 50 khách sạn theo tiền thu" },
           ]}
         />
         <Select
-          defaultValue="0"
-          style={{ width: 240,marginRight:"20px" }}
+          value={propertyType}
+          style={{ width: 240, marginRight: "20px" }}
           onChange={handleChangePropertyType}
           options={[
-            { value: "0", label: "Loại khách sạn" },
+            { value: "", label: "Loại khách sạn" },
             { value: "Hotel", label: "Hotel" },
             { value: "Apartment", label: "Apartment" },
             { value: "Villa", label: "Villa" },
@@ -209,9 +256,13 @@ function Properties() {
             { value: "Homestay", label: "Homestay" },
           ]}
         />
-        <Button type="primary">
+        <Button type="primary" onClick={handleFilter} style={{marginRight:"20px"}}>
           <FilterOutlined />
           Lọc
+        </Button>
+        <Button color="cyan" variant="outlined" onClick={handlePrint}>
+          <PrinterOutlined />
+          Xuất
         </Button>
       </div>
       <Table

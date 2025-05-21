@@ -49,6 +49,7 @@ var postAuthorization = function postAuthorization(path, data) {
           return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
             method: "POST",
             headers: {
+              "Content-type": "application/json",
               Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
             },
             body: JSON.stringify(data)

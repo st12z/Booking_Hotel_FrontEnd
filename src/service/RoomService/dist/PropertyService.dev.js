@@ -101,14 +101,14 @@ var getAmountProperties = function getAmountProperties(id) {
 
 exports.getAmountProperties = getAmountProperties;
 
-var getPropertiesByKeyword = function getPropertiesByKeyword(keyword, pageNo, pageSize) {
+var getPropertiesByKeyword = function getPropertiesByKeyword(filter) {
   var result;
   return regeneratorRuntime.async(function getPropertiesByKeyword$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
           _context5.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/properties/search?keyword=".concat(keyword, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("rooms/api/properties/filter", filter));
 
         case 2:
           result = _context5.sent;

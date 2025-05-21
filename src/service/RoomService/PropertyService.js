@@ -1,5 +1,5 @@
 import { get, post } from "../../utils/requestRoomService";
-import { getAuthorization } from "../getAuthorization";
+import { getAuthorization, postAuthorization } from "../getAuthorization";
 
 export const getPropertyBySlug=async(path)=>{
   const result = await get(`properties/slug/${path}`);
@@ -17,7 +17,7 @@ export const getAmountProperties=async(id)=>{
   const result = await getAuthorization(`rooms/api/properties/amount-properties`);
   return result;
 }
-export const  getPropertiesByKeyword = async(keyword,pageNo,pageSize)=>{
-  const result = await getAuthorization(`rooms/api/properties/search?keyword=${keyword}&pageNo=${pageNo}&pageSize=${pageSize}`);
+export const  getPropertiesByKeyword = async(filter)=>{
+  const result = await postAuthorization(`rooms/api/properties/filter`,filter);
   return result;
 }
