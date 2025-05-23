@@ -99,7 +99,8 @@ function AdminBoard() {
         `/user/${user.email}/queue/amount-bills-today`,
         (returnMessage) => {
           console.log("Received message: ", returnMessage.body);
-          setAmountBillsToday(amountBillsToday=>amountBillsToday+1);
+          const message = JSON.parse(returnMessage.body);
+          setAmountBillsToday(amountBillsToday=>amountBillsToday+message);
         }
       );
       client.subscribe(

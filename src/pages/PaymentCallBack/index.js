@@ -26,9 +26,7 @@ function PaymentCallBack() {
           content: `${user.email} đã hoàn thành hóa đơn ${billCode}!`,
         });
         connectStomp(
-          "/app/sendAmountBillsToday",
-          `Hoá đơn ${billCode} đã được thanh toán thàn công!`
-        );
+          "/app/sendAmountBillsToday",1);
         connectStomp("/app/sendAmountRevenueToday", res.data.newTotalPayment);
       } catch (error) {
         console.error(error);

@@ -1,16 +1,19 @@
 import { Space, Table, Tag } from "antd";
 import "./ListBillRecently.scss";
-import { getAllBills, getMyBills } from "../../service/BookingService/BillService";
+import {
+  getAllBills,
+  getMyBills,
+} from "../../service/BookingService/BillService";
 import { getPropertyId } from "../../service/RoomService/PropertyService";
 import { useEffect, useState } from "react";
-import { getFormatPrice } from "../../utils/format";
+import { getDate, getFormatPrice, getTime } from "../../utils/format";
 import { useSelector } from "react-redux";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import { API_DOMAIN_SOCKET } from "../../utils/variable";
 function ListBillRecently() {
   const [data, setData] = useState([]);
-  const [reload,setReload] = useState();
+  const [reload, setReload] = useState();
   const user = useSelector((state) => state.user);
   useEffect(() => {
     const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
@@ -19,7 +22,7 @@ function ListBillRecently() {
       console.log("Connected to stomp");
       // lắng nghe thông báo
       client.subscribe(
-        `/user/${user.email}/queue/amount-bills`,
+        `/user/${user.email}/queue/amount-bills-today`,
         (returnMessage) => {
           const message = JSON.parse(returnMessage.body);
           setReload(Date.now());
@@ -34,21 +37,21 @@ function ListBillRecently() {
         console.log(res);
         if (res.code == 200) {
           const resData = res.data;
-          let newData=[];
-          for(const item of resData){
-            const resProperty= await getPropertyId(item.propertyId);
-            if(resProperty.code==200){
+          let newData = [];
+          for (const item of resData) {
+            const resProperty = await getPropertyId(item.propertyId);
+            if (resProperty.code == 200) {
               newData.push({
                 ...item,
-                property:resProperty.data
-              })
+                property: resProperty.data,
+              });
             }
           }
           setData(newData);
         }
       } catch (error) {
         console.error(error);
-      } 
+      }
     };
     fetchApi();
   }, [reload]);
@@ -58,9 +61,7 @@ function ListBillRecently() {
       key: "billcode",
       render: (_, record) => (
         <>
-          <p style={{fontSize:"14px"}}>
-            {record.billCode}
-          </p>
+          <p style={{ fontSize: "14px" }}>{record.billCode}</p>
         </>
       ),
     },
@@ -69,14 +70,17 @@ function ListBillRecently() {
       key: "billcode",
       render: (_, record) => (
         <>
-          <div 
-            style={{ 
-              display:"flex",
-              flexDirection:"column"
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <p style={{fontSize:"14px"}}>{record.property.name}</p>
-            <img src={record.property.images} style={{width:"150px",borderRadius:"5px"}}/>
+            <p style={{ fontSize: "14px" }}>{record.property.name}</p>
+            <img
+              src={record.property.images}
+              style={{ width: "150px", borderRadius: "5px" }}
+            />
           </div>
         </>
       ),
@@ -86,7 +90,7 @@ function ListBillRecently() {
       key: "name",
       render: (_, record) => (
         <>
-          <p style={{fontSize:"14px"}}>
+          <p style={{ fontSize: "14px" }}>
             {record.firstName} {record.lastName}
           </p>
         </>
@@ -106,7 +110,7 @@ function ListBillRecently() {
       key: "address",
       render: (_, record) => (
         <>
-          <p style={{fontSize:"14px"}}>
+          <p style={{ fontSize: "14px" }}>
             {record.district}, {record.city}, {record.country}
           </p>
         </>
@@ -118,11 +122,13 @@ function ListBillRecently() {
       key: "status",
       render: (_, record) => (
         <>
-          <p style={{fontSize:"14px"}}>
+          <p>
             {record.billStatus == "SUCCESS" ? (
-              <Tag color="success">Đã thanh toán</Tag>
+              <Tag color="green">Đã thanh toán</Tag>
+            ) : record.billStatus == "CANCEL" ? (
+              <Tag color="blue">Đã huỷ đặt phòng</Tag>
             ) : (
-              <Tag color="warning">Chưa thanh toán</Tag>
+              <Tag color="red">Chưa thanh toán</Tag>
             )}
           </p>
         </>
@@ -133,7 +139,18 @@ function ListBillRecently() {
       key: "payment",
       render: (_, record) => (
         <>
-          <p style={{fontSize:"14px"}}>{getFormatPrice(record.newTotalPayment)}</p>
+          <p style={{ fontSize: "14px" }}>
+            {getFormatPrice(record.newTotalPayment)}
+          </p>
+        </>
+      ),
+    },
+    {
+      title: "Ngày thanh toán",
+      key: "payment-date",
+      render: (_, record) => (
+        <>
+          <p style={{ fontSize: "14px" }}>{getDate(record.createdAt)}</p>
         </>
       ),
     },
@@ -142,10 +159,7 @@ function ListBillRecently() {
     <>
       <div className="list_bill">
         <p>Hóa đơn gần đây</p>
-        <Table
-          dataSource={data}
-          columns={columns}
-        />
+        <Table dataSource={data} columns={columns} />
       </div>
     </>
   );

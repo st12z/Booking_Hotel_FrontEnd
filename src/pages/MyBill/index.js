@@ -6,29 +6,42 @@ import {
 } from "../../service/BookingService/BillService";
 import { render } from "@testing-library/react";
 import { Button, Popconfirm, Skeleton, Table, Tag } from "antd";
-import { getFormatPrice } from "../../utils/format";
+import { getDate, getFormatPrice, getTime } from "../../utils/format";
 import { EyeOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import "./MyBill.scss";
 import { getPropertyId } from "../../service/RoomService/PropertyService";
+import { cancelBooking } from "../../service/PaymentService/payment";
+import { notification } from "antd";
+import { connectStomp } from "../../utils/connectStomp";
 function MyBill() {
   const user = useSelector((state) => state.user);
   const [data, setData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState();
-  const [loading, setLoading] = useState(false);
   const [keyword, setKeyword] = useState([]);
+  const [reload, setReload] = useState();
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (placement, color, message) => {
+    api.info({
+      message: `Thông báo`,
+      description: (
+        <span style={{ color: color, fontSize: "20px", fontWeight: 600 }}>
+          {message}
+        </span>
+      ),
+      placement,
+    });
+  };
   useEffect(() => {
     const fetchApi = async () => {
-      setLoading(true);
       try {
         const res = await getMyBills(user.email, pageNo, pageSize, keyword);
         console.log(res);
         if (res.code == 200) {
           const resData = res.data.dataPage;
           let newData = [];
-          setPageNo(res.data.pageNo);
           setPageSize(res.data.pageSize);
           setTotal(res.data.total);
           for (const item of resData) {
@@ -45,16 +58,35 @@ function MyBill() {
       } catch (error) {
         console.error(error);
       } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 1000);
       }
     };
     fetchApi();
-  }, [pageNo, keyword]);
+  }, [pageNo, keyword, reload]);
   // hủy phòng
-  const handleCancelBooking = (billCode) => {
-    console.log(billCode);
+  const handleCancelBooking = async (billCode) => {
+    try {
+      const res = await cancelBooking(billCode);
+      console.log(res);
+      if (res.data.vnp_ResponseCode == "00") {
+        openNotification(
+          "topRight",
+          "green",
+          "Huỷ đặt phòng thành công!",
+          "green"
+        );
+        connectStomp("/app/sendAmountBillsToday", -1);
+        connectStomp("/app/sendAmountRevenueToday", -res.data.vnp_Amount);
+        connectStomp("/app/sendNotification", {
+          content: `${user.email} đã hủy hóa đơn ${billCode}!`,
+        });
+        setReload(Date.now());
+      } else {
+        openNotification("topRight", "red", "Đã vượt số ngày hoàn tiền!");
+      }
+    } catch (error) {
+      openNotification("topRight", "red", "Đã vượt số ngày hoàn tiền!");
+      console.error(error);
+    }
   };
   const columns = [
     {
@@ -127,9 +159,11 @@ function MyBill() {
         <>
           <p>
             {record.billStatus == "SUCCESS" ? (
-              <Tag color="success">Đã thanh toán</Tag>
+              <Tag color="green">Đã thanh toán</Tag>
+            ) : record.billStatus == "CANCEL" ? (
+              <Tag color="blue">Đã huỷ đặt phòng</Tag>
             ) : (
-              <Tag color="warning">Chưa thanh toán</Tag>
+              <Tag color="red">Chưa thanh toán</Tag>
             )}
           </p>
         </>
@@ -145,6 +179,15 @@ function MyBill() {
       ),
     },
     {
+      title: "Ngày thanh toán",
+      key: "payment-date",
+      render: (_, record) => (
+        <>
+          <p style={{ fontSize: "14px" }}>{getDate(record.createdAt)}</p>
+        </>
+      ),
+    },
+    {
       title: "Hành động",
       key: "payment",
       render: (_, record) => (
@@ -152,13 +195,15 @@ function MyBill() {
           <Button style={{ marginRight: "10px" }}>
             <Link to={`/bills/${record.billCode}`}>{<EyeOutlined />}</Link>
           </Button>
-          <Popconfirm
-            title="Hủy đặt phòng"
-            description="Bạn có muốn hủy đặt phòng"
-            onConfirm={() => handleCancelBooking(record.billCode)}
-          >
-            <Button icon={<DeleteOutlined />} />
-          </Popconfirm>
+          {record.billStatus === "SUCCESS" && (
+            <Popconfirm
+              title="Hủy đặt phòng"
+              description="Bạn có muốn hủy đặt phòng"
+              onConfirm={() => handleCancelBooking(record.billCode)}
+            >
+              <Button icon={<DeleteOutlined />} />
+            </Popconfirm>
+          )}
         </div>
       ),
     },
@@ -166,15 +211,11 @@ function MyBill() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const keyword = e.target[0].value || "";
-    setLoading(true);
-    const timeout = setTimeout(() => {
-      setKeyword(keyword);
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timeout);
+    setKeyword(keyword);
   };
   return (
     <>
+      {contextHolder}
       <form className="form-search" onSubmit={handleSubmit}>
         <div className="input-search">
           <input name="keyword" />
@@ -182,23 +223,19 @@ function MyBill() {
         </div>
         <button type="submit">Tìm kiếm</button>
       </form>
-      {loading ? (
-        <Skeleton active />
-      ) : (
-        <Table
-          dataSource={data}
-          columns={columns}
-          pagination={{
-            current: pageNo,
-            pageSize: pageSize,
-            total: total,
-            onChange: (page, pageSize) => {
-              setPageNo(page);
-              setPageSize(pageSize);
-            },
-          }}
-        />
-      )}
+      <Table
+        dataSource={data}
+        columns={columns}
+        pagination={{
+          current: pageNo,
+          pageSize: pageSize,
+          total: total,
+          onChange: (page, pageSize) => {
+            setPageNo(page);
+            setPageSize(pageSize);
+          },
+        }}
+      />
       ;
     </>
   );
