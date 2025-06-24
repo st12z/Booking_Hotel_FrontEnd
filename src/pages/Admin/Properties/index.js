@@ -147,7 +147,7 @@ function Properties() {
       render: (_, record) => (
         <div style={{ display: "flex" }}>
           <Button style={{ marginRight: "10px" }}>
-            <Link to={``}>{<EyeOutlined />}</Link>
+            <Link to={`/admin/properties/${record.id}`}>{<EyeOutlined />}</Link>
           </Button>
         </div>
       ),
@@ -256,7 +256,7 @@ function Properties() {
         />
         <Select
           value={propertyType}
-          style={{ width: 240, marginRight: "20px" }}
+          style={{ width: 180, marginRight: "20px" }}
           onChange={handleChangePropertyType}
           options={[
             { value: "", label: "Loại khách sạn" },

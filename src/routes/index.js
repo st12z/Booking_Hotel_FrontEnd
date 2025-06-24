@@ -19,6 +19,9 @@ import LayoutAdmin from "../layout/LayoutAdmin";
 import RoomChats from "../pages/Admin/RoomChats";
 import Chats from "../pages/Admin/Chats";
 import Properties from "../pages/Admin/Properties";
+import PropertyDetailAdmin from "../components/PropertyDetailAdmin";
+import EditProperty from "../components/EditProperty";
+import CreateRoomType from "../components/CreateRoomType";
 export const routes = [
   {
     path: "/",
@@ -97,6 +100,18 @@ export const routes = [
           {
             path:"properties",
             element: <Properties/>
+          },
+          {
+            path:"properties/:id",
+            element: <PropertyDetailAdmin/>
+          },
+          {
+            path:"properties/edit/:id",
+            element: <EditProperty/>
+          },
+          {
+            path:"properties/room-types/:id",
+            element: <CreateRoomType />
           },
           {
             path: "room-chats",

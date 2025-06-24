@@ -10,6 +10,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
     "@testing-library/user-event": "^13.5.0",
+    "@tinymce/tinymce-react": "^6.2.1",
     "antd": "^5.24.5",
     "dayjs": "^1.11.13",
     "emoji-picker-react": "^4.12.2",
@@ -29,6 +30,7 @@
     "sass": "^1.86.0",
     "sockjs-client": "^1.6.1",
     "swiper": "^11.2.6",
+    "tinymce": "^7.9.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

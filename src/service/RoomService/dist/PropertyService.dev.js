@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getPropertiesByKeyword = exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = void 0;
+exports.updateProperty = exports.getPropertiesByKeyword = exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
@@ -123,3 +123,26 @@ var getPropertiesByKeyword = function getPropertiesByKeyword(filter) {
 };
 
 exports.getPropertiesByKeyword = getPropertiesByKeyword;
+
+var updateProperty = function updateProperty(data) {
+  var result;
+  return regeneratorRuntime.async(function updateProperty$(_context6) {
+    while (1) {
+      switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postImagesAuthorization)("rooms/api/properties/update", data));
+
+        case 2:
+          result = _context6.sent;
+          return _context6.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context6.stop();
+      }
+    }
+  });
+};
+
+exports.updateProperty = updateProperty;
