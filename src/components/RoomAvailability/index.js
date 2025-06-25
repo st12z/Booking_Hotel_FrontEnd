@@ -22,6 +22,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
+import { getQuantityRooms } from "../../service/RoomService/RoomService";
 const { RangePicker } = DatePicker;
 
 function RoomAvailability(props) {
@@ -94,7 +95,19 @@ function RoomAvailability(props) {
           searchRequest
         );
         if (res.code == 200) {
-          setRoomTypes(res.data);
+          const newRoomTypes=[];
+          for(const item of res.data){
+            const resQuantity = await getQuantityRooms(item.propertyId,item.id);
+            if(resQuantity.code==200){
+              const quantity = resQuantity.data;
+              newRoomTypes.push({
+                ...item,
+                quantityRooms: quantity,
+              });
+            }
+          }
+          console.log(newRoomTypes);
+          setRoomTypes(newRoomTypes);
         }
       } catch (error) {
         console.error(error);
@@ -318,10 +331,11 @@ function RoomAvailability(props) {
                 handleQuantityRoomChange(record.id, e.target.value)
               }
             >
-              <option value={1}>1</option>
-              <option value={2}>2</option>
-              <option value={3}>3</option>
-              <option value={4}>4</option>
+              {Array.from(
+                { length: record.quantityRooms }
+              ).map((_, index) => (
+                <option key={index} value={index + 1}>{index+1}</option>
+              ))}
             </select>
           </div>
         </>

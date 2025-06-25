@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.postImagesAuthorization = exports.postAuthorization = exports.getAuthorizationBlob = exports.getAuthorization = void 0;
+exports.deleteAuthorization = exports.postImagesAuthorization = exports.postAuthorization = exports.getAuthorizationBlob = exports.getAuthorization = void 0;
 var API_DOMAIN = "http://localhost:8072/bookinghotel";
 
 var getAuthorization = function getAuthorization(path) {
@@ -140,3 +140,38 @@ var postImagesAuthorization = function postImagesAuthorization(path, data) {
 };
 
 exports.postImagesAuthorization = postImagesAuthorization;
+
+var deleteAuthorization = function deleteAuthorization(path, data) {
+  var response, result;
+  return regeneratorRuntime.async(function deleteAuthorization$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.next = 2;
+          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+            method: "DELETE",
+            headers: {
+              "Content-type": "application/json",
+              Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
+            },
+            body: JSON.stringify(data)
+          }));
+
+        case 2:
+          response = _context5.sent;
+          _context5.next = 5;
+          return regeneratorRuntime.awrap(response.json());
+
+        case 5:
+          result = _context5.sent;
+          return _context5.abrupt("return", result);
+
+        case 7:
+        case "end":
+          return _context5.stop();
+      }
+    }
+  });
+};
+
+exports.deleteAuthorization = deleteAuthorization;

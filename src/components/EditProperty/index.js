@@ -26,6 +26,7 @@ import { getAllPropertyTypes } from "../../service/RoomService/PropertyTypeServi
 import "./EditProperty.scss";
 import { getFacilities } from "../../service/RoomService/FacilityService";
 import { useForm } from "antd/es/form/Form";
+import { createRoom, deleteRoom } from "../../service/RoomService/RoomService";
 var __awaiter =
   (this && this.__awaiter) ||
   function (thisArg, _arguments, P, generator) {
@@ -82,7 +83,11 @@ function EditProperty() {
   const [isUpload, setIsUpload] = useState(false);
   const [form] = Form.useForm();
   const [rooms, setRooms] = useState([]);
+  const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [api, contextHolder] = notification.useNotification();
+  const [roomNumber, setRoomNumber] = useState();
+  const [currentRoomType, setCurrentRoomType] = useState();
+  const [loading, setLoading] = useState(false);
   const openNotification = (placement, message, color, onClose) => {
     api.info({
       message: `Thông báo`,
@@ -207,9 +212,10 @@ function EditProperty() {
           });
           const rooms = res.data.rooms.filter(
             (item) => item.roomType.id == roomTypes[0].value
-          );
+          ).sort((a, b) => a.roomNumber - b.roomNumber);;
           setRooms(rooms);
           console.log("rooms", rooms);
+          setCurrentRoomType(roomTypes[0].value);
           setRoomTypes(roomTypes);
           setProperty(res.data);
         }
@@ -220,7 +226,6 @@ function EditProperty() {
     fetchApi();
   }, [propertyId]);
   const handleSubmit = async (e) => {
-    console.log("1");
     const newFacilities = facilities.map((facility1) => {
       const findFacility = allFacilities.find(
         (facility2) => facility2.value == facility1
@@ -243,6 +248,7 @@ function EditProperty() {
     console.log(data);
     console.log(fileList);
     try {
+      setLoading(true);
       const res = await updateProperty(formData);
       console.log(res);
       if (res.code == 200) {
@@ -253,6 +259,8 @@ function EditProperty() {
     } catch (error) {
       openNotification("topRight", "Cập nhật thất bại!", "red");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
   const confirm = (index) => {
@@ -281,14 +289,50 @@ function EditProperty() {
     setIsUpload(!isUpload);
   };
   const handleChangeRoomTypes = (value) => {
-    const newRooms = property.rooms.filter((item) => item.roomType.id == value);
+    const newRooms = property.rooms.filter((item) => item.roomType.id == value).sort((a, b) => a.roomNumber - b.roomNumber);
+    setCurrentRoomType(value);
     setRooms(newRooms);
   };
-  const handleDeleteRooms = (id) => {
-    console.log(id);
-    const roomsCurrent = rooms.filter((item) => item.id != id);
-    property.rooms = property.rooms.filter((item) => item.id != id);
-    setRooms(roomsCurrent);
+  const handleDeleteRooms = async(id) => {
+    try {
+      const res =await deleteRoom(id);
+      console.log(res);
+      if (res.code == 200) {
+        openNotification("topRight", "Xoá phòng thành công!", "green");
+        const newRooms = rooms.filter((item) => item.id != id).sort((a, b) => a.roomNumber - b.roomNumber);
+        setRooms(newRooms);
+      } else {
+        openNotification("topRight", "Xoá phòng thất bại!", "red");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleChangeRoomNumber = (e) => {
+    setRoomNumber(e);
+  };
+  const handleAddRoom = async () => {
+    if (!roomNumber || roomNumber < 100 || roomNumber > 9999) {
+      openNotification("topRight", "Số phòng không hợp lệ!", "red");
+      return;
+    }
+    const data = {
+      roomNumber: roomNumber,
+      roomTypeId: currentRoomType,
+      propertyId: parseInt(propertyId),
+    };
+    console.log(data);
+    try {
+      const res = await createRoom(data);
+      if (res.code == 200) {
+        openNotification("topRight", "Thêm phòng thành công!", "green");
+        const newRoom = res.data;
+        setRooms((rooms) => [...rooms, newRoom]);
+        setShowCreateRoom(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
   const rules = [{ required: true, message: "Vui lòng nhập trường này!" }];
   return (
@@ -428,8 +472,8 @@ function EditProperty() {
                         {item.roomNumber}
                       </span>
                       <Popconfirm
-                        title="Xóa ảnh"
-                        description="Bạn có chắc xóa ảnh này không ?"
+                        title="Xóa phòng"
+                        description="Bạn có chắc xóa phòng này không ?"
                         onConfirm={() => handleDeleteRooms(item.id)}
                         okText="Yes"
                         cancelText="No"
@@ -441,6 +485,43 @@ function EditProperty() {
                     </li>
                   ))}
               </ul>
+              {!showCreateRoom ? (
+                <Button
+                  color="primary"
+                  variant="solid"
+                  style={{ marginBottom: "10px" }}
+                  onClick={() => setShowCreateRoom(true)}
+                >
+                  Thêm phòng
+                </Button>
+              ) : (
+                <>
+                  <div
+                    className="create-room"
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    <InputNumber
+                      placeholder="Nhập số phòng"
+                      onChange={handleChangeRoomNumber}
+                      min={100}
+                      max={9999}
+                    />
+                    <Button onClick={handleAddRoom}>Thêm</Button>
+                  </div>
+                  <Button
+                    color="primary"
+                    variant="solid"
+                    style={{ marginBottom: "10px" }}
+                    onClick={() => setShowCreateRoom(false)}
+                  >
+                    Ẩn
+                  </Button>
+                </>
+              )}
             </div>
             <Form.Item
               label={<h3 style={{ color: "#0057B8" }}>Mô tả</h3>}
@@ -450,7 +531,7 @@ function EditProperty() {
             >
               <TextArea rows={10} />
             </Form.Item>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={loading}>
               Cập nhật
             </Button>
           </Form>
