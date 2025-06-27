@@ -373,7 +373,7 @@ function BookingPropertyDetail(props) {
           </div>
         </div>
       </div>
-      {myDiscountHotels && (
+      {myDiscountHotels && myDiscountHotels.length > 0 && (
         <div className="booking-discounts">
           <div className="booking-discounts__header">
             <p>Mã giảm giá khách sạn</p>
@@ -430,7 +430,7 @@ function BookingPropertyDetail(props) {
           ))}
         </div>
       )}
-      {myDiscountCars && (
+      {myDiscountCars && myDiscountCars.length > 0 && (
         <div className="booking-discounts">
           <div className="booking-discounts__header">
             <p>Mã giảm giá đặt xe</p>

@@ -53,7 +53,7 @@ function Properties() {
   };
   useEffect(() => {
     fetchApi();
-  }, []);
+  }, [filter]);
   const columns = [
     {
       title: "Mã khách sạn",
@@ -180,9 +180,7 @@ function Properties() {
   const handleChangePropertyType = (e) => {
     setPropertyType(e);
   };
-  const handleFilter = async () => {
-    fetchApi();
-  };
+
   const handleExport = async () => {
     try {
       const blob = await exportPropertiesRevenue();
@@ -267,14 +265,6 @@ function Properties() {
             { value: "Homestay", label: "Homestay" },
           ]}
         />
-        <Button
-          type="primary"
-          onClick={handleFilter}
-          style={{ marginRight: "20px" }}
-        >
-          <FilterOutlined />
-          Lọc
-        </Button>
         <Button color="cyan" variant="outlined" onClick={handleExport}>
           <PrinterOutlined />
           Xuất

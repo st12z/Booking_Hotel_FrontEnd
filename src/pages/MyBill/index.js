@@ -37,7 +37,7 @@ function MyBill() {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const res = await getMyBills(user.email, pageNo, pageSize, keyword);
+        const res = await getMyBills(pageNo, pageSize, keyword);
         console.log(res);
         if (res.code == 200) {
           const resData = res.data.dataPage;

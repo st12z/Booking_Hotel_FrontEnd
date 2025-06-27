@@ -1,6 +1,9 @@
 import { get, post } from "../../utils/requestRoomService";
 import { getAuthorization, postAuthorization, postImagesAuthorization } from "../getAuthorization";
-
+export const getAllProperties = async ()=>{
+  const result = await get(`properties/all`);
+  return result;
+}
 export const getPropertyBySlug=async(path)=>{
   const result = await get(`properties/slug/${path}`);
   return result;

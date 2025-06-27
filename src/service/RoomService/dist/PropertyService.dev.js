@@ -3,20 +3,20 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateProperty = exports.getPropertiesByKeyword = exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = void 0;
+exports.updateProperty = exports.getPropertiesByKeyword = exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = exports.getAllProperties = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
 var _getAuthorization = require("../getAuthorization");
 
-var getPropertyBySlug = function getPropertyBySlug(path) {
+var getAllProperties = function getAllProperties() {
   var result;
-  return regeneratorRuntime.async(function getPropertyBySlug$(_context) {
+  return regeneratorRuntime.async(function getAllProperties$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("properties/slug/".concat(path)));
+          return regeneratorRuntime.awrap((0, _requestRoomService.get)("properties/all"));
 
         case 2:
           result = _context.sent;
@@ -30,16 +30,16 @@ var getPropertyBySlug = function getPropertyBySlug(path) {
   });
 };
 
-exports.getPropertyBySlug = getPropertyBySlug;
+exports.getAllProperties = getAllProperties;
 
-var getPropertiesBySuggest = function getPropertiesBySuggest(data) {
+var getPropertyBySlug = function getPropertyBySlug(path) {
   var result;
-  return regeneratorRuntime.async(function getPropertiesBySuggest$(_context2) {
+  return regeneratorRuntime.async(function getPropertyBySlug$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.post)("properties", data));
+          return regeneratorRuntime.awrap((0, _requestRoomService.get)("properties/slug/".concat(path)));
 
         case 2:
           result = _context2.sent;
@@ -53,16 +53,16 @@ var getPropertiesBySuggest = function getPropertiesBySuggest(data) {
   });
 };
 
-exports.getPropertiesBySuggest = getPropertiesBySuggest;
+exports.getPropertyBySlug = getPropertyBySlug;
 
-var getPropertyId = function getPropertyId(id) {
+var getPropertiesBySuggest = function getPropertiesBySuggest(data) {
   var result;
-  return regeneratorRuntime.async(function getPropertyId$(_context3) {
+  return regeneratorRuntime.async(function getPropertiesBySuggest$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return regeneratorRuntime.awrap((0, _requestRoomService.get)("properties/id/".concat(id)));
+          return regeneratorRuntime.awrap((0, _requestRoomService.post)("properties", data));
 
         case 2:
           result = _context3.sent;
@@ -76,16 +76,16 @@ var getPropertyId = function getPropertyId(id) {
   });
 };
 
-exports.getPropertyId = getPropertyId;
+exports.getPropertiesBySuggest = getPropertiesBySuggest;
 
-var getAmountProperties = function getAmountProperties(id) {
+var getPropertyId = function getPropertyId(id) {
   var result;
-  return regeneratorRuntime.async(function getAmountProperties$(_context4) {
+  return regeneratorRuntime.async(function getPropertyId$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/properties/amount-properties"));
+          return regeneratorRuntime.awrap((0, _requestRoomService.get)("properties/id/".concat(id)));
 
         case 2:
           result = _context4.sent;
@@ -99,16 +99,16 @@ var getAmountProperties = function getAmountProperties(id) {
   });
 };
 
-exports.getAmountProperties = getAmountProperties;
+exports.getPropertyId = getPropertyId;
 
-var getPropertiesByKeyword = function getPropertiesByKeyword(filter) {
+var getAmountProperties = function getAmountProperties(id) {
   var result;
-  return regeneratorRuntime.async(function getPropertiesByKeyword$(_context5) {
+  return regeneratorRuntime.async(function getAmountProperties$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
           _context5.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("rooms/api/properties/filter", filter));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/properties/amount-properties"));
 
         case 2:
           result = _context5.sent;
@@ -122,16 +122,16 @@ var getPropertiesByKeyword = function getPropertiesByKeyword(filter) {
   });
 };
 
-exports.getPropertiesByKeyword = getPropertiesByKeyword;
+exports.getAmountProperties = getAmountProperties;
 
-var updateProperty = function updateProperty(data) {
+var getPropertiesByKeyword = function getPropertiesByKeyword(filter) {
   var result;
-  return regeneratorRuntime.async(function updateProperty$(_context6) {
+  return regeneratorRuntime.async(function getPropertiesByKeyword$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
           _context6.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.postImagesAuthorization)("rooms/api/properties/update", data));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("rooms/api/properties/filter", filter));
 
         case 2:
           result = _context6.sent;
@@ -140,6 +140,29 @@ var updateProperty = function updateProperty(data) {
         case 4:
         case "end":
           return _context6.stop();
+      }
+    }
+  });
+};
+
+exports.getPropertiesByKeyword = getPropertiesByKeyword;
+
+var updateProperty = function updateProperty(data) {
+  var result;
+  return regeneratorRuntime.async(function updateProperty$(_context7) {
+    while (1) {
+      switch (_context7.prev = _context7.next) {
+        case 0:
+          _context7.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postImagesAuthorization)("rooms/api/properties/update", data));
+
+        case 2:
+          result = _context7.sent;
+          return _context7.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context7.stop();
       }
     }
   });

@@ -1,8 +1,8 @@
 import { Space, Table, Tag } from "antd";
 import "./ListBillRecently.scss";
 import {
-  getAllBills,
   getMyBills,
+  getRecentlyBills,
 } from "../../service/BookingService/BillService";
 import { getPropertyId } from "../../service/RoomService/PropertyService";
 import { useEffect, useState } from "react";
@@ -33,7 +33,7 @@ function ListBillRecently() {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const res = await getAllBills();
+        const res = await getRecentlyBills();
         console.log(res);
         if (res.code == 200) {
           const resData = res.data;

@@ -22,6 +22,7 @@ import Properties from "../pages/Admin/Properties";
 import PropertyDetailAdmin from "../components/PropertyDetailAdmin";
 import EditProperty from "../components/EditProperty";
 import CreateRoomType from "../components/CreateRoomType";
+import Bills from "../pages/Admin/Bills";
 export const routes = [
   {
     path: "/",
@@ -120,6 +121,10 @@ export const routes = [
           {
             path: "room-chats/:id",
             element: <Chats/>
+          },
+          {
+            path: "bills",
+            element: <Bills/>
           }
 
         ]

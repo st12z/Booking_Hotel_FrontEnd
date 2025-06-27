@@ -46,6 +46,7 @@ function PropertyDetailAdmin() {
 
   return (
     <>
+  
       <h2>Thông tin chi tiết khách sạn</h2>
       {property && (
         <>

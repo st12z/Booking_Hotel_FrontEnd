@@ -9,6 +9,8 @@ import { AppstoreOutlined,UserOutlined,
    } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { FaCity } from "react-icons/fa";
+import { BsCalendar2Event } from "react-icons/bs";
+
 
 function MenuSider(){
   const items=[
@@ -21,6 +23,12 @@ function MenuSider(){
       key:"/properties",
       label:<Link to="/admin/properties">Quản lý khách sạn</Link>,
       icon:<FaCity />,
+    },
+    {
+      key:"/bills",
+      label:<Link to="/admin/bills">Quản lý hóa đơn</Link>,
+      icon:<BsCalendar2Event />
+,
     },
   ]
   return(
