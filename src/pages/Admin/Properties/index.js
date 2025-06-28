@@ -265,7 +265,7 @@ function Properties() {
             { value: "Homestay", label: "Homestay" },
           ]}
         />
-        <Button color="cyan" variant="outlined" onClick={handleExport}>
+        <Button color="primary" variant="solid" onClick={handleExport}>
           <PrinterOutlined />
           Xuất
         </Button>

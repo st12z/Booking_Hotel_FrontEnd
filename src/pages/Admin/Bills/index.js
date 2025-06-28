@@ -1,4 +1,9 @@
-import { SearchOutlined, FilterOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  FilterOutlined,
+  EyeOutlined,
+  PrinterOutlined,
+} from "@ant-design/icons";
 import { Button, Input, Select, Table, DatePicker } from "antd";
 import { use, useEffect, useMemo, useState } from "react";
 import "./Bills.scss";
@@ -15,6 +20,7 @@ import {
   getDate,
   getFormatPrice,
 } from "../../../utils/format";
+import { exportBills } from "../../../service/RoomService/ExportFileService";
 const { RangePicker } = DatePicker;
 function Bills() {
   const [keyword, setKeyword] = useState("");
@@ -240,6 +246,23 @@ function Bills() {
       ),
     },
   ];
+  const handleExport = async () => {
+    try {
+      const blob = await exportBills();
+      const url = window.URL.createObjectURL(blob);
+      console.log(url);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "bills.xls";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <div className="input_search">
@@ -251,6 +274,10 @@ function Bills() {
           <SearchOutlined />
           <span>Tìm kiếm</span>
         </div>
+        <Button color="primary" variant="solid" onClick={handleExport}>
+          <PrinterOutlined />
+          Xuất
+        </Button>
       </div>
       <div style={{ marginBottom: "20px", marginTop: "20px" }}>
         <Select
