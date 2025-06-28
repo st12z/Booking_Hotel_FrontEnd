@@ -45,7 +45,7 @@ function InformationBookingRooms(props) {
       title: "Dịch vụ",
       key: "freeServices",
       render: (_, record) => (
-        <div style={{ display: "flex", alignContent: "center" }}>
+        <>
           <ul style={{ display: "flex", flexWrap: "wrap" }}>
             {record.roomType.freeServices?.map((item, index) => (
               <li
@@ -56,7 +56,7 @@ function InformationBookingRooms(props) {
               </li>
             ))}
           </ul>
-        </div>
+        </>
       ),
       width: 400,
     },

@@ -23,6 +23,9 @@ import PropertyDetailAdmin from "../components/PropertyDetailAdmin";
 import EditProperty from "../components/EditProperty";
 import CreateRoomType from "../components/CreateRoomType";
 import Bills from "../pages/Admin/Bills";
+import DetailBills from "../pages/Admin/DetailBill";
+import DetailBill from "../pages/Admin/DetailBill";
+import EditRoomType from "../pages/Admin/EditRoomType";
 export const routes = [
   {
     path: "/",
@@ -115,6 +118,10 @@ export const routes = [
             element: <CreateRoomType />
           },
           {
+            path: "properties/room-types/edit/:id",
+            element: <EditRoomType/>
+          },
+          {
             path: "room-chats",
             element: <RoomChats/>
           },
@@ -125,8 +132,11 @@ export const routes = [
           {
             path: "bills",
             element: <Bills/>
+          },
+          {
+            path: "bills/:billCode",
+            element: <DetailBill/>
           }
-
         ]
       },
     ],

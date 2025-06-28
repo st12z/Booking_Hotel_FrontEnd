@@ -34,3 +34,11 @@ export const createRoomType = async(data)=>{
   const res = await postAuthorization(`rooms/api/roomtypes/create`,data);
   return res;
 }
+export const updateFreeServicesOfRoomType= async(data)=>{
+  const res = await postAuthorization(`rooms/api/roomtypes/update-free-services`,data);
+  return res;
+}
+export const updateRoomType=async(id,data)=>{
+  const res = await postAuthorization(`rooms/api/roomtypes/update/${id}`,data);
+  return res;
+}

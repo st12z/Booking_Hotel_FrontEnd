@@ -240,7 +240,7 @@ function Bills() {
       render: (_, record) => (
         <div style={{ display: "flex" }}>
           <Button style={{ marginRight: "10px" }}>
-            <Link to={`/admin/bills/${record.id}`}>{<EyeOutlined />}</Link>
+            <Link to={`/admin/bills/${record.billCode}`}>{<EyeOutlined />}</Link>
           </Button>
         </div>
       ),

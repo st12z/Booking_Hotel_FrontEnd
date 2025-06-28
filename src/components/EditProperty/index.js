@@ -20,8 +20,11 @@ import {
 } from "antd";
 import { Editor } from "@tinymce/tinymce-react";
 import TextArea from "antd/es/input/TextArea";
-import { PlusOutlined } from "@ant-design/icons";
-import { getAllRoomTypes } from "../../service/RoomService/RoomTypeService";
+import { PlusOutlined,EditOutlined } from "@ant-design/icons";
+import {
+  getAllRoomTypes,
+  updateFreeServicesOfRoomType,
+} from "../../service/RoomService/RoomTypeService";
 import { getAllPropertyTypes } from "../../service/RoomService/PropertyTypeService";
 import "./EditProperty.scss";
 import { getFacilities } from "../../service/RoomService/FacilityService";
@@ -82,10 +85,8 @@ function EditProperty() {
   const [fileList, setFileList] = useState([]);
   const [isUpload, setIsUpload] = useState(false);
   const [form] = Form.useForm();
-  const [rooms, setRooms] = useState([]);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
   const [api, contextHolder] = notification.useNotification();
-  const [roomNumber, setRoomNumber] = useState();
   const [currentRoomType, setCurrentRoomType] = useState();
   const [loading, setLoading] = useState(false);
   const openNotification = (placement, message, color, onClose) => {
@@ -210,11 +211,6 @@ function EditProperty() {
               label: item.name,
             };
           });
-          const rooms = res.data.rooms.filter(
-            (item) => item.roomType.id == roomTypes[0].value
-          ).sort((a, b) => a.roomNumber - b.roomNumber);;
-          setRooms(rooms);
-          console.log("rooms", rooms);
           setCurrentRoomType(roomTypes[0].value);
           setRoomTypes(roomTypes);
           setProperty(res.data);
@@ -289,50 +285,8 @@ function EditProperty() {
     setIsUpload(!isUpload);
   };
   const handleChangeRoomTypes = (value) => {
-    const newRooms = property.rooms.filter((item) => item.roomType.id == value).sort((a, b) => a.roomNumber - b.roomNumber);
+    console.log(value);
     setCurrentRoomType(value);
-    setRooms(newRooms);
-  };
-  const handleDeleteRooms = async(id) => {
-    try {
-      const res =await deleteRoom(id);
-      console.log(res);
-      if (res.code == 200) {
-        openNotification("topRight", "Xoá phòng thành công!", "green");
-        const newRooms = rooms.filter((item) => item.id != id).sort((a, b) => a.roomNumber - b.roomNumber);
-        setRooms(newRooms);
-      } else {
-        openNotification("topRight", "Xoá phòng thất bại!", "red");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const handleChangeRoomNumber = (e) => {
-    setRoomNumber(e);
-  };
-  const handleAddRoom = async () => {
-    if (!roomNumber || roomNumber < 100 || roomNumber > 9999) {
-      openNotification("topRight", "Số phòng không hợp lệ!", "red");
-      return;
-    }
-    const data = {
-      roomNumber: roomNumber,
-      roomTypeId: currentRoomType,
-      propertyId: parseInt(propertyId),
-    };
-    console.log(data);
-    try {
-      const res = await createRoom(data);
-      if (res.code == 200) {
-        openNotification("topRight", "Thêm phòng thành công!", "green");
-        const newRoom = res.data;
-        setRooms((rooms) => [...rooms, newRoom]);
-        setShowCreateRoom(false);
-      }
-    } catch (error) {
-      console.error(error);
-    }
   };
   const rules = [{ required: true, message: "Vui lòng nhập trường này!" }];
   return (
@@ -451,10 +405,19 @@ function EditProperty() {
               <Button
                 color="primary"
                 variant="solid"
-                style={{ marginBottom: "10px" }}
+                style={{ marginBottom: "10px",marginRight: "10px" }}
               >
                 <Link to={`/admin/properties/room-types/${propertyId}`}>
-                  Thêm loại phòng
+                  <PlusOutlined /> Thêm loại phòng
+                </Link>
+              </Button>
+              <Button
+                color="primary"
+                variant="solid"
+                style={{ marginBottom: "10px" }}
+              >
+                <Link to={`/admin/properties/room-types/edit/${currentRoomType}`}>
+                  <EditOutlined /> Chỉnh sửa loại phòng
                 </Link>
               </Button>
               <Select
@@ -463,66 +426,6 @@ function EditProperty() {
                 onChange={handleChangeRoomTypes}
               />
             </Form.Item>
-            <div className="list-rooms">
-              <ul>
-                {rooms &&
-                  rooms.map((item, index) => (
-                    <li key={index} style={{ marginBottom: "10px" }}>
-                      <span style={{ marginRight: "20px" }}>
-                        {item.roomNumber}
-                      </span>
-                      <Popconfirm
-                        title="Xóa phòng"
-                        description="Bạn có chắc xóa phòng này không ?"
-                        onConfirm={() => handleDeleteRooms(item.id)}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <Button color="danger" variant="solid">
-                          Xoá
-                        </Button>
-                      </Popconfirm>
-                    </li>
-                  ))}
-              </ul>
-              {!showCreateRoom ? (
-                <Button
-                  color="primary"
-                  variant="solid"
-                  style={{ marginBottom: "10px" }}
-                  onClick={() => setShowCreateRoom(true)}
-                >
-                  Thêm phòng
-                </Button>
-              ) : (
-                <>
-                  <div
-                    className="create-room"
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <InputNumber
-                      placeholder="Nhập số phòng"
-                      onChange={handleChangeRoomNumber}
-                      min={100}
-                      max={9999}
-                    />
-                    <Button onClick={handleAddRoom}>Thêm</Button>
-                  </div>
-                  <Button
-                    color="primary"
-                    variant="solid"
-                    style={{ marginBottom: "10px" }}
-                    onClick={() => setShowCreateRoom(false)}
-                  >
-                    Ẩn
-                  </Button>
-                </>
-              )}
-            </div>
             <Form.Item
               label={<h3 style={{ color: "#0057B8" }}>Mô tả</h3>}
               name="overview"

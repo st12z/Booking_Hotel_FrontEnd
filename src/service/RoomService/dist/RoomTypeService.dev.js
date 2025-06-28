@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createRoomType = exports.checkBookingRooms = exports.holdRooms = exports.getRoomTypeById = exports.checkEnoughQuantityRooms = exports.getRoomTypesBySearchRequest = exports.getRoomTypesBySlugProperty = exports.getAllRoomTypes = void 0;
+exports.updateRoomType = exports.updateFreeServicesOfRoomType = exports.createRoomType = exports.checkBookingRooms = exports.holdRooms = exports.getRoomTypeById = exports.checkEnoughQuantityRooms = exports.getRoomTypesBySearchRequest = exports.getRoomTypesBySlugProperty = exports.getAllRoomTypes = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
@@ -192,3 +192,49 @@ var createRoomType = function createRoomType(data) {
 };
 
 exports.createRoomType = createRoomType;
+
+var updateFreeServicesOfRoomType = function updateFreeServicesOfRoomType(data) {
+  var res;
+  return regeneratorRuntime.async(function updateFreeServicesOfRoomType$(_context9) {
+    while (1) {
+      switch (_context9.prev = _context9.next) {
+        case 0:
+          _context9.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("rooms/api/roomtypes/update-free-services", data));
+
+        case 2:
+          res = _context9.sent;
+          return _context9.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context9.stop();
+      }
+    }
+  });
+};
+
+exports.updateFreeServicesOfRoomType = updateFreeServicesOfRoomType;
+
+var updateRoomType = function updateRoomType(id, data) {
+  var res;
+  return regeneratorRuntime.async(function updateRoomType$(_context10) {
+    while (1) {
+      switch (_context10.prev = _context10.next) {
+        case 0:
+          _context10.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("rooms/api/roomtypes/update/".concat(id), data));
+
+        case 2:
+          res = _context10.sent;
+          return _context10.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context10.stop();
+      }
+    }
+  });
+};
+
+exports.updateRoomType = updateRoomType;
