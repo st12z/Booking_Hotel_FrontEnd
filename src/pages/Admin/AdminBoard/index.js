@@ -189,10 +189,10 @@ function AdminBoard() {
       </div>
       <div className="dashboard-chart">
         <Row gutter={[10, 10]}>
-          <Col span={12}>
+          <Col span={24}>
             <StatisticBill />
           </Col>
-          <Col span={12}>
+          <Col span={24}>
             <StatisticView />
           </Col>
           <Col span={24}>

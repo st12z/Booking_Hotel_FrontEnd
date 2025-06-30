@@ -75,7 +75,7 @@ function StatisticBill() {
         console.error(e);
       }
     },
-    width: 600,
+    width: 1000,
     height: 500,
   };
   const handleChange = (e) => {

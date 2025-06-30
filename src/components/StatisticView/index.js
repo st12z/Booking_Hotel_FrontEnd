@@ -16,9 +16,9 @@ function StatisticView() {
     };
   });
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth() + 1);
-  const [data, setData] = useState([{day:1,amount:0}]);
+  const [data, setData] = useState([{ day: 1, amount: 0 }]);
   const [reload, setReload] = useState();
-  const user = useSelector(state=>state.user);
+  const user = useSelector((state) => state.user);
   useEffect(() => {
     const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
     const client = Stomp.over(socket);
@@ -28,7 +28,7 @@ function StatisticView() {
       client.subscribe(
         `/user/${user.email}/queue/update-visits`,
         (returnMessage) => {
-          setReload(Date.now())
+          setReload(Date.now());
         }
       );
     });
@@ -54,7 +54,7 @@ function StatisticView() {
     onReady: ({ chart }) => {
       try {
         const { height } = chart._container.getBoundingClientRect();
-        const tooltipItem = data[Math.floor(Math.random() * data?.length)];
+        const tooltipItem = data[Math.floor(Math.random() * data.length)];
         chart.on(
           "afterrender",
           () => {
@@ -71,7 +71,7 @@ function StatisticView() {
         console.error(e);
       }
     },
-    width: 600,
+    width: 1000,
     height: 500,
   };
   const handleChange = (e) => {
