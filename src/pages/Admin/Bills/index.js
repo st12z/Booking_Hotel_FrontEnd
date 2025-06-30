@@ -21,6 +21,7 @@ import {
   getFormatPrice,
 } from "../../../utils/format";
 import { exportBills } from "../../../service/RoomService/ExportFileService";
+import { getPrintBill } from "../../../service/BookingService/PrintService";
 const { RangePicker } = DatePicker;
 function Bills() {
   const [keyword, setKeyword] = useState("");
@@ -152,6 +153,20 @@ function Bills() {
       setEndDate(null);
     }
   };
+  const handlePrintBills = async (id) => {
+    try {
+      const blob = await getPrintBill(id);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "invoice.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const columns = [
     {
       title: "Mã ID",
@@ -240,7 +255,12 @@ function Bills() {
       render: (_, record) => (
         <div style={{ display: "flex" }}>
           <Button style={{ marginRight: "10px" }}>
-            <Link to={`/admin/bills/${record.billCode}`}>{<EyeOutlined />}</Link>
+            <Link to={`/admin/bills/${record.billCode}`}>
+              {<EyeOutlined />}
+            </Link>
+          </Button>
+          <Button onClick={() => handlePrintBills(record.id)}>
+            <PrinterOutlined />
           </Button>
         </div>
       ),
