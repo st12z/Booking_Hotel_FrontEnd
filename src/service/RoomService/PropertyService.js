@@ -28,3 +28,7 @@ export const updateProperty = async(data)=>{
   const result = await postImagesAuthorization(`rooms/api/properties/update`,data);
   return result;
 }
+export const createProperty = async(data)=>{
+  const result = await postImagesAuthorization(`rooms/api/properties/create`,data);
+  return result;
+}

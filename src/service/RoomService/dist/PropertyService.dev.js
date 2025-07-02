@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateProperty = exports.getPropertiesByKeyword = exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = exports.getAllProperties = void 0;
+exports.createProperty = exports.updateProperty = exports.getPropertiesByKeyword = exports.getAmountProperties = exports.getPropertyId = exports.getPropertiesBySuggest = exports.getPropertyBySlug = exports.getAllProperties = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
@@ -169,3 +169,26 @@ var updateProperty = function updateProperty(data) {
 };
 
 exports.updateProperty = updateProperty;
+
+var createProperty = function createProperty(data) {
+  var result;
+  return regeneratorRuntime.async(function createProperty$(_context8) {
+    while (1) {
+      switch (_context8.prev = _context8.next) {
+        case 0:
+          _context8.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postImagesAuthorization)("rooms/api/properties/create", data));
+
+        case 2:
+          result = _context8.sent;
+          return _context8.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context8.stop();
+      }
+    }
+  });
+};
+
+exports.createProperty = createProperty;

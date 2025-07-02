@@ -10,6 +10,7 @@ import {
   SearchOutlined,
   FilterOutlined,
   PrinterOutlined,
+  PlusOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { get } from "../../../utils/requestRoomService";
@@ -200,6 +201,9 @@ function Properties() {
   };
   return (
     <>
+      <Button type="primary" style={{marginBottom:"20px"}}>
+        <Link to="/admin/properties/create"><PlusOutlined /> Tạo mới </Link>
+      </Button>
       <div className="" style={{ marginBottom: "20px", position: "relative" }}>
         <Input
           onChange={handleChangeInput}

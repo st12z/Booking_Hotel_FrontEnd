@@ -26,6 +26,7 @@ import Bills from "../pages/Admin/Bills";
 import DetailBills from "../pages/Admin/DetailBill";
 import DetailBill from "../pages/Admin/DetailBill";
 import EditRoomType from "../pages/Admin/EditRoomType";
+import CreateProperties from "../pages/Admin/CreateProperties";
 export const routes = [
   {
     path: "/",
@@ -108,6 +109,10 @@ export const routes = [
           {
             path:"properties/:id",
             element: <PropertyDetailAdmin/>
+          },
+          {
+            path: "properties/create",
+            element: <CreateProperties />
           },
           {
             path:"properties/edit/:id",

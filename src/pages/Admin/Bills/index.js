@@ -4,7 +4,7 @@ import {
   EyeOutlined,
   PrinterOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Select, Table, DatePicker } from "antd";
+import { Button, Input, Select, Table, DatePicker, Tag } from "antd";
 import { use, useEffect, useMemo, useState } from "react";
 import "./Bills.scss";
 import {
@@ -159,7 +159,7 @@ function Bills() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "invoice.pdf";
+      a.download = `invoice_${id}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -223,6 +223,23 @@ function Bills() {
         <>
           <p>
             <b>{record.phoneNumber}</b>
+          </p>
+        </>
+      ),
+    },
+    {
+      title: "Trạng thái thanh toán",
+      key: "statusBill",
+      render: (_, record) => (
+        <>
+          <p>
+            {record.billStatus == "SUCCESS" ? (
+              <Tag color="green">Đã thanh toán</Tag>
+            ) : record.billStatus == "CANCEL" ? (
+              <Tag color="blue">Đã huỷ đặt phòng</Tag>
+            ) : (
+              <Tag color="red">Chưa thanh toán</Tag>
+            )}
           </p>
         </>
       ),

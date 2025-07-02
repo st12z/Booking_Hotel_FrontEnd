@@ -20,7 +20,7 @@ import {
 } from "antd";
 import { Editor } from "@tinymce/tinymce-react";
 import TextArea from "antd/es/input/TextArea";
-import { PlusOutlined,EditOutlined } from "@ant-design/icons";
+import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import {
   getAllRoomTypes,
   updateFreeServicesOfRoomType,
@@ -178,13 +178,15 @@ function EditProperty() {
           const allFacilities = resFacilities.data.map((item) => {
             return { label: item.name, value: item.id };
           });
-          const facilities = res.data.facilities.map((facility1) => {
-            const item = allFacilities.find(
-              (facility2) => facility2.label == facility1
-            );
-            return item.value;
-          });
-          setFacilities(facilities);
+          if (res.data.facilities) {
+            const facilities = res.data.facilities.map((facility1) => {
+              const item = allFacilities.find(
+                (facility2) => facility2.label == facility1
+              );
+              return item.value;
+            });
+            setFacilities(facilities || []);
+          }
           setAllFacilites(allFacilities);
         }
         if (resPropertyTypes.code == 200) {
@@ -216,7 +218,7 @@ function EditProperty() {
           setProperty(res.data);
         }
       } catch (error) {
-        console.error();
+        console.error(error);
       }
     };
     fetchApi();
@@ -405,7 +407,7 @@ function EditProperty() {
               <Button
                 color="primary"
                 variant="solid"
-                style={{ marginBottom: "10px",marginRight: "10px" }}
+                style={{ marginBottom: "10px", marginRight: "10px" }}
               >
                 <Link to={`/admin/properties/room-types/${propertyId}`}>
                   <PlusOutlined /> Thêm loại phòng
@@ -416,7 +418,9 @@ function EditProperty() {
                 variant="solid"
                 style={{ marginBottom: "10px" }}
               >
-                <Link to={`/admin/properties/room-types/edit/${currentRoomType}`}>
+                <Link
+                  to={`/admin/properties/room-types/edit/${currentRoomType}`}
+                >
                   <EditOutlined /> Chỉnh sửa loại phòng
                 </Link>
               </Button>

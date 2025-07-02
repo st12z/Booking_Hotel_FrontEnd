@@ -63,8 +63,8 @@ function CreateRoomType() {
       openNotification("topRight", "Tạo loại phòng thất bại!", "red");
       console.error(error);
     } finally {
-      // form.resetFields();
-      // setFreeServices([]);
+      form.resetFields();
+      setFreeServices([]);
     }
   };
   const handleChangeFreeServices = (value) => {
