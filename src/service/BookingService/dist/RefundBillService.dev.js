@@ -3,18 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getPrintRefundBill = exports.getPrintBill = void 0;
+exports.getSearchRefundBills = exports.getAllRefundBills = void 0;
 
 var _getAuthorization = require("../getAuthorization");
 
-var getPrintBill = function getPrintBill(id) {
+var getAllRefundBills = function getAllRefundBills(filter) {
   var res;
-  return regeneratorRuntime.async(function getPrintBill$(_context) {
+  return regeneratorRuntime.async(function getAllRefundBills$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.getFileAuthorization)("bookings/api/prints/bills/".concat(id)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("bookings/api/refund-bills/filter", filter));
 
         case 2:
           res = _context.sent;
@@ -28,16 +28,16 @@ var getPrintBill = function getPrintBill(id) {
   });
 };
 
-exports.getPrintBill = getPrintBill;
+exports.getAllRefundBills = getAllRefundBills;
 
-var getPrintRefundBill = function getPrintRefundBill(id) {
+var getSearchRefundBills = function getSearchRefundBills(keyword) {
   var res;
-  return regeneratorRuntime.async(function getPrintRefundBill$(_context2) {
+  return regeneratorRuntime.async(function getSearchRefundBills$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return regeneratorRuntime.awrap((0, _getAuthorization.getFileAuthorization)("bookings/api/prints/refund-bills/".concat(id)));
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/refund-bills/search?keyword=".concat(keyword)));
 
         case 2:
           res = _context2.sent;
@@ -51,4 +51,4 @@ var getPrintRefundBill = function getPrintRefundBill(id) {
   });
 };
 
-exports.getPrintRefundBill = getPrintRefundBill;
+exports.getSearchRefundBills = getSearchRefundBills;

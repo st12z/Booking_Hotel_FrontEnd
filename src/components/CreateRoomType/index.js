@@ -65,6 +65,7 @@ function CreateRoomType() {
     } finally {
       form.resetFields();
       setFreeServices([]);
+      setRooms([]);
     }
   };
   const handleChangeFreeServices = (value) => {

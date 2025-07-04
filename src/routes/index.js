@@ -27,6 +27,7 @@ import DetailBills from "../pages/Admin/DetailBill";
 import DetailBill from "../pages/Admin/DetailBill";
 import EditRoomType from "../pages/Admin/EditRoomType";
 import CreateProperties from "../pages/Admin/CreateProperties";
+import RefundBills from "../pages/Admin/RefundBills";
 export const routes = [
   {
     path: "/",
@@ -137,6 +138,10 @@ export const routes = [
           {
             path: "bills",
             element: <Bills/>
+          },
+          {
+            path: "refund-bills",
+            element:  <RefundBills />
           },
           {
             path: "bills/:billCode",

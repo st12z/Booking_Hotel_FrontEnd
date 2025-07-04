@@ -175,10 +175,10 @@ function EditProperty() {
         const resPropertyTypes = await getAllPropertyTypes();
         const resFacilities = await getFacilities();
         if (resFacilities.code == 200) {
-          const allFacilities = resFacilities.data.map((item) => {
-            return { label: item.name, value: item.id };
-          });
-          if (res.data.facilities) {
+          if (res.data.facilities && res.data.facilities.length > 0) {
+            const allFacilities = resFacilities.data.map((item) => {
+              return { label: item.name, value: item.id };
+            });
             const facilities = res.data.facilities.map((facility1) => {
               const item = allFacilities.find(
                 (facility2) => facility2.label == facility1
@@ -186,35 +186,41 @@ function EditProperty() {
               return item.value;
             });
             setFacilities(facilities || []);
+            setAllFacilites(allFacilities);
           }
-          setAllFacilites(allFacilities);
         }
         if (resPropertyTypes.code == 200) {
-          const propertyTypes = resPropertyTypes.data.map((item) => {
-            return {
-              value: item,
-              label: item,
-            };
-          });
-          setPropertyTypes(propertyTypes);
+          if (resPropertyTypes.data && resPropertyTypes.data.length > 0) {
+            const propertyTypes = resPropertyTypes.data.map((item) => {
+              return {
+                value: item,
+                label: item,
+              };
+            });
+            setPropertyTypes(propertyTypes);
+          }
         }
-        const mappedFileList = res.data.images.map((url, index) => ({
-          uid: `image-${index}`,
-          name: `image-${index}.jpg`,
-          status: "done",
-          url: url,
-        }));
-        setFileList(mappedFileList);
+        if (res.data.images && res.data.images.length > 0) {
+          const mappedFileList = res.data.images.map((url, index) => ({
+            uid: `image-${index}`,
+            name: `image-${index}.jpg`,
+            status: "done",
+            url: url,
+          }));
+          setFileList(mappedFileList);
+        }
         if (res.code == 200) {
           setImages(res.data.images);
-          const roomTypes = res.data.roomTypes.map((item) => {
-            return {
-              value: item.id,
-              label: item.name,
-            };
-          });
-          setCurrentRoomType(roomTypes[0].value);
-          setRoomTypes(roomTypes);
+          if (res.data.roomTypes && res.data.roomTypes.length > 0) {
+            const roomTypes = res.data.roomTypes.map((item) => {
+              return {
+                value: item.id,
+                label: item.name,
+              };
+            });
+            setCurrentRoomType(roomTypes[0].value || "");
+            setRoomTypes(roomTypes || []);
+          }
           setProperty(res.data);
         }
       } catch (error) {
@@ -426,7 +432,7 @@ function EditProperty() {
               </Button>
               <Select
                 options={roomTypes}
-                defaultValue={roomTypes[0].value}
+                value={currentRoomType}
                 onChange={handleChangeRoomTypes}
               />
             </Form.Item>

@@ -28,7 +28,11 @@ function MenuSider(){
       key:"/bills",
       label:<Link to="/admin/bills">Quản lý hóa đơn</Link>,
       icon:<BsCalendar2Event />
-,
+    },
+    {
+      key:"/refund-bills",
+      label:<Link to="/admin/refund-bills">Quản lý hóa đơn hoàn tiền</Link>,
+      icon:<BsCalendar2Event />
     },
   ]
   return(

@@ -180,7 +180,7 @@ function PropertyDetail() {
                           <LeftOutlined />
                         </span>
                       )}
-                          <ReviewCardItem item={reviews[currentIndex]} />
+                      <ReviewCardItem item={reviews[currentIndex]} />
                       {currentIndex < reviews.length - 1 && (
                         <span className="arrow-right" onClick={handleRight}>
                           <RightOutlined />
@@ -214,14 +214,23 @@ function PropertyDetail() {
                 >
                   {showMore == false ? (
                     <>
-                      <ul>
-                        {item.facilities.slice(0, 5).map((facility, index) => (
-                          <li key={index}>{facility}</li>
-                        ))}
-                      </ul>
-                      <p onClick={() => setShowMore(true)}>
-                        Xem thêm ({item.facilities.length - 5})
-                      </p>
+                      {item.facilities && item.facilities.length > 0 && (
+                        <>
+                          <ul>
+                            {(item.facilities.length > 5
+                              ? item.facilities.slice(0, 5)
+                              : item.facilities
+                            ).map((facility, index) => (
+                              <li key={index}>{facility}</li>
+                            ))}
+                          </ul>
+                          {item.facilities.length > 5 && (
+                            <p onClick={() => setShowMore(true)}>
+                              Xem thêm ({item.facilities.length - 5})
+                            </p>
+                          )}
+                        </>
+                      )}
                     </>
                   ) : (
                     <>

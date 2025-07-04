@@ -121,6 +121,7 @@ function Search() {
     const fetchApi = async () => {
       try {
         const res = await getPropertiesBySearch(params.toString());
+        console.log(res);
         if (res.code === 200) {
           setData(res.data.dataPage);
           setTotal(res.data.total);
