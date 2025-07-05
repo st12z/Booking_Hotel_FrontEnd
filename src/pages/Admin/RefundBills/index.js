@@ -5,14 +5,22 @@ import {
   getAllRefundBills,
   getSearchRefundBills,
 } from "../../../service/BookingService/RefundBillService";
-import { SearchOutlined,PrinterOutlined,EyeOutlined } from "@ant-design/icons";
+import {
+  SearchOutlined,
+  PrinterOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
 import {
   formatLocalDateTime,
   getDate,
   getFormatPrice,
 } from "../../../utils/format";
 import { Link } from "react-router-dom";
-import { getPrintBill, getPrintRefundBill } from "../../../service/BookingService/PrintService";
+import {
+  getPrintBill,
+  getPrintRefundBill,
+} from "../../../service/BookingService/PrintService";
+import { exportRefundBills } from "../../../service/BookingService/ExportService";
 const { RangePicker } = DatePicker;
 
 function RefundBills() {
@@ -62,7 +70,16 @@ function RefundBills() {
       beginDate: timeOption != "custom" ? null : beginDate,
       endDate: timeOption != "custom" ? null : endDate,
     }),
-    [pageNo, pageSize, propertyId, timeOption, sortOption, beginDate, endDate,transactionType]
+    [
+      pageNo,
+      pageSize,
+      propertyId,
+      timeOption,
+      sortOption,
+      beginDate,
+      endDate,
+      transactionType,
+    ]
   );
   const fetchBills = async () => {
     try {
@@ -131,19 +148,36 @@ function RefundBills() {
     }
   };
   const handlePrintBills = async (id) => {
-      try {
-        const blob = await getPrintRefundBill(id);
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `invoice_${id}.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    try {
+      const blob = await getPrintRefundBill(id);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `invoice_${id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleExport = async () => {
+    try {
+      const blob = await exportRefundBills();
+      const url = window.URL.createObjectURL(blob);
+      console.log(url);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "refund-bills.xls";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const columns = [
     {
       title: "Mã ID",
@@ -263,10 +297,10 @@ function RefundBills() {
           <SearchOutlined />
           <span>Tìm kiếm</span>
         </div>
-        {/* <Button color="primary" variant="solid" onClick={handleExport}>
+        <Button color="primary" variant="solid" onClick={handleExport}>
           <PrinterOutlined />
           Xuất
-        </Button> */}
+        </Button>
       </div>
       <div style={{ marginBottom: "20px", marginTop: "20px" }}>
         <Select

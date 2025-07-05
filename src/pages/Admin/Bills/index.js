@@ -20,8 +20,8 @@ import {
   getDate,
   getFormatPrice,
 } from "../../../utils/format";
-import { exportBills } from "../../../service/RoomService/ExportFileService";
 import { getPrintBill } from "../../../service/BookingService/PrintService";
+import { exportBills } from "../../../service/BookingService/ExportService";
 const { RangePicker } = DatePicker;
 function Bills() {
   const [keyword, setKeyword] = useState("");
