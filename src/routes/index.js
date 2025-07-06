@@ -29,6 +29,7 @@ import EditRoomType from "../pages/Admin/EditRoomType";
 import CreateProperties from "../pages/Admin/CreateProperties";
 import RefundBills from "../pages/Admin/RefundBills";
 import DetailRefundBill from "../pages/DetailRefundBill";
+import PaymentTransactions from "../pages/Admin/AdminBoard/PaymentTransactions";
 export const routes = [
   {
     path: "/",
@@ -153,7 +154,8 @@ export const routes = [
             element: <DetailBill/>
           },
           {
-            
+            path: "payment-transactions",
+            element: <PaymentTransactions/>
           }
         ]
       },

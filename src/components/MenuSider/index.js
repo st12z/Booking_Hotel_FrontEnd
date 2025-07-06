@@ -9,7 +9,7 @@ import { AppstoreOutlined,UserOutlined,
    } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { FaCity } from "react-icons/fa";
-import { BsCalendar2Event } from "react-icons/bs";
+import { BsCalendar2Event,BsActivity  } from "react-icons/bs";
 
 
 function MenuSider(){
@@ -33,6 +33,11 @@ function MenuSider(){
       key:"/refund-bills",
       label:<Link to="/admin/refund-bills">Quản lý hóa đơn hoàn tiền</Link>,
       icon:<BsCalendar2Event />
+    },
+    {
+      key:"/payment-transactions",
+      label:<Link to="/admin/payment-transactions">Quản lý giao dịch</Link>,
+      icon:<BsActivity  />
     },
   ]
   return(
