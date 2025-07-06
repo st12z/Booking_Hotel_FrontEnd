@@ -8,9 +8,9 @@ import InformationBookingClient from "../../components/InformationBookingClient"
 import InformationBookingRooms from "../../components/InformationBookingRooms";
 import { getRoomTypeById } from "../../service/RoomService/RoomTypeService";
 import InformationBookingCars from "../../components/InfomationBookingCars";
-function BillDetail() {
+function BillDetail({billCodeParent}) {
   const params = useParams();
-  const billCode = params.billCode;
+  const billCode = params.billCode || billCodeParent;
   const [bill, setBill] = useState();
   const [property, setProperty] = useState();
   const [bookingRooms, setBookingRooms] = useState();
@@ -18,6 +18,7 @@ function BillDetail() {
   useEffect(() => {
     const fetchApi = async () => {
       const resBill = await getBillByBillCode(billCode);
+      console.log(resBill);
       if (resBill.code == 200) {
         const billData = resBill.data;
         let newBillData = [];

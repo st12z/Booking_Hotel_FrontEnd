@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { getFormatPrice } from "../../utils/format";
 
-function InformationBookingClient(props){
+function InformationBookingClient(props) {
   const bill = props.bill;
   const columns = [
     {
@@ -20,14 +20,17 @@ function InformationBookingClient(props){
       key: "billcode",
       render: (_, record) => (
         <>
-          <div 
-            style={{ 
-              display:"flex",
-              flexDirection:"column"
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <b>{record.property.name}</b>
-            <img src={record.property.images} style={{width:"150px",borderRadius:"5px"}}/>
+            <img
+              src={record.property.images}
+              style={{ width: "150px", borderRadius: "5px" }}
+            />
           </div>
         </>
       ),
@@ -73,15 +76,15 @@ function InformationBookingClient(props){
       ),
     },
   ];
-  return(
+  return (
     <>
       <Table
-          dataSource={bill}
-          columns={columns}
-          pagination={false}
-          style={{marginBottom:"30px"}}
-        />
+        dataSource={bill}
+        columns={columns}
+        pagination={false}
+        style={{ marginBottom: "30px" }}
+      />
     </>
-  )
+  );
 }
 export default InformationBookingClient;

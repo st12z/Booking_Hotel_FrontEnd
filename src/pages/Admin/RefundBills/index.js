@@ -21,6 +21,7 @@ import {
   getPrintRefundBill,
 } from "../../../service/BookingService/PrintService";
 import { exportRefundBills } from "../../../service/BookingService/ExportService";
+import ChartRefundBill from "../../../components/ChartRefundBill";
 const { RangePicker } = DatePicker;
 
 function RefundBills() {
@@ -153,7 +154,7 @@ function RefundBills() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `invoice_${id}.pdf`;
+      a.download = `refund-bills${id}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -253,7 +254,7 @@ function RefundBills() {
       render: (_, record) => (
         <>
           <p style={{ color: "red" }}>
-            <b>{record.vnp_Amount}</b>
+            <b>{getFormatPrice(record.vnp_Amount)}</b>
           </p>
         </>
       ),
@@ -286,8 +287,12 @@ function RefundBills() {
       ),
     },
   ];
+  
   return (
     <>
+      <div className="revenue-refund" style={{marginBottom:"40px"}}>
+        <ChartRefundBill />
+      </div>
       <div className="input_search">
         <Input
           onChange={handleChangeInput}

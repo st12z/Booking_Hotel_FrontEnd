@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getSearchRefundBills = exports.getAllRefundBills = void 0;
+exports.getRevenueRefundByMonth = exports.getRefundBillById = exports.getSearchRefundBills = exports.getAllRefundBills = void 0;
 
 var _getAuthorization = require("../getAuthorization");
 
@@ -52,3 +52,49 @@ var getSearchRefundBills = function getSearchRefundBills(keyword) {
 };
 
 exports.getSearchRefundBills = getSearchRefundBills;
+
+var getRefundBillById = function getRefundBillById(id) {
+  var res;
+  return regeneratorRuntime.async(function getRefundBillById$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/refund-bills/".concat(id)));
+
+        case 2:
+          res = _context3.sent;
+          return _context3.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+};
+
+exports.getRefundBillById = getRefundBillById;
+
+var getRevenueRefundByMonth = function getRevenueRefundByMonth(month) {
+  var res;
+  return regeneratorRuntime.async(function getRevenueRefundByMonth$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("bookings/api/refund-bills/amount-refund-month/".concat(month)));
+
+        case 2:
+          res = _context4.sent;
+          return _context4.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  });
+};
+
+exports.getRevenueRefundByMonth = getRevenueRefundByMonth;
