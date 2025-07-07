@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.exportRefundBills = exports.exportBills = void 0;
+exports.exportTransactions = exports.exportRefundBills = exports.exportBills = void 0;
 
 var _getAuthorization = require("../getAuthorization");
 
@@ -52,3 +52,26 @@ var exportRefundBills = function exportRefundBills() {
 };
 
 exports.exportRefundBills = exportRefundBills;
+
+var exportTransactions = function exportTransactions() {
+  var res;
+  return regeneratorRuntime.async(function exportTransactions$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorizationBlob)("payments/api/export"));
+
+        case 2:
+          res = _context3.sent;
+          return _context3.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+};
+
+exports.exportTransactions = exportTransactions;

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getStatisticTransactionType = exports.getRevenuePaymentTransactionByMonth = exports.getAmountTransactionByMonth = exports.cancelBooking = exports.callBackPayment = void 0;
+exports.getSearchTransaction = exports.getAllTransactionTypes = exports.getAllPaymentTransactions = exports.getStatisticTransactionType = exports.getRevenuePaymentTransactionByMonth = exports.getAmountTransactionByMonth = exports.cancelBooking = exports.callBackPayment = void 0;
 
 var _requestPaymentService = require("../../utils/requestPaymentService");
 
@@ -123,3 +123,72 @@ var getStatisticTransactionType = function getStatisticTransactionType(month) {
 };
 
 exports.getStatisticTransactionType = getStatisticTransactionType;
+
+var getAllPaymentTransactions = function getAllPaymentTransactions(filter) {
+  var res;
+  return regeneratorRuntime.async(function getAllPaymentTransactions$(_context6) {
+    while (1) {
+      switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("payments/api/payments/list-transactions", filter));
+
+        case 2:
+          res = _context6.sent;
+          return _context6.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context6.stop();
+      }
+    }
+  });
+};
+
+exports.getAllPaymentTransactions = getAllPaymentTransactions;
+
+var getAllTransactionTypes = function getAllTransactionTypes() {
+  var res;
+  return regeneratorRuntime.async(function getAllTransactionTypes$(_context7) {
+    while (1) {
+      switch (_context7.prev = _context7.next) {
+        case 0:
+          _context7.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("payments/api/payments/transaction-types"));
+
+        case 2:
+          res = _context7.sent;
+          return _context7.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context7.stop();
+      }
+    }
+  });
+};
+
+exports.getAllTransactionTypes = getAllTransactionTypes;
+
+var getSearchTransaction = function getSearchTransaction(keyword, pageNo, pageSize) {
+  var res;
+  return regeneratorRuntime.async(function getSearchTransaction$(_context8) {
+    while (1) {
+      switch (_context8.prev = _context8.next) {
+        case 0:
+          _context8.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("payments/api/payments/search?keyword=".concat(keyword, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize)));
+
+        case 2:
+          res = _context8.sent;
+          return _context8.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context8.stop();
+      }
+    }
+  });
+};
+
+exports.getSearchTransaction = getSearchTransaction;

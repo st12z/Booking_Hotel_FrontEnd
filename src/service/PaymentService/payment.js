@@ -21,3 +21,15 @@ export const getStatisticTransactionType = async(month)=>{
   const res = await getAuthorization(`payments/api/payments/statistic-transactiontype-month/${month}`);
   return res;
 }
+export const getAllPaymentTransactions = async(filter)=>{
+  const res = await postAuthorization(`payments/api/payments/list-transactions`,filter);
+  return res;
+}
+export const getAllTransactionTypes = async()=>{
+  const res = await getAuthorization(`payments/api/payments/transaction-types`);
+  return res;
+}
+export const getSearchTransaction = async(keyword,pageNo,pageSize)=>{
+  const res = await getAuthorization(`payments/api/payments/search?keyword=${keyword}&pageNo=${pageNo}&pageSize=${pageSize}`);
+  return res;
+}
