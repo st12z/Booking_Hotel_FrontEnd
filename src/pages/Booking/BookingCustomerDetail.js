@@ -1,19 +1,31 @@
 import { useSelector } from "react-redux";
 import "./BookingCustomerDetail.scss";
-import { Button, Col, Form, Input, notification, Radio, Row, Skeleton } from "antd";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  notification,
+  Radio,
+  Row,
+  Skeleton,
+} from "antd";
 import TextArea from "antd/es/input/TextArea";
 import ServiceCar from "../../components/ServiceCar";
 import { useContext, useState } from "react";
 import { Context } from ".";
 import { checkBookingVehicle } from "../../service/BookingService/VehicleService";
-import { checkBookingRooms } from "../../service/RoomService/RoomTypeService";
 import { confirmBooking } from "../../service/BookingService/BookingService";
+import { checkBookingPolicy } from "../../service/PaymentService/payment";
+import { checkBookingRooms } from "../../service/RoomService/RoomTypeService";
+import { useNavigate } from "react-router-dom";
 function BookingCustomerDetail() {
   const user = useSelector((state) => state.user);
   const { form } = useContext(Context);
   const { priceCar } = useContext(Context);
   const [loading, setLoading] = useState(false);
   const [api, contextHolder] = notification.useNotification();
+  const nav = useNavigate();
   const openNotification = (placement, message, color, onClose) => {
     api.info({
       message: `Thông báo`,
@@ -50,44 +62,67 @@ function BookingCustomerDetail() {
   };
   // check lại đặt phòng khách sạn
   const checkBookingHotel = async (data) => {
-    try{
+    try {
       const res = await checkBookingRooms(data);
-      console.log(res);
       if (res.code != 200) {
         return false;
       }
       return true;
-    }catch(err){
+    } catch (err) {
       console.error(err);
       return false;
     }
-  }
+  };
   // thanh toán
-  const handlePayment = async(e)=>{
-    try{
-      const res = await confirmBooking(e);
-      window.open(res.data, "_self");
-    }catch(err){
+  // const handlePayment = async(e)=>{
+  //   try{
+  //     const res = await confirmBooking(e);
+  //     window.open(res.data, "_self");
+  //   }catch(err){
+  //     console.error(err);
+  //   }
+  // }
+
+  const handleCheckPolicyPayment = async (e) => {
+    try {
+      const resCheckPolicyPayment = await checkBookingPolicy(e);
+      console.log(resCheckPolicyPayment);
+      if (resCheckPolicyPayment.code == 200) {
+        const data = resCheckPolicyPayment.data;
+        if (data.check == true) {
+          if (data.suspiciousType == "AMOUNT") {
+            nav(`/check-booking-otp?uniqueCheck=${data.uniqueCheck}`);
+          }
+        }
+        else{
+          const resConfirmBooking=await confirmBooking(data.uniqueCheck);
+          console.log(resConfirmBooking);
+          window.open(resConfirmBooking.data, "_self");
+          
+        }
+      }
+    } catch (err) {
+      openNotification("topRight", "Đặt phòng thất bại!", "red");
       console.error(err);
     }
-  }
-  const handleSubmit =  (e) => {
+  };
+  const handleSubmit = (e) => {
     console.log(e);
     setLoading(true);
-    setTimeout(async() => {
-      let checkCar=true;
-      if(priceCar !=0){
-        checkCar=await checkBookingCar(e);
-        if(!checkCar){
+    setTimeout(async () => {
+      let checkCar = true;
+      if (priceCar != 0) {
+        checkCar = await checkBookingCar(e);
+        if (!checkCar) {
           openNotification("topRight", "Đặt xe thất bại!", "red");
         }
       }
-      const checkHotel=await checkBookingHotel(e);
-      if(!checkHotel){
+      const checkHotel = await checkBookingHotel(e);
+      if (!checkHotel) {
         openNotification("topRight", "Đặt phòng thất bại!", "red");
       }
-      if(checkCar && checkHotel){
-        handlePayment(e);
+      if (checkCar && checkHotel) {
+        handleCheckPolicyPayment(e);
       }
       setLoading(false);
     }, 3000);

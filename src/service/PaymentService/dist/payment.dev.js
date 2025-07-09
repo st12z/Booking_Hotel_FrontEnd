@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getSearchTransaction = exports.getAllTransactionTypes = exports.getAllPaymentTransactions = exports.getStatisticTransactionType = exports.getRevenuePaymentTransactionByMonth = exports.getAmountTransactionByMonth = exports.cancelBooking = exports.callBackPayment = void 0;
+exports.getCheckOtp = exports.checkBookingPolicy = exports.getSearchTransaction = exports.getAllTransactionTypes = exports.getAllPaymentTransactions = exports.getStatisticTransactionType = exports.getRevenuePaymentTransactionByMonth = exports.getAmountTransactionByMonth = exports.cancelBooking = exports.callBackPayment = void 0;
 
 var _requestPaymentService = require("../../utils/requestPaymentService");
 
@@ -192,3 +192,49 @@ var getSearchTransaction = function getSearchTransaction(keyword, pageNo, pageSi
 };
 
 exports.getSearchTransaction = getSearchTransaction;
+
+var checkBookingPolicy = function checkBookingPolicy(data) {
+  var res;
+  return regeneratorRuntime.async(function checkBookingPolicy$(_context9) {
+    while (1) {
+      switch (_context9.prev = _context9.next) {
+        case 0:
+          _context9.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("payments/api/payments/check-booking", data));
+
+        case 2:
+          res = _context9.sent;
+          return _context9.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context9.stop();
+      }
+    }
+  });
+};
+
+exports.checkBookingPolicy = checkBookingPolicy;
+
+var getCheckOtp = function getCheckOtp(otp, uniqueCheck) {
+  var res;
+  return regeneratorRuntime.async(function getCheckOtp$(_context10) {
+    while (1) {
+      switch (_context10.prev = _context10.next) {
+        case 0:
+          _context10.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("payments/api/payments/check-otp?otp=".concat(otp, "&uniqueCheck=").concat(uniqueCheck)));
+
+        case 2:
+          res = _context10.sent;
+          return _context10.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context10.stop();
+      }
+    }
+  });
+};
+
+exports.getCheckOtp = getCheckOtp;

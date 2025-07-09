@@ -30,6 +30,7 @@ import CreateProperties from "../pages/Admin/CreateProperties";
 import RefundBills from "../pages/Admin/RefundBills";
 import DetailRefundBill from "../pages/DetailRefundBill";
 import PaymentTransactions from "../pages/Admin/AdminBoard/PaymentTransactions";
+import BookingCheckOtp from "../pages/BookingCheckOtp";
 export const routes = [
   {
     path: "/",
@@ -67,12 +68,17 @@ export const routes = [
         path: "*",
         element: <NotFound404 />,
       },
+
       {
         element: <PrivateRoute />,
         children: [
           {
             path: "/booking",
             element: <Booking />,
+          },
+          {
+            path: "check-booking-otp",
+            element: <BookingCheckOtp />,
           },
           {
             path: "/payments",
@@ -100,64 +106,64 @@ export const routes = [
       {
         path: "/admin",
         element: <LayoutAdmin />,
-        children:[
+        children: [
           {
-            path:"",
-            element: <AdminBoard/>
+            path: "",
+            element: <AdminBoard />,
           },
           {
-            path:"properties",
-            element: <Properties/>
+            path: "properties",
+            element: <Properties />,
           },
           {
-            path:"properties/:id",
-            element: <PropertyDetailAdmin/>
+            path: "properties/:id",
+            element: <PropertyDetailAdmin />,
           },
           {
             path: "properties/create",
-            element: <CreateProperties />
+            element: <CreateProperties />,
           },
           {
-            path:"properties/edit/:id",
-            element: <EditProperty/>
+            path: "properties/edit/:id",
+            element: <EditProperty />,
           },
           {
-            path:"properties/room-types/:id",
-            element: <CreateRoomType />
+            path: "properties/room-types/:id",
+            element: <CreateRoomType />,
           },
           {
             path: "properties/room-types/edit/:id",
-            element: <EditRoomType/>
+            element: <EditRoomType />,
           },
           {
             path: "room-chats",
-            element: <RoomChats/>
+            element: <RoomChats />,
           },
           {
             path: "room-chats/:id",
-            element: <Chats/>
+            element: <Chats />,
           },
           {
             path: "bills",
-            element: <Bills/>
+            element: <Bills />,
           },
           {
             path: "refund-bills",
-            element:  <RefundBills />
+            element: <RefundBills />,
           },
           {
             path: "refund-bills/:id",
-            element: <DetailRefundBill/>
+            element: <DetailRefundBill />,
           },
           {
             path: "bills/:billCode",
-            element: <DetailBill/>
+            element: <DetailBill />,
           },
           {
             path: "payment-transactions",
-            element: <PaymentTransactions/>
-          }
-        ]
+            element: <PaymentTransactions />,
+          },
+        ],
       },
     ],
   },

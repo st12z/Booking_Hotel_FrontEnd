@@ -253,7 +253,7 @@ function ListPaymentTransaction() {
       console.log(url);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "bills.xls";
+      a.download = "payment-transactions.xls";
       document.body.appendChild(a);
       a.click();
       a.remove();

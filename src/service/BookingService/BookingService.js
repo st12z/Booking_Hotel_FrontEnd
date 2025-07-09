@@ -1,7 +1,7 @@
 import { post } from "../../utils/requestBookingService"
-import { postAuthorization } from "../getAuthorization";
+import { getAuthorization, postAuthorization } from "../getAuthorization";
 
-export const confirmBooking = async(data)=>{
-  const res = await postAuthorization("bookings/api/bookings/confirm",data);
+export const confirmBooking = async(uniqueCheck)=>{
+  const res = await getAuthorization(`bookings/api/bookings/confirm?uniqueCheck=${uniqueCheck}`);
   return res;
 }

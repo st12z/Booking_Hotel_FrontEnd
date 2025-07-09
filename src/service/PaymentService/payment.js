@@ -33,3 +33,11 @@ export const getSearchTransaction = async(keyword,pageNo,pageSize)=>{
   const res = await getAuthorization(`payments/api/payments/search?keyword=${keyword}&pageNo=${pageNo}&pageSize=${pageSize}`);
   return res;
 }
+export const checkBookingPolicy = async(data)=>{
+  const res = await postAuthorization(`payments/api/payments/check-booking`,data);
+  return res;
+}
+export const getCheckOtp = async(otp,uniqueCheck)=>{
+  const res = await getAuthorization(`payments/api/payments/check-otp?otp=${otp}&uniqueCheck=${uniqueCheck}`);
+  return res;
+}

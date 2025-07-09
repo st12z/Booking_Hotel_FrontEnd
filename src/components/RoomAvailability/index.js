@@ -47,7 +47,7 @@ function RoomAvailability(props) {
 
   const [roomReversed, setRoomReversed] = useState([]);
 
-  const [reversedButtonLoading,setReversedButtonLoading] = useState(false);
+  const [reversedButtonLoading, setReversedButtonLoading] = useState(false);
 
   const user = useSelector((state) => state.user);
 
@@ -57,7 +57,7 @@ function RoomAvailability(props) {
     {
       roomTypeId: -1,
       quantity: -1,
-      propertyId: roomTypes.length>0&& roomTypes[0]?.propertyId,
+      propertyId: roomTypes.length > 0 && roomTypes[0]?.propertyId,
     },
   ]);
 
@@ -95,10 +95,13 @@ function RoomAvailability(props) {
           searchRequest
         );
         if (res.code == 200) {
-          const newRoomTypes=[];
-          for(const item of res.data){
-            const resQuantity = await getQuantityRooms(item.propertyId,item.id);
-            if(resQuantity.code==200){
+          const newRoomTypes = [];
+          for (const item of res.data) {
+            const resQuantity = await getQuantityRooms(
+              item.propertyId,
+              item.id
+            );
+            if (resQuantity.code == 200) {
               const quantity = resQuantity.data;
               newRoomTypes.push({
                 ...item,
@@ -108,6 +111,13 @@ function RoomAvailability(props) {
           }
           console.log(newRoomTypes);
           setRoomTypes(newRoomTypes);
+          setQuantityRooms([
+            {
+              roomTypeId: -1,
+              quantity: -1,
+              propertyId: newRoomTypes.length > 0 && newRoomTypes[0]?.propertyId,
+            },
+          ]);
         }
       } catch (error) {
         console.error(error);
@@ -162,7 +172,6 @@ function RoomAvailability(props) {
             }
             return prevRoomChecked;
           });
-          
         }
       }
     } catch (error) {
@@ -212,17 +221,23 @@ function RoomAvailability(props) {
     if (indexReversed !== -1) {
       setRoomReversed(roomReversed.filter((item) => item.roomTypeId !== id));
     }
-    setQuantityRooms((prevQuantityRooms) =>
-      prevQuantityRooms.map((room) =>
-        room.roomTypeId === id
-          ? { ...room, quantity: value }
-          : {
-              roomTypeId: id,
-              quantity: value,
-              propertyId: roomTypes[0].propertyId,
-            }
-      )
-    );
+    setQuantityRooms((prevQuantityRooms) => {
+      const existing = prevQuantityRooms.find((room) => room.roomTypeId === id);
+      if (existing) {
+        return prevQuantityRooms.map((room) =>
+          room.roomTypeId === id ? { ...room, quantity: value } : room
+        );
+      } else {
+        return [
+          ...prevQuantityRooms,
+          {
+            roomTypeId: id,
+            quantity: value,
+            propertyId: roomTypes[0].propertyId,
+          },
+        ];
+      }
+    });
   };
 
   // xử lý checkbox
@@ -237,32 +252,30 @@ function RoomAvailability(props) {
   };
 
   // xử lý đặt phòng gửi request roomReversed lên server
-  const handleRequestReverse = async() => {
-    try{
+  const handleRequestReverse = async () => {
+    try {
       const res = await holdRooms(roomReversed);
       console.log(roomReversed);
-      if(res.code==200){
+      if (res.code == 200) {
         const requestQuery = {
-          roomReversed:JSON.stringify(roomChecked),
+          roomReversed: JSON.stringify(roomChecked),
           checkIn: searchRequest.checkIn ? searchRequest.checkIn : "",
           checkOut: searchRequest.checkOut ? searchRequest.checkOut : "",
           email: user.email,
-        }
+        };
         const query = new URLSearchParams(requestQuery);
         setReversedButtonLoading(true);
-        setTimeout(()=>{
+        setTimeout(() => {
           setReversedButtonLoading(false);
           nav(`/booking?${query.toString()}`);
-        },3000);
+        }, 3000);
+      } else {
+        openNotification("topRight", "Vui lòng kiểm tra lại!", "red");
       }
-      else{
-        openNotification("topRight","Vui lòng kiểm tra lại!","red");
-      }
-    }catch(error){
-      openNotification("topRight","Vui lòng kiểm tra lại","red");
+    } catch (error) {
+      openNotification("topRight", "Vui lòng kiểm tra lại", "red");
       console.error(error);
     }
-
   };
 
   // data cột
@@ -331,10 +344,10 @@ function RoomAvailability(props) {
                 handleQuantityRoomChange(record.id, e.target.value)
               }
             >
-              {Array.from(
-                { length: record.quantityRooms }
-              ).map((_, index) => (
-                <option key={index} value={index + 1}>{index+1}</option>
+              {Array.from({ length: record.quantityRooms }).map((_, index) => (
+                <option key={index} value={index + 1}>
+                  {index + 1}
+                </option>
               ))}
             </select>
           </div>
@@ -344,8 +357,10 @@ function RoomAvailability(props) {
     {
       title: "Tổng số tiền thanh toán",
       render: (_, record) => {
-        const room = quantityRooms?.find((room) => room.id == record.id);
-        const quantity = room ? room.value : 1;
+        const room = quantityRooms?.find(
+          (room) => room.roomTypeId == record.id
+        );
+        const quantity = room ? Number(room.quantity) : 1;
         return (
           <>
             <div className="roomtype__total">
