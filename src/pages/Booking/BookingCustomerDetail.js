@@ -93,6 +93,9 @@ function BookingCustomerDetail() {
           if (data.suspiciousType == "AMOUNT") {
             nav(`/check-booking-otp?uniqueCheck=${data.uniqueCheck}`);
           }
+          else if(data.suspiciousType == "FREQUENCY"){
+             openNotification("topRight", "Bạn đã thanh toán thất bại 3 lần liên tiếp. Vui lòng thử lại sau!", "red");
+          }
         }
         else{
           const resConfirmBooking=await confirmBooking(data.uniqueCheck);

@@ -27,7 +27,7 @@ const uniqueCheck = params.get("uniqueCheck");
     console.log("onChange:", text);
   };
   const onInput = (value) => {
-    setDisabled(false);
+    if(value.length==6) setDisabled(false);
     setOtp(value.join(""));
     console.log("onInput:", value);
   };
