@@ -9,6 +9,10 @@ export const exportRefundBills = async()=>{
   return res;
 }
 export const exportTransactions = async()=>{
-  const res = await getAuthorizationBlob(`payments/api/export`);
+  const res = await getAuthorizationBlob(`payments/api/export/payment-transactions`);
+  return res;
+}
+export const exportPaymentTranLogs=async()=>{
+  const res = await getAuthorizationBlob(`payments/api/export/suspicious-tran-logs`);
   return res;
 }

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getCheckOtp = exports.checkBookingPolicy = exports.getSearchTransaction = exports.getAllTransactionTypes = exports.getAllPaymentTransactions = exports.getStatisticTransactionType = exports.getRevenuePaymentTransactionByMonth = exports.getAmountTransactionByMonth = exports.cancelBooking = exports.callBackPayment = void 0;
+exports.getUnclockedUserIdsTrans = exports.getPaymentTransactionLocked = exports.getSuspiciousTransByKeyword = exports.getAllSuspiciousTransByFilter = exports.getAllSuspiciousTransType = exports.getCheckOtp = exports.checkBookingPolicy = exports.getSearchTransaction = exports.getAllTransactionTypes = exports.getAllPaymentTransactions = exports.getStatisticTransactionType = exports.getRevenuePaymentTransactionByMonth = exports.getAmountTransactionByMonth = exports.cancelBooking = exports.callBackPayment = void 0;
 
 var _requestPaymentService = require("../../utils/requestPaymentService");
 
@@ -238,3 +238,118 @@ var getCheckOtp = function getCheckOtp(otp, uniqueCheck) {
 };
 
 exports.getCheckOtp = getCheckOtp;
+
+var getAllSuspiciousTransType = function getAllSuspiciousTransType() {
+  var res;
+  return regeneratorRuntime.async(function getAllSuspiciousTransType$(_context11) {
+    while (1) {
+      switch (_context11.prev = _context11.next) {
+        case 0:
+          _context11.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("payments/api/suspicious-transaction/get-types"));
+
+        case 2:
+          res = _context11.sent;
+          return _context11.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context11.stop();
+      }
+    }
+  });
+};
+
+exports.getAllSuspiciousTransType = getAllSuspiciousTransType;
+
+var getAllSuspiciousTransByFilter = function getAllSuspiciousTransByFilter(filter) {
+  var res;
+  return regeneratorRuntime.async(function getAllSuspiciousTransByFilter$(_context12) {
+    while (1) {
+      switch (_context12.prev = _context12.next) {
+        case 0:
+          _context12.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("payments/api/suspicious-transaction/filter", filter));
+
+        case 2:
+          res = _context12.sent;
+          return _context12.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context12.stop();
+      }
+    }
+  });
+};
+
+exports.getAllSuspiciousTransByFilter = getAllSuspiciousTransByFilter;
+
+var getSuspiciousTransByKeyword = function getSuspiciousTransByKeyword(keyword, pageNo, pageSize) {
+  var res;
+  return regeneratorRuntime.async(function getSuspiciousTransByKeyword$(_context13) {
+    while (1) {
+      switch (_context13.prev = _context13.next) {
+        case 0:
+          _context13.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("payments/api/suspicious-transaction/keyword?pageNo=".concat(pageNo, "&pageSize=").concat(pageSize, "&keyword=").concat(keyword)));
+
+        case 2:
+          res = _context13.sent;
+          return _context13.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context13.stop();
+      }
+    }
+  });
+};
+
+exports.getSuspiciousTransByKeyword = getSuspiciousTransByKeyword;
+
+var getPaymentTransactionLocked = function getPaymentTransactionLocked(keyword, pageNo, pageSize) {
+  var res;
+  return regeneratorRuntime.async(function getPaymentTransactionLocked$(_context14) {
+    while (1) {
+      switch (_context14.prev = _context14.next) {
+        case 0:
+          _context14.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("payments/api/suspicious-transaction/payment-trans-locked?pageNo=".concat(pageNo, "&pageSize=").concat(pageSize, "&keyword=").concat(keyword)));
+
+        case 2:
+          res = _context14.sent;
+          return _context14.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context14.stop();
+      }
+    }
+  });
+};
+
+exports.getPaymentTransactionLocked = getPaymentTransactionLocked;
+
+var getUnclockedUserIdsTrans = function getUnclockedUserIdsTrans(userIds) {
+  var res;
+  return regeneratorRuntime.async(function getUnclockedUserIdsTrans$(_context15) {
+    while (1) {
+      switch (_context15.prev = _context15.next) {
+        case 0:
+          _context15.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("payments/api/suspicious-transaction/unclocked", userIds));
+
+        case 2:
+          res = _context15.sent;
+          return _context15.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context15.stop();
+      }
+    }
+  });
+};
+
+exports.getUnclockedUserIdsTrans = getUnclockedUserIdsTrans;

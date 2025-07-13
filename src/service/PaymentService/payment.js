@@ -1,5 +1,5 @@
-import { get } from "../../utils/requestPaymentService";
-import { getAuthorization, postAuthorization } from "../getAuthorization";
+import { get, post } from "../../utils/requestPaymentService";
+import { getAuthorization, getAuthorizationBlob, postAuthorization } from "../getAuthorization";
 
 export const callBackPayment = async () => {
   const res = await getAuthorization("payments/api/payments/vn-pay-callback");
@@ -39,5 +39,25 @@ export const checkBookingPolicy = async(data)=>{
 }
 export const getCheckOtp = async(otp,uniqueCheck)=>{
   const res = await getAuthorization(`payments/api/payments/check-otp?otp=${otp}&uniqueCheck=${uniqueCheck}`);
+  return res;
+}
+export const getAllSuspiciousTransType = async()=>{
+  const res = await getAuthorization(`payments/api/suspicious-transaction/get-types`);
+  return res;
+}
+export const getAllSuspiciousTransByFilter=async(filter)=>{
+  const res = await postAuthorization(`payments/api/suspicious-transaction/filter`,filter);
+  return res;
+}
+export const getSuspiciousTransByKeyword = async(keyword,pageNo,pageSize)=>{
+  const res = await getAuthorization(`payments/api/suspicious-transaction/keyword?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+  return res;
+}
+export const getPaymentTransactionLocked = async(keyword,pageNo,pageSize)=>{
+  const res = await getAuthorization(`payments/api/suspicious-transaction/payment-trans-locked?pageNo=${pageNo}&pageSize=${pageSize}&keyword=${keyword}`);
+  return res;
+}
+export const getUnclockedUserIdsTrans = async(userIds)=>{
+  const res = await postAuthorization(`payments/api/suspicious-transaction/unclocked`,userIds);
   return res;
 }

@@ -31,6 +31,7 @@ import RefundBills from "../pages/Admin/RefundBills";
 import DetailRefundBill from "../pages/DetailRefundBill";
 import PaymentTransactions from "../pages/Admin/AdminBoard/PaymentTransactions";
 import BookingCheckOtp from "../pages/BookingCheckOtp";
+import PaymentLogs from "../pages/Admin/PaymentLogs";
 export const routes = [
   {
     path: "/",
@@ -163,6 +164,10 @@ export const routes = [
             path: "payment-transactions",
             element: <PaymentTransactions />,
           },
+          {
+            path: "suspicious-payment-logs",
+            element: <PaymentLogs />
+          }
         ],
       },
     ],

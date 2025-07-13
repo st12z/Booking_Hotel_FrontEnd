@@ -5,10 +5,12 @@ import { AppstoreOutlined,UserOutlined,
     SettingOutlined,
     HomeOutlined,
     PicCenterOutlined,
-    SketchOutlined
+    SketchOutlined,
    } from '@ant-design/icons';
 import { Link } from "react-router-dom";
-import { FaCity } from "react-icons/fa";
+import { FaCity  } from "react-icons/fa";
+import { BsCardList } from "react-icons/bs";
+
 import { BsCalendar2Event,BsActivity  } from "react-icons/bs";
 
 
@@ -39,6 +41,11 @@ function MenuSider(){
       label:<Link to="/admin/payment-transactions">Quản lý giao dịch</Link>,
       icon:<BsActivity  />
     },
+    {
+      key:"/payment-logs",
+      label: <Link to="/admin/suspicious-payment-logs">Quản lý log giao dịch</Link>,
+      icon: <BsCardList />
+    }
   ]
   return(
     <>

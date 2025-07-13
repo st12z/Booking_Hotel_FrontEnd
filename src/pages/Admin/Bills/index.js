@@ -21,7 +21,7 @@ import {
   getFormatPrice,
 } from "../../../utils/format";
 import { getPrintBill } from "../../../service/BookingService/PrintService";
-import { exportBills } from "../../../service/BookingService/ExportService";
+import { exportBills } from "../../../service/ExportService/ExportService";
 const { RangePicker } = DatePicker;
 function Bills() {
   const [keyword, setKeyword] = useState("");
