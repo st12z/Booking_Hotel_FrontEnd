@@ -22,7 +22,6 @@ import { formatLocalDateTime } from "../../utils/format";
 import { addParamIfExists } from "../../utils/appendParams";
 import { SearchContext } from "../../layout/LayoutDefault";
 function Search() {
-  const [searchParams] = useSearchParams();
   const [quantityBeds, setQuantityBeds] = useState(0);
   const [showMore, setShowMore] = useState(false);
   const [selectedRating, setSelectedRating] = useState([]);
@@ -39,6 +38,9 @@ function Search() {
   const [sortCondition, setSortCondition] = useState("0");
   const [facilities, setFacilities] = useState([]);
   const { searchTrigger } = useContext(SearchContext);
+  const [params, setParams] = useState(new URLSearchParams());
+  const [shouldResetPageNo, setShouldResetPageNo] = useState(false);
+  const [searchParams] = useSearchParams();
   const filter = useMemo(
     () => ({
       quantityBeds,
@@ -61,6 +63,32 @@ function Search() {
       sortCondition,
     ]
   );
+
+  const buildParams = (customPageNo = pageNo) => {
+    const newSearchRequest = {
+      destination: searchParams.get("destination") || null,
+      checkIn: searchParams.get("checkIn")
+        ? formatLocalDateTime(searchParams.get("checkIn"))
+        : null,
+      checkOut: searchParams.get("checkOut")
+        ? formatLocalDateTime(searchParams.get("checkOut"))
+        : null,
+      quantityBeds: searchParams.get("quantityBeds") || null,
+    };
+    const { destination, checkIn, checkOut, quantityBeds } = newSearchRequest;
+    console.log("newSearchRequest", newSearchRequest);
+    const newParams = new URLSearchParams();
+    addParamIfExists(newParams, "destination", destination);
+    addParamIfExists(newParams, "checkIn", checkIn);
+    addParamIfExists(newParams, "checkOut", checkOut);
+    addParamIfExists(newParams, "quantityBeds", quantityBeds);
+    addParamIfExists(newParams, "pageNo", customPageNo);
+    addParamIfExists(newParams, "pageSize", pageSize);
+    return newParams;
+  };
+  useEffect(() => {
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  }, [filter, searchTrigger]);
   useEffect(() => {
     setQuantityBeds(0);
     setSelectedRating([]);
@@ -71,38 +99,22 @@ function Search() {
     setBudget(0);
     setSortCondition("0");
   }, [searchTrigger]);
-  // hàm tạo query params
-  const getParams = () => {
-    let params = new URLSearchParams();
-    params = addParamIfExists(params, "destination", searchRequest.destination);
-    params = addParamIfExists(params, "checkIn", searchRequest.checkIn);
-    params = addParamIfExists(params, "checkOut", searchRequest.checkOut);
-    params = addParamIfExists(
-      params,
-      "quantityBeds",
-      searchRequest.quantityBeds
-    );
-    params = addParamIfExists(params, "pageNo", searchRequest.pageNo);
-    params = addParamIfExists(params, "pageSize", searchRequest.pageSize);
-    return params.toString();
-  };
 
-  const searchRequest = useMemo(
-    () => ({
-      destination: searchParams.get("destination") || null,
-      checkIn: searchParams.get("checkIn")
-        ? formatLocalDateTime(searchParams.get("checkIn"))
-        : null,
-      checkOut: searchParams.get("checkOut")
-        ? formatLocalDateTime(searchParams.get("checkOut"))
-        : null,
-      quantityBeds: searchParams.get("quantityBeds") || null,
-      pageNo,
-      pageSize,
-    }),
-    [searchParams.toString(), pageNo, pageSize]
-  );
-  const params = getParams();
+  // Reset page về 1 duy nhất 1 lần khi cần
+  useEffect(() => {
+    setPageNo(1);
+  }, [shouldResetPageNo]);
+  // Khi pageNo hoặc searchTrigger thay đổi → build lại params
+  useEffect(() => {
+    const newParams = buildParams(pageNo);
+    console.log("newParams:", newParams.toString());
+    setParams(newParams);
+  }, [pageNo, searchParams]);
+  useEffect(() => {
+    const newParams = buildParams(1);
+    console.log("newParams:", newParams.toString());
+    setParams(newParams);
+  }, [filter]);
   useEffect(() => {
     const fetchApi = async () => {
       const resFacility = await getFacilities();
@@ -114,83 +126,78 @@ function Search() {
     fetchApi();
   }, []);
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setLoading(true);
-    }, 100); // delay nhẹ 100ms
-  
+    const isDefaultFilter =
+      JSON.stringify(filter) ===
+      JSON.stringify({
+        quantityBeds: 0,
+        rating: [],
+        facilities: [],
+        reviewScore: [],
+        distance: [],
+        propertyType: [],
+        budget: 0,
+        sortCondition: "0",
+      });
+
     const fetchApi = async () => {
       try {
-        const res = await getPropertiesBySearch(params.toString());
-        console.log(res);
+        setLoading(true);
+        let res;
+        if (isDefaultFilter) {
+          console.log("--------- Gọi API search--------- ");
+
+          res = await getPropertiesBySearch(params.toString());
+        } else {
+          console.log("--------- Gọi API filter--------- ");
+          console.log(filter);
+          res = await getPropertiesFilterAfterSearch(params.toString(), filter);
+        }
+        console.log("params:", params.toString());
+        console.log(pageNo);
         if (res.code === 200) {
           setData(res.data.dataPage);
           setTotal(res.data.total);
-          setPageNo(res.data.pageNo);
-          setPageSize(res.data.pageSize);
         }
       } catch (error) {
-        console.error("Lỗi khi gọi API: ", error);
+        console.error("Lỗi khi gọi API:", error);
       } finally {
-        // Luôn chờ 3 giây rồi mới setLoading(false)
         setTimeout(() => {
           setLoading(false);
         }, 3000);
       }
     };
-  
-    fetchApi();
-    return () => clearTimeout(timeout); // dọn dẹp timeout
-  }, [searchRequest, searchTrigger]);
-  
-  
-  
-  const prevFilter = useRef(filter);
-  useEffect(() => {
-    setLoading(true);
-    const fetchApi = async () => {
-      try {
-        console.log(filter);
-        const result = await getPropertiesFilterAfterSearch(
-          params.toString(),
-          filter
-        );
-        console.log(result);
-        if (result.code == 200) {
-          setData(result.data.dataPage);
-          setTotal(result.data.total);
-          setPageNo(result.data.pageNo);
-          setPageSize(result.data.pageSize);
-        }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false); // Kết thúc tải dữ liệu
-      }
-    };
-    if (JSON.stringify(prevFilter.current) !== JSON.stringify(filter)) {
-      prevFilter.current = filter;
-      setTimeout(() => {
+
+    if (params.toString()) {
+      const timeout = setTimeout(() => {
         fetchApi();
-      }, 1000);
-    } else {
-      setLoading(false);
+      }, 300); // debounce nhẹ
+
+      return () => clearTimeout(timeout);
     }
-  }, [filter, pageNo]);
+  }, [params.toString(), filter]);
   // thay đổi thay trượt giá
   const handleBudgetChange = (e) => {
     setBudget(e);
+    setPageNo(1);
   };
   // tăng số lượng giường
   const handleDecrease = () => {
-    if (quantityBeds > 1) setQuantityBeds(quantityBeds - 1);
+    if (quantityBeds > 1) {
+      setQuantityBeds((quantityBeds) => quantityBeds - 1);
+      setPageNo(1);
+    }
   };
   // giảm số lượng giường
   const handleIncrease = () => {
-    if (quantityBeds <= 3) setQuantityBeds(quantityBeds + 1);
+    if (quantityBeds <= 3) {
+      setQuantityBeds((quantityBeds) => quantityBeds + 1);
+      setPageNo(1);
+    }
   };
   // xử lý sắp xếp
   const handleSelectChange = (e) => {
     setSortCondition(e);
+    setPageNo(1);
   };
   return (
     <>
@@ -317,7 +324,6 @@ function Search() {
         <Col span={18}>
           {loading == false ? (
             <>
-              <h2>{total} properties found</h2>
               <Select
                 defaultValue="Sắp xếp"
                 style={{ width: 240, marginBottom: "20px" }}

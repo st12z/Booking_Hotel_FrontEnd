@@ -3,10 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.exportPaymentTranLogs = exports.exportTransactions = exports.exportRefundBills = exports.exportBills = void 0;
+exports.exportListCities = exports.exportPaymentTranLogs = exports.exportTransactions = exports.exportRefundBills = exports.exportBills = void 0;
 
 var _getAuthorization = require("../getAuthorization");
 
+// bookings
 var exportBills = function exportBills() {
   var res;
   return regeneratorRuntime.async(function exportBills$(_context) {
@@ -49,7 +50,8 @@ var exportRefundBills = function exportRefundBills() {
       }
     }
   });
-};
+}; //payments
+
 
 exports.exportRefundBills = exportRefundBills;
 
@@ -95,6 +97,30 @@ var exportPaymentTranLogs = function exportPaymentTranLogs() {
       }
     }
   });
-};
+}; //rooms
+
 
 exports.exportPaymentTranLogs = exportPaymentTranLogs;
+
+var exportListCities = function exportListCities() {
+  var res;
+  return regeneratorRuntime.async(function exportListCities$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorizationBlob)("rooms/api/export/cities"));
+
+        case 2:
+          res = _context5.sent;
+          return _context5.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context5.stop();
+      }
+    }
+  });
+};
+
+exports.exportListCities = exportListCities;

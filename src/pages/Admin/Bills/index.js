@@ -5,7 +5,7 @@ import {
   PrinterOutlined,
 } from "@ant-design/icons";
 import { Button, Input, Select, Table, DatePicker, Tag } from "antd";
-import { use, useEffect, useMemo, useState } from "react";
+import { use, useEffect, useMemo, useRef, useState } from "react";
 import "./Bills.scss";
 import {
   getAllBills,
@@ -37,6 +37,9 @@ function Bills() {
   const [sortOption, setSortOption] = useState(0);
   const [beginDate, setBeginDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [shouldResetPageNo, setShouldResetPageNo] = useState();
+  const [isSearchMode, setIsSearchMode] = useState(false);
+  const [triggreSearch, setTriggerSearch] = useState(false);
   const timeOptions = [
     { label: "Thời gian thanh toán", value: 0 },
     { label: "Hôm nay", value: "today" },
@@ -77,10 +80,19 @@ function Bills() {
       endDate,
     ]
   );
+  useEffect(() => {
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  }, [propertyId, timeOption, billTypeStatus, sortOption, beginDate, endDate]);
+  useEffect(() => {
+    setPageNo(1);
+  }, [shouldResetPageNo]);
   const fetchBills = async () => {
     try {
-      console.log(filter);
       const res = await getAllBills(filter);
+      setIsSearchMode(false);
+      setKeyword("");
+      console.log("------------Gọi API filter---------");
+      console.log("filter", filter);
       console.log("Bills data:", res);
       if (res.code == 200) {
         setTotal(res.data.total);
@@ -122,11 +134,17 @@ function Bills() {
   }, []);
   useEffect(() => {
     fetchBills();
-  }, [filter]);
+  }, [propertyId, timeOption, billTypeStatus, sortOption, beginDate, endDate]);
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
   const handleSearch = async () => {
+    console.log("Searching for keyword:", keyword);
+    setTriggerSearch((triggreSearch) => !triggreSearch);
+    setIsSearchMode(true);
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  };
+  const getApiSearch = async () => {
     try {
       console.log("Searching for keyword:", keyword);
       const res = await getSearchBills(keyword, pageNo, pageSize);
@@ -139,8 +157,11 @@ function Bills() {
     }
   };
   useEffect(() => {
-    if (keyword) {
-      handleSearch();
+    getApiSearch();
+  }, [triggreSearch,pageNo]);
+  useEffect(() => {
+    if (!isSearchMode) {
+      fetchBills();
     }
   }, [pageNo]);
   const handleChangRangePicker = (dates, dateStrings) => {
@@ -304,6 +325,7 @@ function Bills() {
     <>
       <div className="input_search">
         <Input
+        value={keyword}
           onChange={handleChangeInput}
           style={{ width: "50%", marginRight: "20px" }}
         />

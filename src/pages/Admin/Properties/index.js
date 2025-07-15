@@ -10,7 +10,7 @@ import {
   SearchOutlined,
   FilterOutlined,
   PrinterOutlined,
-  PlusOutlined
+  PlusOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { get } from "../../../utils/requestRoomService";
@@ -26,7 +26,7 @@ function Properties() {
   const [topBill, setTopBill] = useState(0);
   const [topRevenue, setTopRevenue] = useState(0);
   const [propertyType, setPropertyType] = useState("");
-
+  const [shouldResetPageNo, setShouldResetPageNo] = useState(false);
   const filter = useMemo(
     () => ({
       rateStar: rateStar,
@@ -39,6 +39,12 @@ function Properties() {
     }),
     [keyword, rateStar, topBill, topRevenue, propertyType, pageNo, pageSize]
   );
+  useEffect(() => {
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  }, [keyword, rateStar, topBill, topRevenue, propertyType]);
+  useEffect(() => {
+    setPageNo(1);
+  }, [shouldResetPageNo]);
   const fetchApi = async () => {
     try {
       console.log(filter);
@@ -201,8 +207,10 @@ function Properties() {
   };
   return (
     <>
-      <Button type="primary" style={{marginBottom:"20px"}}>
-        <Link to="/admin/properties/create"><PlusOutlined /> Tạo mới </Link>
+      <Button type="primary" style={{ marginBottom: "20px" }}>
+        <Link to="/admin/properties/create">
+          <PlusOutlined /> Tạo mới{" "}
+        </Link>
       </Button>
       <div className="" style={{ marginBottom: "20px", position: "relative" }}>
         <Input

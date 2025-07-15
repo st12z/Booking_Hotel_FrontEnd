@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { FaCity  } from "react-icons/fa";
 import { BsCardList } from "react-icons/bs";
 
-import { BsCalendar2Event,BsActivity  } from "react-icons/bs";
+import { BsCalendar2Event,BsActivity, BsHospital   } from "react-icons/bs";
 
 
 function MenuSider(){
@@ -45,6 +45,11 @@ function MenuSider(){
       key:"/payment-logs",
       label: <Link to="/admin/suspicious-payment-logs">Quản lý log giao dịch</Link>,
       icon: <BsCardList />
+    },
+    {
+      key:"/cities",
+      label: <Link to="/admin/cities">Quản lý thành phố</Link>,
+      icon: <BsHospital />
     }
   ]
   return(

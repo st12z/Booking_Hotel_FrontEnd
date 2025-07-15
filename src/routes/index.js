@@ -32,6 +32,9 @@ import DetailRefundBill from "../pages/DetailRefundBill";
 import PaymentTransactions from "../pages/Admin/AdminBoard/PaymentTransactions";
 import BookingCheckOtp from "../pages/BookingCheckOtp";
 import PaymentLogs from "../pages/Admin/PaymentLogs";
+import Cities from "../pages/Admin/Cities";
+import EditCity from "../pages/Admin/EditCity";
+import CreateCity from "../pages/Admin/CreateCity";
 export const routes = [
   {
     path: "/",
@@ -167,7 +170,20 @@ export const routes = [
           {
             path: "suspicious-payment-logs",
             element: <PaymentLogs />
-          }
+          },
+          {
+            path: "cities",
+            element: <Cities />
+          },
+          {
+            path: "cities/create",
+            element: <CreateCity/>
+          },
+          {
+            path: "cities/edit/:id",
+            element: <EditCity />
+          },
+          
         ],
       },
     ],

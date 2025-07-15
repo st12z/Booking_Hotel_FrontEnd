@@ -5,15 +5,19 @@ import {
 } from "../../service/BookingService/BillService";
 import { getAllProperties } from "../../service/RoomService/PropertyService";
 import { getDate, getFormatPrice } from "../../utils/format";
-import { Button, Input, Select, Table, Tag,DatePicker } from "antd";
-import { EyeOutlined,SearchOutlined,PrinterOutlined } from "@ant-design/icons";
+import { Button, Input, Select, Table, Tag, DatePicker } from "antd";
+import {
+  EyeOutlined,
+  SearchOutlined,
+  PrinterOutlined,
+} from "@ant-design/icons";
 import { useEffect, useMemo, useState } from "react";
 import {
   getAllPaymentTransactions,
   getAllTransactionTypes,
   getSearchTransaction,
 } from "../../service/PaymentService/payment";
-import { exportTransactions } from "../../service/ExportService/ExportService"; 
+import { exportTransactions } from "../../service/ExportService/ExportService";
 function ListPaymentTransaction() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState([]);
@@ -25,10 +29,13 @@ function ListPaymentTransaction() {
   const [timeOption, setTimeOption] = useState(0);
   const [dataTransactionTypes, setDataTransactionTypes] = useState([]);
   const [transactionType, setTransactionType] = useState(0);
-  const [transactionStatus,setTransactionStatus] = useState(0);
+  const [transactionStatus, setTransactionStatus] = useState(0);
   const [sortOption, setSortOption] = useState(0);
   const [beginDate, setBeginDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [shouldResetPageNo, setShouldResetPageNo] = useState();
+  const [isSearchMode, setIsSearchMode] = useState(false);
+  const [triggreSearch, setTriggerSearch] = useState(false);
   const { RangePicker } = DatePicker;
   const timeOptions = [
     { label: "Thời gian thanh toán", value: 0 },
@@ -46,15 +53,13 @@ function ListPaymentTransaction() {
     { label: "Tổng tiền giao dịch tăng dần", value: "price_asc" },
     { label: "Tổng tiền giao dịch giảm dần", value: "price_desc" },
     { label: "Ngày thanh toán tăng dần", value: "date_asc" },
-    { label: "Ngày thanh toán giảm dần", value: "date_desc" }
-    
+    { label: "Ngày thanh toán giảm dần", value: "date_desc" },
   ];
-  const transactionStatusOptions=[
+  const transactionStatusOptions = [
     { label: "Trạng thái giao dịch", value: 0 },
     { label: "Thành công", value: "SUCCESS" },
-    { label: "Thất bại",value:"FAILURE"}
-    
-  ]
+    { label: "Thất bại", value: "FAILURE" },
+  ];
   const filter = useMemo(
     () => ({
       pageNo: pageNo,
@@ -79,9 +84,25 @@ function ListPaymentTransaction() {
       endDate,
     ]
   );
+  useEffect(() => {
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  }, [
+    propertyId,
+    timeOption,
+    transactionType,
+    transactionStatus,
+    sortOption,
+    beginDate,
+    endDate,
+  ]);
+  useEffect(() => {
+    setPageNo(1);
+  }, [shouldResetPageNo]);
   const fetchTransactions = async () => {
     try {
       console.log(filter);
+      setIsSearchMode(false);
+      setKeyword("");
       const res = await getAllPaymentTransactions(filter);
       console.log("TransactionPayments data:", res);
       if (res.code == 200) {
@@ -103,7 +124,7 @@ function ListPaymentTransaction() {
             label: item.name,
             value: item.id,
           }));
-          properties.push({ label: "Khách sạn", value: 0 });
+          properties.unshift({ label: "Khách sạn", value: 0 });
           console.log("Properties:", properties);
           setDataProperties(properties);
         }
@@ -127,14 +148,22 @@ function ListPaymentTransaction() {
   }, []);
   useEffect(() => {
     fetchTransactions();
-  }, [filter]);
+  }, [
+    propertyId,
+    timeOption,
+    transactionType,
+    transactionStatus,
+    sortOption,
+    beginDate,
+    endDate,
+  ]);
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
-  const handleSearch = async () => {
-    try {
+  const getApiSearch = async () => {
+     try {
       console.log("Searching for keyword:", keyword);
-      console.log(pageNo,pageSize);
+      console.log(pageNo, pageSize);
       const res = await getSearchTransaction(keyword, pageNo, pageSize);
       if (res.code == 200) {
         setTotal(res.data.total);
@@ -144,9 +173,18 @@ function ListPaymentTransaction() {
       console.error("Error during search:", error);
     }
   };
+  const handleSearch = async () => {
+    console.log("Searching for keyword:", keyword);
+    setTriggerSearch((triggreSearch) => !triggreSearch);
+    setIsSearchMode(true);
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  };
   useEffect(() => {
-    if (keyword) {
-      handleSearch();
+    getApiSearch();
+  }, [triggreSearch,pageNo]);
+  useEffect(() => {
+    if (!isSearchMode) {
+      fetchTransactions();
     }
   }, [pageNo]);
   const handleChangRangePicker = (dates, dateStrings) => {
@@ -198,11 +236,11 @@ function ListPaymentTransaction() {
       key: "transaction-type",
       render: (_, record) => (
         <>
-          <p >
-            {record.transactionType=="REFUND" ? (
+          <p>
+            {record.transactionType == "REFUND" ? (
               <b style={{ color: "red" }}>Hoàn tiền</b>
-            ):(
-              <b style={{ color: "#0057B8" }} >Thanh toán</b>
+            ) : (
+              <b style={{ color: "#0057B8" }}>Thanh toán</b>
             )}
           </p>
         </>
@@ -214,9 +252,9 @@ function ListPaymentTransaction() {
       render: (_, record) => (
         <>
           <p>
-            {record.vnpResponseCode=="00" ? (
+            {record.vnpResponseCode == "00" ? (
               <Tag color="green">Thành công</Tag>
-            ):(
+            ) : (
               <Tag color="red">Thất bại</Tag>
             )}
           </p>
@@ -268,6 +306,7 @@ function ListPaymentTransaction() {
       <h2>Danh sách giao dịch</h2>
       <div className="input_search">
         <Input
+          value={keyword}
           onChange={handleChangeInput}
           style={{ width: "50%", marginRight: "20px" }}
         />

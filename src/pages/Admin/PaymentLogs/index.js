@@ -42,6 +42,9 @@ function PaymentLogs() {
   const [userIds, setUserIds] = useState([]);
   const [isButtonUnclock, setIsButtonUnclock] = useState(true);
   const [api, contextHolder] = notification.useNotification();
+  const [shouldResetPageNo, setShouldResetPageNo] = useState();
+  const [isSearchMode, setIsSearchMode] = useState(false);
+  const [triggreSearch, setTriggerSearch] = useState(false);
   const openNotification = (placement, message, color) => {
     api.info({
       message: `Thông báo`,
@@ -124,10 +127,25 @@ function PaymentLogs() {
       endDate,
     ]
   );
+  useEffect(() => {
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  }, [
+    pageSize,
+    suspiciousTranType,
+    timeOption,
+    sortOption,
+    beginDate,
+    endDate,
+  ]);
+  useEffect(() => {
+    setPageNo(1);
+  }, [shouldResetPageNo]);
   const fetchSuspiciousTrans = async (filter) => {
     try {
       console.log(filter);
       const res = await getAllSuspiciousTransByFilter(filter);
+      setIsSearchMode(false);
+      setKeyword("");
       console.log("suspicious-trans", res.data);
       if (res.code == 200) {
         setTotal(res.data.total);
@@ -140,12 +158,18 @@ function PaymentLogs() {
   useEffect(() => {
     fetchSuspiciousTrans(filter);
     setCheckLock(false);
-  }, [filter]);
+  }, [suspiciousTranType, timeOption, sortOption, beginDate, endDate]);
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
   const handleSearch = async () => {
     setCheckLock(false);
+    console.log("Searching for keyword:", keyword);
+    setTriggerSearch((triggreSearch) => !triggreSearch);
+    setIsSearchMode(true);
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  };
+  const getApiSearch = async () => {
     try {
       const res = await getSuspiciousTransByKeyword(keyword, pageNo, pageSize);
       console.log(res);
@@ -158,8 +182,11 @@ function PaymentLogs() {
     }
   };
   useEffect(() => {
-    if (keyword) {
-      handleSearch();
+    getApiSearch();
+  }, [triggreSearch, pageNo]);
+  useEffect(() => {
+    if (!isSearchMode) {
+      fetchSuspiciousTrans(filter);
     }
   }, [pageNo]);
   const handleChangRangePicker = (dates, dateStrings) => {
@@ -354,6 +381,7 @@ function PaymentLogs() {
       <h2>Danh sách log giao dịch</h2>
       <div className="input_search">
         <Input
+          value={keyword}
           onChange={handleChangeInput}
           style={{ width: "50%", marginRight: "20px" }}
         />

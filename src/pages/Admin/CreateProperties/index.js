@@ -232,38 +232,26 @@ function CreateProperties() {
           <Select options={allCities} />
         </Form.Item>
         <Form.Item
-          label={
-            <h3
-              style={{ color: "#0057B8" }}
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập vĩ độ!",
-                },
-              ]}
-            >
-              Vĩ độ
-            </h3>
-          }
+          label={<h3 style={{ color: "#0057B8" }}>Vĩ độ</h3>}
           name="latitude"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập vĩ độ!",
+            },
+          ]}
         >
           <InputNumber />
         </Form.Item>
         <Form.Item
-          label={
-            <h3
-              style={{ color: "#0057B8" }}
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng nhập kinh độ!",
-                },
-              ]}
-            >
-              Kinh độ
-            </h3>
-          }
+          label={<h3 style={{ color: "#0057B8" }}>Kinh độ</h3>}
           name="longitude"
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng nhập kinh độ!",
+            },
+          ]}
         >
           <InputNumber />
         </Form.Item>

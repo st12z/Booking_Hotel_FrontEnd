@@ -37,6 +37,9 @@ function RefundBills() {
   const [endDate, setEndDate] = useState(null);
   const [dataProperties, setDataProperties] = useState([]);
   const [transactionType, setTransactionType] = useState(0);
+  const [shouldResetPageNo, setShouldResetPageNo] = useState();
+  const [isSearchMode, setIsSearchMode] = useState(false);
+  const [triggreSearch, setTriggerSearch] = useState(false);
   const transactionOptions = [
     { label: "Loại hoàn tiền", value: 0 },
     { label: "Hoàn tiền một phần", value: "03" },
@@ -82,9 +85,17 @@ function RefundBills() {
       transactionType,
     ]
   );
+  useEffect(() => {
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  }, [propertyId, timeOption, sortOption, beginDate, endDate, transactionType]);
+  useEffect(() => {
+    setPageNo(1);
+  }, [shouldResetPageNo]);
   const fetchBills = async () => {
     try {
       console.log(filter);
+      setIsSearchMode(false);
+      setKeyword("");
       const res = await getAllRefundBills(filter);
       console.log("refundBills data:", res);
       if (res.code == 200) {
@@ -117,11 +128,17 @@ function RefundBills() {
   }, []);
   useEffect(() => {
     fetchBills();
-  }, [filter]);
+  }, [propertyId, timeOption, sortOption, beginDate, endDate, transactionType]);
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
   const handleSearch = async () => {
+    console.log("Searching for keyword:", keyword);
+    setTriggerSearch((triggreSearch) => !triggreSearch);
+    setIsSearchMode(true);
+    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+  };
+  const getApiSearch = async () => {
     try {
       console.log("Searching for keyword:", keyword);
       const res = await getSearchRefundBills(keyword, pageNo, pageSize);
@@ -134,8 +151,11 @@ function RefundBills() {
     }
   };
   useEffect(() => {
-    if (keyword) {
-      handleSearch();
+    getApiSearch();
+  }, [triggreSearch, pageNo]);
+  useEffect(() => {
+    if (!isSearchMode) {
+      fetchBills();
     }
   }, [pageNo]);
   const handleChangRangePicker = (dates, dateStrings) => {
@@ -287,14 +307,15 @@ function RefundBills() {
       ),
     },
   ];
-  
+
   return (
     <>
-      <div className="revenue-refund" style={{marginBottom:"40px"}}>
+      <div className="revenue-refund" style={{ marginBottom: "40px" }}>
         <ChartRefundBill />
       </div>
       <div className="input_search">
         <Input
+          value={keyword}
           onChange={handleChangeInput}
           style={{ width: "50%", marginRight: "20px" }}
         />

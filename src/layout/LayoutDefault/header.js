@@ -222,20 +222,6 @@ function Header() {
                   value={destination}
                 />
                 <HomeOutlined className="search-icon" />
-                {showSearch && (
-                  <div className="header__bottom__search__input__data">
-                    {dataDestinations?.map((item, index) => (
-                      <ul key={index}>
-                        <li
-                          className="header__bottom__search__input__data__item"
-                          onClick={() => handleClickDestination(item)}
-                        >
-                          {item}
-                        </li>
-                      </ul>
-                    ))}
-                  </div>
-                )}
               </div>
               <div className="header__bottom__search__timeline">
                 <RangePicker

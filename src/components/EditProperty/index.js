@@ -75,11 +75,11 @@ function EditProperty() {
   const params = useParams();
   const propertyId = params.id;
   const [property, setProperty] = useState();
-  const [facilities, setFacilities] = useState();
+  const [facilities, setFacilities] = useState([]);
   const [images, setImages] = useState();
   const [roomTypes, setRoomTypes] = useState();
   const [propertyTypes, setPropertyTypes] = useState();
-  const [allFacilities, setAllFacilites] = useState();
+  const [allFacilities, setAllFacilites] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
@@ -174,19 +174,21 @@ function EditProperty() {
         const res = await getPropertyId(propertyId);
         const resPropertyTypes = await getAllPropertyTypes();
         const resFacilities = await getFacilities();
+        console.log("resFacilities", resFacilities);
+        console.log("res", res);
         if (resFacilities.code == 200) {
+          const allFacilities = resFacilities.data.map((item) => {
+            return { label: item.name, value: item.id };
+          });
+          setAllFacilites(allFacilities);
           if (res.data.facilities && res.data.facilities.length > 0) {
-            const allFacilities = resFacilities.data.map((item) => {
-              return { label: item.name, value: item.id };
-            });
-            const facilities = res.data.facilities.map((facility1) => {
+            const facilities = res.data.facilities?.map((facility1) => {
               const item = allFacilities.find(
                 (facility2) => facility2.label == facility1
               );
               return item.value;
             });
             setFacilities(facilities || []);
-            setAllFacilites(allFacilities);
           }
         }
         if (resPropertyTypes.code == 200) {
@@ -301,7 +303,7 @@ function EditProperty() {
     <>
       {contextHolder}
       <h2>Chỉnh sửa thông tin khách sạn</h2>
-      {property && (
+      {property && allFacilities && (
         <>
           <Form
             layout="vertical"
@@ -396,7 +398,7 @@ function EditProperty() {
                 placeholder="Please select"
                 onChange={handleChangeFacilities}
                 options={allFacilities}
-                defaultValue={facilities}
+                value={facilities}
               />
             </Form.Item>
 
