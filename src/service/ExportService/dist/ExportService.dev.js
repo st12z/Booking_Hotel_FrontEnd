@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.exportListCities = exports.exportPaymentTranLogs = exports.exportTransactions = exports.exportRefundBills = exports.exportBills = void 0;
+exports.exportTripTypes = exports.exportTrips = exports.exportListCities = exports.exportPaymentTranLogs = exports.exportTransactions = exports.exportRefundBills = exports.exportBills = void 0;
 
 var _getAuthorization = require("../getAuthorization");
 
@@ -124,3 +124,49 @@ var exportListCities = function exportListCities() {
 };
 
 exports.exportListCities = exportListCities;
+
+var exportTrips = function exportTrips() {
+  var res;
+  return regeneratorRuntime.async(function exportTrips$(_context6) {
+    while (1) {
+      switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorizationBlob)("rooms/api/export/trips"));
+
+        case 2:
+          res = _context6.sent;
+          return _context6.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context6.stop();
+      }
+    }
+  });
+};
+
+exports.exportTrips = exportTrips;
+
+var exportTripTypes = function exportTripTypes() {
+  var res;
+  return regeneratorRuntime.async(function exportTripTypes$(_context7) {
+    while (1) {
+      switch (_context7.prev = _context7.next) {
+        case 0:
+          _context7.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorizationBlob)("rooms/api/export/triptypes"));
+
+        case 2:
+          res = _context7.sent;
+          return _context7.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context7.stop();
+      }
+    }
+  });
+};
+
+exports.exportTripTypes = exportTripTypes;

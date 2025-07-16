@@ -6,12 +6,13 @@ import { AppstoreOutlined,UserOutlined,
     HomeOutlined,
     PicCenterOutlined,
     SketchOutlined,
+    
    } from '@ant-design/icons';
 import { Link } from "react-router-dom";
 import { FaCity  } from "react-icons/fa";
-import { BsCardList } from "react-icons/bs";
+import { BsCardList,BsCloudHaze, BsCardText  } from "react-icons/bs";
 
-import { BsCalendar2Event,BsActivity, BsHospital   } from "react-icons/bs";
+import { BsCalendar2Event,BsActivity, BsHospital,BsHouses   } from "react-icons/bs";
 
 
 function MenuSider(){
@@ -25,6 +26,11 @@ function MenuSider(){
       key:"/properties",
       label:<Link to="/admin/properties">Quản lý khách sạn</Link>,
       icon:<FaCity />,
+    },
+    {
+      key:"/propertie-types",
+      label:<Link to="/admin/property-types">Quản lý loại khách sạn</Link>,
+      icon: <BsHouses />
     },
     {
       key:"/bills",
@@ -50,6 +56,16 @@ function MenuSider(){
       key:"/cities",
       label: <Link to="/admin/cities">Quản lý thành phố</Link>,
       icon: <BsHospital />
+    },
+    {
+      key:"trips",
+      label: <Link to="/admin/trips">Quản lý điểm đến</Link>,
+      icon:  <BsCloudHaze />
+    },
+    {
+      key:"trip_types",
+      label: <Link to="/admin/trip-types">Quản lý loại điểm đến</Link>,
+      icon:  <BsCardText />
     }
   ]
   return(

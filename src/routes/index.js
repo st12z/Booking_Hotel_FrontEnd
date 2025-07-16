@@ -35,6 +35,15 @@ import PaymentLogs from "../pages/Admin/PaymentLogs";
 import Cities from "../pages/Admin/Cities";
 import EditCity from "../pages/Admin/EditCity";
 import CreateCity from "../pages/Admin/CreateCity";
+import Trips from "../pages/Admin/Trips";
+import EditTrip from "../pages/Admin/EditTrip";
+import CreateTrip from "../pages/Admin/CreateTrip";
+import TripTypes from "../pages/Admin/TripTypes";
+import EditTripType from "../pages/Admin/EditTripType";
+import CreateTripType from "../pages/Admin/CreateTripType";
+import PropertyTypes from "../pages/Admin/PropertyTypes";
+import EditPropertyType from "../pages/Admin/EditPropertyType";
+import CreatePropertyType from "../pages/Admin/CreatePropertyType";
 export const routes = [
   {
     path: "/",
@@ -183,7 +192,42 @@ export const routes = [
             path: "cities/edit/:id",
             element: <EditCity />
           },
-          
+          {
+            path: "trips",
+            element: <Trips/>
+          },
+          {
+            path: "trips/edit/:id",
+            element: <EditTrip/>
+          },
+          {
+            path: "trips/create",
+            element: <CreateTrip />
+          },
+          {
+            path: "trip-types",
+            element: <TripTypes/>
+          },
+          {
+            path: "trip-types/edit/:id",
+            element: <EditTripType/>
+          },
+          {
+            path: "trip-types/create",
+            element: <CreateTripType/>
+          },
+          {
+            path: "property-types",
+            element: <PropertyTypes/>
+          },
+          {
+            path: "property-types/edit/:id",
+            element: <EditPropertyType/>
+          },
+          {
+            path: "property-types/create",
+            element: <CreatePropertyType/>
+          }
         ],
       },
     ],

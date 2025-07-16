@@ -22,3 +22,11 @@ export const exportListCities = async()=>{
   const res = await getAuthorizationBlob(`rooms/api/export/cities`);
   return res;
 }
+export const exportTrips = async()=>{
+  const res = await getAuthorizationBlob(`rooms/api/export/trips`);
+  return res;
+}
+export const exportTripTypes= async()=>{
+  const res = await getAuthorizationBlob(`rooms/api/export/triptypes`);
+  return res;
+}

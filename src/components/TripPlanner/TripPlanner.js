@@ -9,8 +9,9 @@ import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import TripItem from "./TripItem";
-import { getAllTripTypes, getTripsByType } from "../../service/RoomService/TripService";
 import { Link, NavLink } from "react-router-dom";
+import { getTripsByType } from "../../service/RoomService/TripService";
+import { getAllTripTypes } from "../../service/RoomService/TripTypeService";
 function TripPlanner(){
   const [data,setData]=useState([]);
   const [dataTripType,setDataTripType]=useState([]);
