@@ -18,7 +18,10 @@ var connectStomp = function connectStomp(url, data) {
 
   var client = _stompjs.Stomp.over(socket);
 
-  client.connect({}, function () {
+  var token = localStorage.getItem("access_token");
+  client.connect({
+    Authorization: "Bearer ".concat(token)
+  }, function () {
     console.log("Đã kết nối tới STOMP");
     client.send("".concat(url), {}, JSON.stringify(data));
   });

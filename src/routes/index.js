@@ -44,6 +44,16 @@ import CreateTripType from "../pages/Admin/CreateTripType";
 import PropertyTypes from "../pages/Admin/PropertyTypes";
 import EditPropertyType from "../pages/Admin/EditPropertyType";
 import CreatePropertyType from "../pages/Admin/CreatePropertyType";
+import MyDiscounts from "../pages/MyDiscounts";
+import DiscountHotels from "../pages/Admin/DiscountHotels";
+import DiscountCars from "../pages/Admin/DiscountCars";
+import EditDiscountHotels from "../pages/Admin/EditDiscountHotels";
+import CreateDiscountHotel from "../pages/Admin/CreateDiscountHotel";
+import EditDiscountCars from "../pages/Admin/EditDiscountCars";
+import CreateDiscountCar from "../pages/Admin/CreateDiscountCar";
+import Facilities from "../pages/Admin/Facilities";
+import EditFacilities from "../pages/Admin/EditFacilities";
+import CreateFacilities from "../pages/Admin/CreateFacilities";
 export const routes = [
   {
     path: "/",
@@ -109,6 +119,11 @@ export const routes = [
             path: "/chats",
             element: <Chat />,
           },
+          {
+            path: "my-discounts",
+            element: <MyDiscounts/>
+          },
+          
         ],
       },
     ],
@@ -227,6 +242,42 @@ export const routes = [
           {
             path: "property-types/create",
             element: <CreatePropertyType/>
+          },
+          {
+            path: "discount-hotels",
+            element: <DiscountHotels/>
+          },
+          {
+            path: "discount-cars",
+            element: <DiscountCars/>
+          },
+          {
+            path: "discount-cars/edit/:id",
+            element: <EditDiscountCars/>
+          },
+          {
+            path: "discount-hotels/edit/:id",
+            element: <EditDiscountHotels/>
+          },
+          {
+            path: "discount-hotels/create",
+            element: <CreateDiscountHotel/>
+          },
+          {
+            path: "discount-cars/create",
+            element: <CreateDiscountCar/>
+          },
+          {
+            path: "facilities",
+            element: <Facilities/>
+          },
+          {
+            path: "facilities/edit/:id",
+            element: <EditFacilities/>
+          },
+          {
+            path: "facilities/create",
+            element: <CreateFacilities/>
           }
         ],
       },

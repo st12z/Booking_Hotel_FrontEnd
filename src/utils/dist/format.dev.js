@@ -3,7 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getFormatPrice = exports.getTotalDay = exports.getTime = exports.getDate = exports.formatLocalDateTime = void 0;
+exports.getFormatPrice = exports.getTotalDay = exports.getTime = exports.getDate = exports.formatLocalDateTime2 = exports.formatLocalDateTime = void 0;
+
+var _dayjs = _interopRequireDefault(require("dayjs"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 var formatLocalDateTime = function formatLocalDateTime(value) {
   if (!value) return "";
@@ -27,6 +31,12 @@ var formatLocalDateTime = function formatLocalDateTime(value) {
 };
 
 exports.formatLocalDateTime = formatLocalDateTime;
+
+var formatLocalDateTime2 = function formatLocalDateTime2(dateStr) {
+  return (0, _dayjs["default"])(dateStr).format("YYYY-MM-DDTHH:mm:ss");
+};
+
+exports.formatLocalDateTime2 = formatLocalDateTime2;
 
 var getDate = function getDate(dateString) {
   var date = new Date(dateString);

@@ -44,7 +44,8 @@ function RoomChats() {
 
     const client = Stomp.over(socket);
     console.log(socket);
-    client.connect({}, () => {
+    const token = localStorage.getItem("access_token");
+    client.connect({ Authorization: `Bearer ${token}` }, () => {
       console.log("Connected to stomp");
       client.subscribe(
         `/user/${user.email}/queue/notifymessage`,

@@ -22,9 +22,9 @@ function Chats() {
   const [messages, setMessages] = useState([]);
   const [userB, setUserB] = useState();
   const params = useParams();
-  const roomChatId=params.id;
+  const roomChatId = params.id;
   const [stompClient, setStompClient] = useState(null);
-  
+
   const handleClickEmoji = () => {
     setShowEmoji(!showEmoji);
     setShowImage(false);
@@ -93,7 +93,8 @@ function Chats() {
       const client = Stomp.over(socket);
       console.log(socket);
       // Nhận tin nhắn phản hồi từ
-      client.connect({}, () => {
+      const token = localStorage.getItem("access_token");
+      client.connect({ Authorization: `Bearer ${token}` }, () => {
         console.log("Connected to stomp");
         client.subscribe(`/topic/rooms/${roomChatId}`, (returnMessage) => {
           console.log(returnMessage);
@@ -109,10 +110,10 @@ function Chats() {
             },
           ]);
         });
-        
+
         setStompClient(client);
       });
-      
+
       return () => {
         if (client) {
           console.log("disconnected");
@@ -171,9 +172,10 @@ function Chats() {
               </div>
               <div className="chat__send__content">
                 {item.content && <p>{item.content}</p>}
-                {item.images && item.images.map((item,index)=>(
-                  <img src={item} style={{width:"150px"}}/>
-                ))}
+                {item.images &&
+                  item.images.map((item, index) => (
+                    <img src={item} style={{ width: "150px" }} />
+                  ))}
               </div>
             </div>
           ) : (
@@ -184,9 +186,10 @@ function Chats() {
               </div>
               <div className="chat__accept__content">
                 {item.content && <p>{item.content}</p>}
-                {item.images && item.images.map((item,index)=>(
-                  <img src={item} style={{width:"150px"}}/>
-                ))}
+                {item.images &&
+                  item.images.map((item, index) => (
+                    <img src={item} style={{ width: "150px" }} />
+                  ))}
               </div>
             </div>
           )

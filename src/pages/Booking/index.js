@@ -8,7 +8,8 @@ import { getRoomTypeById } from "../../service/RoomService/RoomTypeService";
 import { getPropertyId } from "../../service/RoomService/PropertyService";
 import { LoadingOutlined } from "@ant-design/icons";
 import "./index.scss";
-import { getDiscountCarsByUser, getDiscountHotelsByUser } from "../../service/RoomService/DiscountService";
+import {  getDiscountHotelsByUser } from "../../service/RoomService/DiscountService";
+import { getDiscountCarsByUser } from "../../service/RoomService/DiscountCarsService";
 export const Context = createContext();
 function Booking() {
   const user = useSelector((state) => state.user);

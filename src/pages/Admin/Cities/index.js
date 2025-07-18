@@ -145,12 +145,12 @@ function Cities() {
   return (
     <>
       <h2>Danh sách thành phố</h2>
-      <Button color="green" variant="solid" style={{marginBottom:"20px"}}>
-          <Link to="/admin/cities/create">
-            <PlusOutlined />
-            Tạo mới
-          </Link>
-        </Button>
+      <Button color="green" variant="solid" style={{ marginBottom: "20px" }}>
+        <Link to="/admin/cities/create">
+          <PlusOutlined />
+          Tạo mới
+        </Link>
+      </Button>
       <div className="input_search" style={{ marginBottom: "20px" }}>
         <Input
           onChange={handleChangeInput}

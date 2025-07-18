@@ -1,83 +1,119 @@
 import { Menu } from "antd";
-import { AppstoreOutlined,UserOutlined,
-    ProductOutlined,
-    CommentOutlined,
-    SettingOutlined,
-    HomeOutlined,
-    PicCenterOutlined,
-    SketchOutlined,
-    
-   } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  UserOutlined,
+  ProductOutlined,
+  CommentOutlined,
+  SettingOutlined,
+  HomeOutlined,
+  PicCenterOutlined,
+  SketchOutlined,
+} from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { FaCity  } from "react-icons/fa";
-import { BsCardList,BsCloudHaze, BsCardText  } from "react-icons/bs";
+import { FaCity } from "react-icons/fa";
+import {
+  BsCardList,
+  BsCloudHaze,
+  BsCardText,
+  BsBackpack2,
+} from "react-icons/bs";
 
-import { BsCalendar2Event,BsActivity, BsHospital,BsHouses   } from "react-icons/bs";
+import {
+  BsCalendar2Event,
+  BsActivity,
+  BsHospital,
+  BsHouses,
+  BsBagHeart,
+} from "react-icons/bs";
 
-
-function MenuSider(){
-  const items=[
+function MenuSider() {
+  const items = [
     {
-      key:"/dashboard",
-      label:<Link to="">Dashboard</Link>,
-      icon:<HomeOutlined />,
+      key: "/dashboard",
+      label: <Link to="">Dashboard</Link>,
+      icon: <HomeOutlined />,
     },
     {
-      key:"/properties",
-      label:<Link to="/admin/properties">Quản lý khách sạn</Link>,
-      icon:<FaCity />,
+      key: "/properties",
+      label: <Link to="/admin/properties">Quản lý khách sạn</Link>,
+      icon: <FaCity />,
     },
     {
-      key:"/propertie-types",
-      label:<Link to="/admin/property-types">Quản lý loại khách sạn</Link>,
-      icon: <BsHouses />
+      key: "/propertie-types",
+      label: <Link to="/admin/property-types">Quản lý loại khách sạn</Link>,
+      icon: <BsHouses />,
     },
     {
-      key:"/bills",
-      label:<Link to="/admin/bills">Quản lý hóa đơn</Link>,
-      icon:<BsCalendar2Event />
+      key: "/bills",
+      label: <Link to="/admin/bills">Quản lý hóa đơn</Link>,
+      icon: <BsCalendar2Event />,
     },
     {
-      key:"/refund-bills",
-      label:<Link to="/admin/refund-bills">Quản lý hóa đơn hoàn tiền</Link>,
-      icon:<BsCalendar2Event />
+      key: "/refund-bills",
+      label: <Link to="/admin/refund-bills">Quản lý hóa đơn hoàn tiền</Link>,
+      icon: <BsCalendar2Event />,
     },
     {
-      key:"/payment-transactions",
-      label:<Link to="/admin/payment-transactions">Quản lý giao dịch</Link>,
-      icon:<BsActivity  />
+      key: "/payment-transactions",
+      label: <Link to="/admin/payment-transactions">Quản lý giao dịch</Link>,
+      icon: <BsActivity />,
     },
     {
-      key:"/payment-logs",
-      label: <Link to="/admin/suspicious-payment-logs">Quản lý log giao dịch</Link>,
-      icon: <BsCardList />
+      key: "/payment-logs",
+      label: (
+        <Link to="/admin/suspicious-payment-logs">Quản lý log giao dịch</Link>
+      ),
+      icon: <BsCardList />,
     },
     {
-      key:"/cities",
+      key: "/cities",
       label: <Link to="/admin/cities">Quản lý thành phố</Link>,
-      icon: <BsHospital />
+      icon: <BsHospital />,
     },
     {
-      key:"trips",
+      key: "trips",
       label: <Link to="/admin/trips">Quản lý điểm đến</Link>,
-      icon:  <BsCloudHaze />
+      icon: <BsCloudHaze />,
     },
     {
-      key:"trip_types",
+      key: "trip_types",
       label: <Link to="/admin/trip-types">Quản lý loại điểm đến</Link>,
-      icon:  <BsCardText />
-    }
-  ]
-  return(
+      icon: <BsCardText />,
+    },
+    {
+      key: "discounts",
+      label: "Quản lý phiếu giảm giá",
+      icon: <BsBagHeart />,
+      children: [
+        {
+          key: "discounts-hotels",
+          label: (
+            <Link to="/admin/discount-hotels">Phiếu giảm giá khách sạn</Link>
+          ),
+        },
+        {
+          key: "discounts-cars",
+          label: "Phiếu đặt xe",
+          label: <Link to="/admin/discount-cars">Phiếu giảm giá đặt xe</Link>,
+        },
+      ],
+    },
+    {
+      key: "facilities",
+      label: <Link to="/admin/facilities">Quản lý tiện ích</Link>,
+      icon: <BsBackpack2 />,
+    },
+  ];
+  return (
     <>
       <Menu
         defaultSelectedKeys={["/dashboard"]}
         defaultOpenKeys={["/dashboard"]}
         mode="inline"
         items={items}
-        style={{width:"240px",height:"100%"}}
+        style={{ width: "240px", height: "100%" }}
       />
     </>
-  )
+  );
 }
 export default MenuSider;

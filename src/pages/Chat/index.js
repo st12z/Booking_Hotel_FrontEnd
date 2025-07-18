@@ -5,10 +5,7 @@ import { FileUploadWithPreview } from "file-upload-with-preview";
 import { useEffect, useRef, useState } from "react";
 import "file-upload-with-preview/dist/style.css";
 import { useSelector } from "react-redux";
-import {
-  getChatsByRoomChatId,
-  
-} from "../../service/RoomService/ChatService";
+import { getChatsByRoomChatId } from "../../service/RoomService/ChatService";
 import { getInfoUserById } from "../../service/UserService/AuthService";
 import { uploadImages } from "../../service/RoomService/UploadService";
 import SockJS from "sockjs-client";
@@ -96,7 +93,8 @@ function Chat() {
       const client = Stomp.over(socket);
       console.log(socket);
       // Nhận tin nhắn phản hồi từ
-      client.connect({}, () => {
+      const token = localStorage.getItem("access_token");
+      client.connect({ Authorization: `Bearer ${token}` }, () => {
         console.log("Connected to stomp");
         client.subscribe(`/topic/rooms/${roomChatId}`, (returnMessage) => {
           console.log(returnMessage);
@@ -114,7 +112,7 @@ function Chat() {
         });
         setStompClient(client);
       });
-      
+
       return () => {
         if (client) {
           console.log("disconnected");
@@ -154,12 +152,20 @@ function Chat() {
           {},
           JSON.stringify(data)
         );
-        stompClient.send(`/app/sendNotification`,{},JSON.stringify({
-          content: `${user.email} đã gửi tin nhắn!`,
-        }));
-        stompClient.send(`/app/sendNotifyMessage`,{},JSON.stringify({
-          content: `${user.email} đã gửi tin nhắn!`,
-        }))
+        stompClient.send(
+          `/app/sendNotification`,
+          {},
+          JSON.stringify({
+            content: `${user.email} đã gửi tin nhắn!`,
+          })
+        );
+        stompClient.send(
+          `/app/sendNotifyMessage`,
+          {},
+          JSON.stringify({
+            content: `${user.email} đã gửi tin nhắn!`,
+          })
+        );
         setInputText("");
       }
     } else {
@@ -179,9 +185,10 @@ function Chat() {
               </div>
               <div className="chat__send__content">
                 {item.content && <p>{item.content}</p>}
-                {item.images && item.images.map((item,index)=>(
-                  <img src={item} style={{width:"150px"}}/>
-                ))}
+                {item.images &&
+                  item.images.map((item, index) => (
+                    <img src={item} style={{ width: "150px" }} />
+                  ))}
               </div>
             </div>
           ) : (
@@ -192,9 +199,10 @@ function Chat() {
               </div>
               <div className="chat__accept__content">
                 {item.content && <p>{item.content}</p>}
-                {item.images && item.images.map((item,index)=>(
-                  <img src={item} style={{width:"150px"}}/>
-                ))}
+                {item.images &&
+                  item.images.map((item, index) => (
+                    <img src={item} style={{ width: "150px" }} />
+                  ))}
               </div>
             </div>
           )

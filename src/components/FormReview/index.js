@@ -103,7 +103,8 @@ function FormReview({ propertyId }) {
     const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
     const client = Stomp.over(socket);
     console.log(socket);
-    client.connect({}, () => {
+    const token = localStorage.getItem("access_token");
+    client.connect({ Authorization: `Bearer ${token}` }, () => {
       console.log("Connected to stomp");
       setStompClient(client);
     });
@@ -146,7 +147,10 @@ function FormReview({ propertyId }) {
       const res = await createReview(data);
       if (res.code == 201) {
         openNotification("topRight", "Gửi đánh giá thành công!", "green");
-          connectStomp("/app/sendAmountReviews",`Tài khoản ${user.email} vừa đánh giá thành công!`);
+        connectStomp(
+          "/app/sendAmountReviews",
+          `Tài khoản ${user.email} vừa đánh giá thành công!`
+        );
       } else {
         openNotification("topRight", "Gửi đánh giá thất bại!", "red");
       }

@@ -29,8 +29,9 @@ function DiscountCars() {
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const res = await getDiscountCarsByUser(user.email);
+        const res = await getDiscountCarsByUser();
         console.log(res);
+        console.log("myDiscounts",myDiscounts);
         if (res.code == 200) {
           setMyDiscounts(res.data);
         }

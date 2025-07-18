@@ -18,7 +18,8 @@ function ListBillRecently() {
   useEffect(() => {
     const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
     const client = Stomp.over(socket);
-    client.connect({}, () => {
+    const token = localStorage.getItem("access_token");
+    client.connect({ Authorization: `Bearer ${token}` }, () => {
       console.log("Connected to stomp");
       // lắng nghe thông báo
       client.subscribe(

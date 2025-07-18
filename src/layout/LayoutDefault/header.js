@@ -162,6 +162,9 @@ function Header() {
                           <NavLink to="/bills">Thông tin đặt phòng</NavLink>
                         </li>
                         <li>
+                          <NavLink to="/my-discounts">Phiếu giảm giá của bạn</NavLink>
+                        </li>
+                        <li>
                           <NavLink to="/chats">Liên hệ</NavLink>
                         </li>
                       </>

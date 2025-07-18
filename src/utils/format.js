@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const formatLocalDateTime = (value) => {
   if (!value) return "";
   if (typeof value === "string") {
@@ -16,7 +18,9 @@ export const formatLocalDateTime = (value) => {
   )}`;
 };
 
-
+export const formatLocalDateTime2 = (dateStr) => {
+  return dayjs(dateStr).format("YYYY-MM-DDTHH:mm:ss");
+};
 export const getDate = (dateString) => {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
