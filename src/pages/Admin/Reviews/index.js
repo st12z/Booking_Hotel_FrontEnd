@@ -1,38 +1,72 @@
-import { Button, DatePicker, Input, Select, Table, Tag } from "antd";
-import { useEffect, useMemo, useState } from "react";
 import {
   SearchOutlined,
+  FilterOutlined,
+  EyeOutlined,
   PrinterOutlined,
-  EditOutlined,
-  PlusOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import {
-  getAllDiscountsByPage,
-  getAllDiscountType,
-  getSearchDiscounts,
-} from "../../../service/RoomService/DiscountService";
-import { getDate, getFormatPrice } from "../../../utils/format";
+  Button,
+  Input,
+  Select,
+  Table,
+  DatePicker,
+  Tag,
+  notification,
+  Popconfirm,
+} from "antd";
+import { use, useEffect, useMemo, useRef, useState } from "react";
+import {
+  getAllBills,
+  getAllBillTypeStatus,
+  getBillByKeyword,
+  getSearchBills,
+} from "../../../service/BookingService/BillService";
+import { getAllProperties } from "../../../service/RoomService/PropertyService";
 import { Link } from "react-router-dom";
+import {
+  formatLocalDateTime,
+  getDate,
+  getFormatPrice,
+} from "../../../utils/format";
+import { getPrintBill } from "../../../service/BookingService/PrintService";
+import { exportBills } from "../../../service/ExportService/ExportService";
+import {
+  deleteReview,
+  getAllReviews,
+  getSearchReviews,
+} from "../../../service/RoomService/ReviewService";
 const { RangePicker } = DatePicker;
-
-function DiscountHotels() {
+function Reviews() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
-  const [discountStatus, setDiscountStatus] = useState(0);
-  const [sortOption, setSortOption] = useState(0);
+  const [propertyId, setPropertyId] = useState(0);
+  const [dataProperties, setDataProperties] = useState([]);
+  const [timeOption, setTimeOption] = useState(0);
   const [beginDate, setBeginDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [shouldResetPageNo, setShouldResetPageNo] = useState();
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [triggerSearch, setTriggerSearch] = useState(false);
-  const [timeOption, setTimeOption] = useState(0);
-  const [discountType, setDiscountType] = useState(0);
-  const [dataDiscountType, setDataDiscountType] = useState([]);
+  const [sortOption, setSortOption] = useState(0);
+  const [api, contextHolder] = notification.useNotification();
+  const [isReload,setIsReload] = useState(false);
+  const openNotification = (placement, message, color) => {
+    api.info({
+      message: `Thông báo`,
+      description: (
+        <span style={{ color: color, fontSize: "20px", fontWeight: 600 }}>
+          {message}
+        </span>
+      ),
+      placement,
+    });
+  };
   const timeOptions = [
-    { label: "Thời gian tạo", value: 0 },
+    { label: "Thời gian thanh toán", value: 0 },
     { label: "Hôm nay", value: "today" },
     { label: "Hôm qua", value: "yesterday" },
     { label: "7 ngày qua", value: "last_7_days" },
@@ -44,65 +78,51 @@ function DiscountHotels() {
   ];
   const sortOptions = [
     { label: "Sắp xếp", value: 0 },
-    { label: "Số lượng hiện có tăng dần", value: "quantity_asc" },
-    { label: "Số lượng hiện có giảm dần", value: "quantity_desc" },
-    { label: "Ngày tạo tăng dần", value: "date_asc" },
-    { label: "Ngày tạo giảm dần", value: "date_desc" },
-  ];
-  const dataDiscountStatus = [
-    { label: "Trạng thái", value: 0 },
-    { label: "Còn", value: "active" },
-    { label: "Hết", value: "expired" },
+    { label: "Ngày đánh giá tăng dần", value: "date_asc" },
+    { label: "Ngày đánh giá giảm dần", value: "date_desc" },
   ];
   const filter = useMemo(
     () => ({
       pageNo: pageNo,
       pageSize: pageSize,
+      propertyId: propertyId,
       timeOption: timeOption,
-      discountStatus: discountStatus,
-      discountType: discountType,
       sortOption: sortOption,
       beginDate: timeOption != "custom" ? null : beginDate,
       endDate: timeOption != "custom" ? null : endDate,
     }),
-    [
-      pageNo,
-      pageSize,
-      timeOption,
-      discountStatus,
-      discountType,
-      sortOption,
-      beginDate,
-      endDate,
-    ]
+    [pageNo, pageSize, propertyId, timeOption, sortOption, beginDate, endDate]
   );
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const resDiscountType = await getAllDiscountType();
-        if (resDiscountType.code == 200) {
-          const discountTypes = resDiscountType.data.map((item) => ({
-            label: item,
-            value: item,
+        const resProperties = await getAllProperties();
+        if (resProperties.code == 200) {
+          const properties = resProperties.data.map((item) => ({
+            label: item.name,
+            value: item.id,
           }));
-          discountTypes.push({ label: "Loại phiếu giảm giá", value: 0 });
-          setDataDiscountType(discountTypes);
+          properties.unshift({ label: "Khách sạn", value: 0 });
+          console.log("Properties:", properties);
+          setDataProperties(properties);
         }
       } catch (error) {
-        console.error("Error:", error);
+        console.error(error);
       }
     };
     fetchApi();
   }, []);
 
-  //fetchDiscounts
-  const fetchDiscounts = async () => {
+  // fetchReviews
+  const fetchReviews = async () => {
     try {
-      const res = await getAllDiscountsByPage(filter);
-
+      const res = await getAllReviews(filter);
+      console.log(res);
+      setIsSearchMode(false);
+      setKeyword("");
       console.log("------------Gọi API filter---------");
       console.log("filter", filter);
-      console.log("discount data:", res);
+      console.log("Reviews data:", res);
       if (res.code == 200) {
         setTotal(res.data.total);
         setData(res.data.dataPage);
@@ -111,36 +131,26 @@ function DiscountHotels() {
       console.error("Error fetching bills:", error);
     }
   };
-
   useEffect(() => {
-    setIsSearchMode(false);
-    setKeyword("");
-    if (pageNo === 1) {
-      fetchDiscounts();
+    if ((pageNo === 1) & !isSearchMode) {
+      fetchReviews();
     } else {
       setPageNo(1);
     }
-  }, [
-    timeOption,
-    discountStatus,
-    discountType,
-    sortOption,
-    beginDate,
-    endDate,
-  ]);
+  }, [propertyId, timeOption, sortOption, beginDate, endDate]);
 
   useEffect(() => {
     if (!isSearchMode) {
-      fetchDiscounts();
+      fetchReviews();
     }
   }, [pageNo]);
+  //fetchReviews
 
-  // end fetchDiscounts
-
-  // search
+  //search
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
+  
   const handleSearch = async () => {
     setIsSearchMode(true);
     if (pageNo === 1) {
@@ -153,7 +163,7 @@ function DiscountHotels() {
   const getApiSearch = async () => {
     try {
       console.log("Searching for keyword:", keyword);
-      const res = await getSearchDiscounts(keyword, pageNo, pageSize);
+      const res = await getSearchReviews(keyword, pageNo, pageSize);
       if (res.code == 200) {
         setTotal(res.data.total);
         setData(res.data.dataPage);
@@ -163,12 +173,14 @@ function DiscountHotels() {
     }
   };
   useEffect(() => {
-    if (isSearchMode) {
+    if (isSearchMode & triggerSearch) {
       getApiSearch();
+      setTriggerSearch(false);
     }
   }, [pageNo]);
 
-  //
+  // end search
+
   const handleChangRangePicker = (dates, dateStrings) => {
     console.log("Selected dates:", dates, dateStrings);
     if (dates) {
@@ -179,7 +191,22 @@ function DiscountHotels() {
       setEndDate(null);
     }
   };
+  const handleDeleteReview = async (id) => {
+    try {
+      const res = await deleteReview(id);
+      console.log(res);
+      if (res.code == 200) {
+        setIsReload(isReload=>!isReload);
+        openNotification("topRight", "Xóa thành công", "green");
+      } else {
+        openNotification("topRight", "Xóa thất bại", "red");
+      }
+    } catch (error) {
+      openNotification("topRight", "Xóa thất bại", "red");
 
+      console.error(error);
+    }
+  };
   const columns = [
     {
       title: "Mã ID",
@@ -193,80 +220,41 @@ function DiscountHotels() {
       ),
     },
     {
-      title: "Mã Code",
-      key: "id",
+      title: "Mã người dùng",
+      key: "user_id",
       render: (_, record) => (
         <>
           <p style={{ color: "#0057B8" }}>
-            <b>{record.code}</b>
+            <b>{record.userId}</b>
           </p>
         </>
       ),
     },
     {
-      title: "Ảnh",
-      key: "image",
+      title: "Nội dung",
+      key: "content",
       render: (_, record) => (
         <>
-          <img src={record.image} style={{ width: "150px", height: "100px" }} />
-        </>
-      ),
-    },
-    {
-      title: "Loại",
-      key: "discount-type",
-      render: (_, record) => (
-        <>
-          {record.discountType == "PERCENT" ? (
-            <Tag color="blue">{record.discountType}</Tag>
-          ) : (
-            <Tag color="red">{record.discountType}</Tag>
-          )}
-        </>
-      ),
-    },
-    {
-      title: "Giảm giá",
-      key: "discount-value",
-      render: (_, record) => (
-        <>
-          {record.discountType == "PERCENT" ? (
-            <Tag color="blue">{record.discountValue} %</Tag>
-          ) : (
-            <Tag color="red">{getFormatPrice(record.discountValue)}</Tag>
-          )}
-        </>
-      ),
-    },
-    {
-      title: "Số lượng",
-      key: "quantity",
-      render: (_, record) => (
-        <>
+          <div className="" style={{ display: "flex", gap: "20px" }}>
+            {Array.isArray(record.images) &&
+              record.images.length > 0 &&
+              record.images.map((item, index) => (
+                <img src={item} style={{ width: "100px", height: "80px" }} />
+              ))}
+          </div>
           <p style={{ color: "#0057B8" }}>
-            <b>{record.quantity}</b>
+            <b>{record.content}</b>
           </p>
         </>
       ),
     },
     {
-      title: "Bắt đầu",
-      key: "start_date",
+      title: "Mã khách sạn",
+      key: "property_id",
       render: (_, record) => (
         <>
           <p style={{ color: "#0057B8" }}>
-            <b>{getDate(record.startDate)}</b>
-          </p>
-        </>
-      ),
-    },
-    {
-      title: "Kết thúc",
-      key: "end_date",
-      render: (_, record) => (
-        <>
-          <p style={{ color: "#0057B8" }}>
-            <b>{getDate(record.endDate)}</b>
+            <b>{record.propertyId}</b>
           </p>
         </>
       ),
@@ -286,22 +274,21 @@ function DiscountHotels() {
       title: "Hành động",
       key: "action",
       render: (_, record) => (
-        <Button style={{ marginRight: "10px" }}>
-          <Link to={`/admin/discount-hotels/edit/${record.id}`}>
-            {<EditOutlined />}
-          </Link>
-        </Button>
+        <>
+          <Popconfirm
+            title="Xóa đánh giá"
+            description="Bạn có muốn xoá đánh giá?"
+            onConfirm={() => handleDeleteReview(record.id)}
+          >
+            <Button icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </>
       ),
     },
   ];
   return (
     <>
-      <Button color="green" variant="solid" style={{ marginBottom: "20px" }}>
-        <Link to="/admin/discount-hotels/create">
-          <PlusOutlined />
-          Tạo mới
-        </Link>
-      </Button>
+      {contextHolder};
       <div className="input_search">
         <Input
           value={keyword}
@@ -314,6 +301,14 @@ function DiscountHotels() {
         </div>
       </div>
       <div style={{ marginBottom: "20px", marginTop: "20px" }}>
+        <Select
+          value={propertyId}
+          style={{ width: 240, marginRight: "20px" }}
+          options={dataProperties}
+          onChange={(value) => {
+            setPropertyId(value);
+          }}
+        />
         <Select
           value={timeOption}
           style={{ width: 180, marginRight: "20px" }}
@@ -328,22 +323,6 @@ function DiscountHotels() {
             onChange={handleChangRangePicker}
           />
         )}
-        <Select
-          value={discountStatus}
-          style={{ width: 160, marginRight: "20px" }}
-          options={dataDiscountStatus}
-          onChange={(value) => {
-            setDiscountStatus(value);
-          }}
-        />
-        <Select
-          value={discountType}
-          style={{ width: 180, marginRight: "20px" }}
-          options={dataDiscountType}
-          onChange={(value) => {
-            setDiscountType(value);
-          }}
-        />
         <Select
           value={sortOption}
           style={{ width: 240, marginRight: "20px", marginTop: "20px" }}
@@ -370,4 +349,4 @@ function DiscountHotels() {
     </>
   );
 }
-export default DiscountHotels;
+export default Reviews;

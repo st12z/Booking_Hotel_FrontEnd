@@ -1,4 +1,4 @@
-import { getAuthorization, postImagesAuthorization } from "../getAuthorization";
+import { getAuthorization, postAuthorization, postImagesAuthorization } from "../getAuthorization";
 
 export const createReview = async(data)=>{
   const res = await postImagesAuthorization("rooms/api/reviews",data);
@@ -14,5 +14,13 @@ export const getReviewsByPropertyId=async(propertyId)=>{
 }
 export const getAmountReviews = async()=>{
   const result = await getAuthorization(`rooms/api/reviews/amount-reviews`);
+  return result;
+}
+export const getAllReviews = async(filter)=>{
+  const result = await postAuthorization(`rooms/api/reviews/filter`,filter);
+  return result;
+}
+export const getSearchReviews = async(keyword,pageNo,pageSize)=>{
+  const result = await getAuthorization(`rooms/api/reviews/search?keyword=${keyword}&pageNo=${pageNo}&pageSize=${pageSize}`);
   return result;
 }

@@ -46,3 +46,7 @@ export const getAmountVisitsByMonth=async(month)=>{
   const result= await getAuthorization(`users/api/users/amount-visits-month?month=${month}`);
   return result;
 }
+export const getAllUsersAdmin = async()=>{
+  const result= await getAuthorization(`users/api/users/all-users-admin`);
+  return result;
+}

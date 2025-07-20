@@ -8,6 +8,8 @@ import {
   HomeOutlined,
   PicCenterOutlined,
   SketchOutlined,
+  GiftOutlined,
+  LikeOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { FaCity } from "react-icons/fa";
@@ -16,6 +18,10 @@ import {
   BsCloudHaze,
   BsCardText,
   BsBackpack2,
+  BsCarFront,
+  BsChatText,
+  BsClipboard2Pulse
+
 } from "react-icons/bs";
 
 import {
@@ -83,7 +89,7 @@ function MenuSider() {
     {
       key: "discounts",
       label: "Quản lý phiếu giảm giá",
-      icon: <BsBagHeart />,
+      icon: <GiftOutlined /> ,
       children: [
         {
           key: "discounts-hotels",
@@ -102,6 +108,36 @@ function MenuSider() {
       key: "facilities",
       label: <Link to="/admin/facilities">Quản lý tiện ích</Link>,
       icon: <BsBackpack2 />,
+    },
+    {
+      key: "reviews",
+      label: <Link to="/admin/reviews">Quản lý đánh giá</Link>,
+      icon: <LikeOutlined />,
+    },
+    {
+      key: "vehicles",
+      label: <Link to="/admin/vehicles">Quản lý phương tiện</Link>,
+      icon: <BsCarFront  />,
+    },
+    {
+      key: "room-chats",
+      label: <Link to="/admin/manage-room-chats">Quản lý phòng chat</Link>,
+      icon: <BsChatText  />,
+    },
+    {
+      key: "roles",
+      label: <Link to="/admin/roles">Quản lý role</Link>,
+      icon: <BsClipboard2Pulse  />,
+    },
+    {
+      key: "users",
+      label: <Link to="/admin/manage-users">Quản lý người dùng</Link>,
+      icon: <UserOutlined /> ,
+    },
+    {
+      key: "setting",
+      label: <Link to="/admin/setting">Cài đặt chung</Link>,
+      icon: <SettingOutlined />
     },
   ];
   return (

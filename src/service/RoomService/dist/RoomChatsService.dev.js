@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getRoomChatsId = exports.getRoomChatsOfUser = void 0;
+exports.updateRoomChats = exports.getAllRoomChats = exports.getRoomChatsId = exports.getRoomChatsOfUser = void 0;
 
 var _requestRoomService = require("../../utils/requestRoomService");
 
@@ -54,3 +54,49 @@ var getRoomChatsId = function getRoomChatsId(id) {
 };
 
 exports.getRoomChatsId = getRoomChatsId;
+
+var getAllRoomChats = function getAllRoomChats(keyword, pageNo, pageSize) {
+  var res;
+  return regeneratorRuntime.async(function getAllRoomChats$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/room-chats/all?keyword=".concat(keyword, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize)));
+
+        case 2:
+          res = _context3.sent;
+          return _context3.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+};
+
+exports.getAllRoomChats = getAllRoomChats;
+
+var updateRoomChats = function updateRoomChats(data) {
+  var res;
+  return regeneratorRuntime.async(function updateRoomChats$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("rooms/api/room-chats/update", data));
+
+        case 2:
+          res = _context4.sent;
+          return _context4.abrupt("return", res);
+
+        case 4:
+        case "end":
+          return _context4.stop();
+      }
+    }
+  });
+};
+
+exports.updateRoomChats = updateRoomChats;

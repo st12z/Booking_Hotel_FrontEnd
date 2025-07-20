@@ -28,7 +28,6 @@ import DetailBill from "../pages/Admin/DetailBill";
 import EditRoomType from "../pages/Admin/EditRoomType";
 import CreateProperties from "../pages/Admin/CreateProperties";
 import RefundBills from "../pages/Admin/RefundBills";
-import DetailRefundBill from "../pages/DetailRefundBill";
 import PaymentTransactions from "../pages/Admin/AdminBoard/PaymentTransactions";
 import BookingCheckOtp from "../pages/BookingCheckOtp";
 import PaymentLogs from "../pages/Admin/PaymentLogs";
@@ -54,6 +53,17 @@ import CreateDiscountCar from "../pages/Admin/CreateDiscountCar";
 import Facilities from "../pages/Admin/Facilities";
 import EditFacilities from "../pages/Admin/EditFacilities";
 import CreateFacilities from "../pages/Admin/CreateFacilities";
+import Reviews from "../pages/Admin/Reviews";
+import Roles from "../pages/Admin/Roles";
+import Vehicles from "../pages/Admin/Vehicles";
+import ManagerRoomChats from "../pages/Admin/ManageRoomChats";
+import Users from "../pages/Admin/ManageUsers";
+import ManageUsers from "../pages/Admin/ManageUsers";
+import ManageRoomChats from "../pages/Admin/ManageRoomChats";
+import Setting from "../pages/Admin/Setting";
+import EditVehicles from "../pages/Admin/EditVehicles";
+import CreateVehicles from "../pages/Admin/CreateVehicles";
+import DetailRefundBill from "../pages/Admin/DetailRefundBill";
 export const routes = [
   {
     path: "/",
@@ -278,6 +288,38 @@ export const routes = [
           {
             path: "facilities/create",
             element: <CreateFacilities/>
+          },
+          {
+            path: "reviews",
+            element: <Reviews/>
+          },
+          {
+            path: "roles",
+            element: <Roles/>
+          },
+          {
+            path: "vehicles",
+            element: <Vehicles/>
+          },
+          {
+            path: "manage-room-chats",
+            element: <ManageRoomChats/>
+          },
+          {
+            path: "manage-users",
+            element: <ManageUsers/>
+          },
+          {
+            path: "setting",
+            element: <Setting/>
+          },
+          {
+            path: "vehicles/edit/:id",
+            element: <EditVehicles/>
+          },
+          {
+            path: "vehicles/create",
+            element: <CreateVehicles/>
           }
         ],
       },

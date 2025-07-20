@@ -39,7 +39,8 @@ function Bills() {
   const [endDate, setEndDate] = useState(null);
   const [shouldResetPageNo, setShouldResetPageNo] = useState();
   const [isSearchMode, setIsSearchMode] = useState(false);
-  const [triggreSearch, setTriggerSearch] = useState(false);
+  const [triggerSearch, setTriggerSearch] = useState(false);
+  const [triggerReload, setTriggerReload] = useState(false);
   const timeOptions = [
     { label: "Thời gian thanh toán", value: 0 },
     { label: "Hôm nay", value: "today" },
@@ -81,16 +82,42 @@ function Bills() {
     ]
   );
   useEffect(() => {
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
-  }, [propertyId, timeOption, billTypeStatus, sortOption, beginDate, endDate]);
-  useEffect(() => {
-    setPageNo(1);
-  }, [shouldResetPageNo]);
+    const fetchApi = async () => {
+      try {
+        const resProperties = await getAllProperties();
+        const resBillTypeStatus = await getAllBillTypeStatus();
+        if (resProperties.code == 200) {
+          const properties = resProperties.data.map((item) => ({
+            label: item.name,
+            value: item.id,
+          }));
+          properties.unshift({ label: "Khách sạn", value: 0 });
+          console.log("Properties:", properties);
+          setDataProperties(properties);
+        }
+        if (resBillTypeStatus.code == 200) {
+          const billTypes = resBillTypeStatus.data.map((item) => ({
+            label: item,
+            value: item,
+          }));
+          billTypes.unshift({ label: "Trạng thái hóa đơn", value: 0 });
+          console.log("Bill Types:", billTypes);
+          setDataBillTypeStatus(billTypes);
+        }
+      } catch (error) {
+        console.error("Error fetching properties or bill status:", error);
+      }
+    };
+    fetchApi();
+  }, []);
+
+
+
+
+  // fethBills
   const fetchBills = async () => {
     try {
       const res = await getAllBills(filter);
-      setIsSearchMode(false);
-      setKeyword("");
       console.log("------------Gọi API filter---------");
       console.log("filter", filter);
       console.log("Bills data:", res);
@@ -102,51 +129,39 @@ function Bills() {
       console.error("Error fetching bills:", error);
     }
   };
+  useEffect(() => {
+    setIsSearchMode(false);
+    setKeyword("");
+    if ((pageNo === 1)) {
+      fetchBills();
+    } else {
+      setPageNo(1);
+    }
+  }, [propertyId, timeOption, billTypeStatus, sortOption, beginDate, endDate]);
 
   useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        const resProperties = await getAllProperties();
-        const resBillTypeStatus = await getAllBillTypeStatus();
-        if (resProperties.code == 200) {
-          const properties = resProperties.data.map((item) => ({
-            label: item.name,
-            value: item.id,
-          }));
-          properties.push({ label: "Khách sạn", value: 0 });
-          console.log("Properties:", properties);
-          setDataProperties(properties);
-        }
-        if (resBillTypeStatus.code == 200) {
-          const billTypes = resBillTypeStatus.data.map((item) => ({
-            label: item,
-            value: item,
-          }));
-          billTypes.push({ label: "Trạng thái hóa đơn", value: 0 });
-          console.log("Bill Types:", billTypes);
-          setDataBillTypeStatus(billTypes);
-        }
-      } catch (error) {
-        console.error("Error fetching properties or bill status:", error);
-      }
-    };
-    fetchApi();
-  }, []);
-  useEffect(() => {
-    fetchBills();
-  }, [propertyId, timeOption, billTypeStatus, sortOption, beginDate, endDate]);
+    if (!isSearchMode) {
+      fetchBills();
+    }
+  }, [pageNo]);
+
+  // end fetchbills
+
+  // search
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
+
   const handleSearch = async () => {
-    console.log("Searching for keyword:", keyword);
-    setTriggerSearch((triggreSearch) => !triggreSearch);
     setIsSearchMode(true);
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+    if (pageNo === 1) {
+      getApiSearch(); // Gọi API trực tiếp nếu đã ở trang 1
+    } else {
+      setPageNo(1); // Khi pageNo thay đổi, useEffect sẽ gọi API
+    }
   };
   const getApiSearch = async () => {
     try {
-      console.log("Searching for keyword:", keyword);
       const res = await getSearchBills(keyword, pageNo, pageSize);
       if (res.code == 200) {
         setTotal(res.data.total);
@@ -157,13 +172,13 @@ function Bills() {
     }
   };
   useEffect(() => {
-    getApiSearch();
-  }, [triggreSearch,pageNo]);
-  useEffect(() => {
-    if (!isSearchMode) {
-      fetchBills();
+    if (isSearchMode ) {
+      getApiSearch();
     }
   }, [pageNo]);
+
+  // end search
+
   const handleChangRangePicker = (dates, dateStrings) => {
     console.log("Selected dates:", dates, dateStrings);
     if (dates) {
@@ -325,11 +340,17 @@ function Bills() {
     <>
       <div className="input_search">
         <Input
-        value={keyword}
+          value={keyword}
           onChange={handleChangeInput}
           style={{ width: "50%", marginRight: "20px" }}
         />
-        <div className="icon_search" onClick={handleSearch}>
+        <div
+          className="icon_search"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSearch();
+          }}
+        >
           <SearchOutlined />
           <span>Tìm kiếm</span>
         </div>

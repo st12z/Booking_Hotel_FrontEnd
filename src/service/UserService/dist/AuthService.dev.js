@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAmountVisitsByMonth = exports.getAmountUsers = exports.getAmountVisitsToday = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
+exports.getAllUsersAdmin = exports.getAmountVisitsByMonth = exports.getAmountUsers = exports.getAmountVisitsToday = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
 
 var _requestUserService = require("../../utils/requestUserService");
 
@@ -262,3 +262,26 @@ var getAmountVisitsByMonth = function getAmountVisitsByMonth(month) {
 };
 
 exports.getAmountVisitsByMonth = getAmountVisitsByMonth;
+
+var getAllUsersAdmin = function getAllUsersAdmin() {
+  var result;
+  return regeneratorRuntime.async(function getAllUsersAdmin$(_context12) {
+    while (1) {
+      switch (_context12.prev = _context12.next) {
+        case 0:
+          _context12.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("users/api/users/all-users-admin"));
+
+        case 2:
+          result = _context12.sent;
+          return _context12.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context12.stop();
+      }
+    }
+  });
+};
+
+exports.getAllUsersAdmin = getAllUsersAdmin;

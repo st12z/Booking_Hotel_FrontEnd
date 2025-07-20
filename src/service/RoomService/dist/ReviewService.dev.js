@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAmountReviews = exports.getReviewsByPropertyId = exports.deleteReview = exports.createReview = void 0;
+exports.getSearchReviews = exports.getAllReviews = exports.getAmountReviews = exports.getReviewsByPropertyId = exports.deleteReview = exports.createReview = void 0;
 
 var _getAuthorization = require("../getAuthorization");
 
@@ -98,3 +98,49 @@ var getAmountReviews = function getAmountReviews() {
 };
 
 exports.getAmountReviews = getAmountReviews;
+
+var getAllReviews = function getAllReviews(filter) {
+  var result;
+  return regeneratorRuntime.async(function getAllReviews$(_context5) {
+    while (1) {
+      switch (_context5.prev = _context5.next) {
+        case 0:
+          _context5.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("rooms/api/reviews/filter", filter));
+
+        case 2:
+          result = _context5.sent;
+          return _context5.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context5.stop();
+      }
+    }
+  });
+};
+
+exports.getAllReviews = getAllReviews;
+
+var getSearchReviews = function getSearchReviews(keyword, pageNo, pageSize) {
+  var result;
+  return regeneratorRuntime.async(function getSearchReviews$(_context6) {
+    while (1) {
+      switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("rooms/api/reviews/search?keyword=".concat(keyword, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize)));
+
+        case 2:
+          result = _context6.sent;
+          return _context6.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context6.stop();
+      }
+    }
+  });
+};
+
+exports.getSearchReviews = getSearchReviews;

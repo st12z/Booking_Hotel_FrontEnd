@@ -1,11 +1,11 @@
 .header-admin {
-  background-color: #C5D3DA;
+  background-color: #E20043;
   border-bottom: 1px solid #ddd;
   padding: 0;
   margin-bottom: 0px;
 }
 .header-admin__logo {
-  border-right: 2px solid white;
+  border-right: 2px solid #0057B8;
   width: 240px;
   height: 100%;
   padding: 10px;
@@ -40,10 +40,11 @@
   position: relative;
 }
 .header-admin__menu .menu_notificatons .icon-notification {
-  color: black;
+  color: #0057B8;
+  font-weight: 600;
 }
 .header-admin__menu .menu_notificatons .count-notification {
-  color: red;
+  color: #0057B8;
   font-weight: 600;
   font-size: 16px;
   position: absolute;

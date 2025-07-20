@@ -44,7 +44,7 @@ function PaymentLogs() {
   const [api, contextHolder] = notification.useNotification();
   const [shouldResetPageNo, setShouldResetPageNo] = useState();
   const [isSearchMode, setIsSearchMode] = useState(false);
-  const [triggreSearch, setTriggerSearch] = useState(false);
+  const [triggerSearch, setTriggerSearch] = useState(false);
   const openNotification = (placement, message, color) => {
     api.info({
       message: `Thông báo`,
@@ -127,20 +127,8 @@ function PaymentLogs() {
       endDate,
     ]
   );
-  useEffect(() => {
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
-  }, [
-    pageSize,
-    suspiciousTranType,
-    timeOption,
-    sortOption,
-    beginDate,
-    endDate,
-  ]);
-  useEffect(() => {
-    setPageNo(1);
-  }, [shouldResetPageNo]);
-  const fetchSuspiciousTrans = async (filter) => {
+  // fetchSuspiciousTrans
+  const fetchSuspiciousTrans = async () => {
     try {
       console.log(filter);
       const res = await getAllSuspiciousTransByFilter(filter);
@@ -156,18 +144,35 @@ function PaymentLogs() {
     }
   };
   useEffect(() => {
-    fetchSuspiciousTrans(filter);
-    setCheckLock(false);
+    setIsSearchMode(false);
+    setKeyword("");
+    if ((pageNo === 1)) {
+      fetchSuspiciousTrans();
+    } else {
+      setPageNo(1);
+    }
   }, [suspiciousTranType, timeOption, sortOption, beginDate, endDate]);
+
+  useEffect(() => {
+    if (!isSearchMode) {
+      fetchSuspiciousTrans();
+    }
+  }, [pageNo]);
+
+  // end
+
+  //search
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
   const handleSearch = async () => {
-    setCheckLock(false);
-    console.log("Searching for keyword:", keyword);
-    setTriggerSearch((triggreSearch) => !triggreSearch);
     setIsSearchMode(true);
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+    if (pageNo === 1) {
+      getApiSearch(); // Gọi API trực tiếp nếu đã ở trang 1
+    } else {
+      setTriggerSearch(true);
+      setPageNo(1); // Khi pageNo thay đổi, useEffect sẽ gọi API
+    }
   };
   const getApiSearch = async () => {
     try {
@@ -182,13 +187,11 @@ function PaymentLogs() {
     }
   };
   useEffect(() => {
-    getApiSearch();
-  }, [triggreSearch, pageNo]);
-  useEffect(() => {
-    if (!isSearchMode) {
-      fetchSuspiciousTrans(filter);
+    if (isSearchMode) {
+      getApiSearch();
     }
   }, [pageNo]);
+
   const handleChangRangePicker = (dates, dateStrings) => {
     console.log("Selected dates:", dates, dateStrings);
     if (dates) {

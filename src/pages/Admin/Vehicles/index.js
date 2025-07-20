@@ -1,36 +1,79 @@
-import { Button, DatePicker, Input, Select, Table, Tag } from "antd";
-import { useEffect, useMemo, useState } from "react";
 import {
   SearchOutlined,
+  FilterOutlined,
+  EyeOutlined,
   PrinterOutlined,
+  DeleteOutlined,
   EditOutlined,
-  PlusOutlined,
+  PlusOutlined
 } from "@ant-design/icons";
 import {
-  getAllDiscountsByPage,
-  getAllDiscountType,
-  getSearchDiscounts,
-} from "../../../service/RoomService/DiscountService";
-import { getDate, getFormatPrice } from "../../../utils/format";
+  Button,
+  Input,
+  Select,
+  Table,
+  DatePicker,
+  Tag,
+  notification,
+  Popconfirm,
+} from "antd";
+import { use, useEffect, useMemo, useRef, useState } from "react";
+import {
+  getAllBills,
+  getAllBillTypeStatus,
+  getBillByKeyword,
+  getSearchBills,
+} from "../../../service/BookingService/BillService";
+import { getAllProperties } from "../../../service/RoomService/PropertyService";
 import { Link } from "react-router-dom";
+import {
+  formatLocalDateTime,
+  getDate,
+  getFormatPrice,
+} from "../../../utils/format";
+import { getPrintBill } from "../../../service/BookingService/PrintService";
+import { exportBills } from "../../../service/ExportService/ExportService";
+import {
+  deleteReview,
+  getAllReviews,
+  getSearchReviews,
+} from "../../../service/RoomService/ReviewService";
+import {
+  getAllCarStatus,
+  getAllCarTypes,
+  getAllVehiclesByFilter,
+  getSearchVehicles,
+} from "../../../service/BookingService/VehicleService";
 const { RangePicker } = DatePicker;
-
-function DiscountHotels() {
+function Vehicles() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
-  const [discountStatus, setDiscountStatus] = useState(0);
-  const [sortOption, setSortOption] = useState(0);
+  const [timeOption, setTimeOption] = useState(0);
+  const [carType, setCarType] = useState(0);
+  const [dataCarTypes, setDataCarTypes] = useState([]);
   const [beginDate, setBeginDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [dataCarStatus, setDataCarStatus] = useState([]);
+  const [carStatus, setCarStatus] = useState(0);
   const [shouldResetPageNo, setShouldResetPageNo] = useState();
   const [isSearchMode, setIsSearchMode] = useState(false);
   const [triggerSearch, setTriggerSearch] = useState(false);
-  const [timeOption, setTimeOption] = useState(0);
-  const [discountType, setDiscountType] = useState(0);
-  const [dataDiscountType, setDataDiscountType] = useState([]);
+  const [sortOption, setSortOption] = useState(0);
+  const [api, contextHolder] = notification.useNotification();
+  const openNotification = (placement, message, color) => {
+    api.info({
+      message: `Thông báo`,
+      description: (
+        <span style={{ color: color, fontSize: "20px", fontWeight: 600 }}>
+          {message}
+        </span>
+      ),
+      placement,
+    });
+  };
   const timeOptions = [
     { label: "Thời gian tạo", value: 0 },
     { label: "Hôm nay", value: "today" },
@@ -44,65 +87,68 @@ function DiscountHotels() {
   ];
   const sortOptions = [
     { label: "Sắp xếp", value: 0 },
-    { label: "Số lượng hiện có tăng dần", value: "quantity_asc" },
-    { label: "Số lượng hiện có giảm dần", value: "quantity_desc" },
-    { label: "Ngày tạo tăng dần", value: "date_asc" },
-    { label: "Ngày tạo giảm dần", value: "date_desc" },
-  ];
-  const dataDiscountStatus = [
-    { label: "Trạng thái", value: 0 },
-    { label: "Còn", value: "active" },
-    { label: "Hết", value: "expired" },
+    { label: "Giá tăng dần", value: "price_asc" },
+    { label: "Giá giảm dần", value: "price_desc" },
+    { label: "Ngày đánh giá tăng dần", value: "date_asc" },
+    { label: "Ngày đánh giá giảm dần", value: "date_desc" },
   ];
   const filter = useMemo(
     () => ({
       pageNo: pageNo,
       pageSize: pageSize,
+      carType: carType,
       timeOption: timeOption,
-      discountStatus: discountStatus,
-      discountType: discountType,
       sortOption: sortOption,
       beginDate: timeOption != "custom" ? null : beginDate,
       endDate: timeOption != "custom" ? null : endDate,
+      carStatus: carStatus
     }),
-    [
-      pageNo,
-      pageSize,
-      timeOption,
-      discountStatus,
-      discountType,
-      sortOption,
-      beginDate,
-      endDate,
-    ]
+    [pageNo, pageSize, carType, timeOption, sortOption, beginDate, endDate,carStatus]
   );
   useEffect(() => {
     const fetchApi = async () => {
       try {
-        const resDiscountType = await getAllDiscountType();
-        if (resDiscountType.code == 200) {
-          const discountTypes = resDiscountType.data.map((item) => ({
-            label: item,
-            value: item,
-          }));
-          discountTypes.push({ label: "Loại phiếu giảm giá", value: 0 });
-          setDataDiscountType(discountTypes);
+        const resDataCarStatus = await getAllCarStatus();
+        if (resDataCarStatus.code == 200) {
+          const carStatus = Object.entries(resDataCarStatus.data).map(
+            ([label, value]) => ({
+              label,
+              value,
+            })
+          );
+          carStatus.unshift({ label: "Trạng thái", value: 0 });
+          console.log("CarStatus:", carStatus);
+          setDataCarStatus(carStatus);
+        }
+        const resCarTypes = await getAllCarTypes();
+        console.log("resCarTypes", resCarTypes);
+        if (resCarTypes.code == 200) {
+          const carTypes = Object.entries(resCarTypes.data).map(
+            ([label, value]) => ({
+              label,
+              value,
+            })
+          );
+          carTypes.unshift({ label: "Loại xe", value: 0 });
+          console.log("CarTypes:", carTypes);
+          setDataCarTypes(carTypes);
         }
       } catch (error) {
-        console.error("Error:", error);
+        console.error(error);
       }
     };
     fetchApi();
   }, []);
 
-  //fetchDiscounts
-  const fetchDiscounts = async () => {
+  // fetchVehicles
+  const fetchVehicles = async () => {
     try {
-      const res = await getAllDiscountsByPage(filter);
+      const res = await getAllVehiclesByFilter(filter);
+      console.log(res);
 
       console.log("------------Gọi API filter---------");
       console.log("filter", filter);
-      console.log("discount data:", res);
+      console.log("vehicles data:", res);
       if (res.code == 200) {
         setTotal(res.data.total);
         setData(res.data.dataPage);
@@ -111,36 +157,26 @@ function DiscountHotels() {
       console.error("Error fetching bills:", error);
     }
   };
-
   useEffect(() => {
     setIsSearchMode(false);
     setKeyword("");
     if (pageNo === 1) {
-      fetchDiscounts();
+      fetchVehicles();
     } else {
       setPageNo(1);
     }
-  }, [
-    timeOption,
-    discountStatus,
-    discountType,
-    sortOption,
-    beginDate,
-    endDate,
-  ]);
+  }, [carType, timeOption, sortOption, beginDate, endDate,carStatus]);
 
   useEffect(() => {
     if (!isSearchMode) {
-      fetchDiscounts();
+      fetchVehicles();
     }
   }, [pageNo]);
-
-  // end fetchDiscounts
-
-  // search
+  // end
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
+
   const handleSearch = async () => {
     setIsSearchMode(true);
     if (pageNo === 1) {
@@ -153,7 +189,7 @@ function DiscountHotels() {
   const getApiSearch = async () => {
     try {
       console.log("Searching for keyword:", keyword);
-      const res = await getSearchDiscounts(keyword, pageNo, pageSize);
+      const res = await getSearchVehicles(keyword, pageNo, pageSize);
       if (res.code == 200) {
         setTotal(res.data.total);
         setData(res.data.dataPage);
@@ -167,8 +203,7 @@ function DiscountHotels() {
       getApiSearch();
     }
   }, [pageNo]);
-
-  //
+  //end search
   const handleChangRangePicker = (dates, dateStrings) => {
     console.log("Selected dates:", dates, dateStrings);
     if (dates) {
@@ -179,7 +214,6 @@ function DiscountHotels() {
       setEndDate(null);
     }
   };
-
   const columns = [
     {
       title: "Mã ID",
@@ -193,48 +227,33 @@ function DiscountHotels() {
       ),
     },
     {
-      title: "Mã Code",
-      key: "id",
+      title: "Biển số",
+      key: "license_place",
       render: (_, record) => (
         <>
           <p style={{ color: "#0057B8" }}>
-            <b>{record.code}</b>
+            <b>{record.licensePlate}</b>
           </p>
         </>
       ),
     },
     {
       title: "Ảnh",
-      key: "image",
+      key: "images",
       render: (_, record) => (
         <>
-          <img src={record.image} style={{ width: "150px", height: "100px" }} />
-        </>
-      ),
-    },
-    {
-      title: "Loại",
-      key: "discount-type",
-      render: (_, record) => (
-        <>
-          {record.discountType == "PERCENT" ? (
-            <Tag color="blue">{record.discountType}</Tag>
-          ) : (
-            <Tag color="red">{record.discountType}</Tag>
-          )}
+          <img src={record.images} style={{ width: "150px" }} />
         </>
       ),
     },
     {
       title: "Giảm giá",
-      key: "discount-value",
+      key: "discount",
       render: (_, record) => (
         <>
-          {record.discountType == "PERCENT" ? (
-            <Tag color="blue">{record.discountValue} %</Tag>
-          ) : (
-            <Tag color="red">{getFormatPrice(record.discountValue)}</Tag>
-          )}
+          <p style={{ color: "#0057B8" }}>
+            <b>{record.discount}%</b>
+          </p>
         </>
       ),
     },
@@ -250,24 +269,28 @@ function DiscountHotels() {
       ),
     },
     {
-      title: "Bắt đầu",
-      key: "start_date",
+      title: "Giá",
+      key: "price",
       render: (_, record) => (
         <>
-          <p style={{ color: "#0057B8" }}>
-            <b>{getDate(record.startDate)}</b>
+          <p style={{ color: "red" }}>
+            <b>{getFormatPrice(record.price)}</b>
           </p>
         </>
       ),
     },
     {
-      title: "Kết thúc",
-      key: "end_date",
+      title: "Trạng thái",
+      key: "status",
       render: (_, record) => (
         <>
-          <p style={{ color: "#0057B8" }}>
-            <b>{getDate(record.endDate)}</b>
-          </p>
+          {record.status == "AVAILABLE" ? (
+            <Tag color="green">Có sẵn</Tag>
+          ) : record.status == "BUSY" ? (
+            <Tag color="blue">Đang bận</Tag>
+          ) : (
+            <Tag color="red">Không hoạt động</Tag>
+          )}
         </>
       ),
     },
@@ -287,7 +310,7 @@ function DiscountHotels() {
       key: "action",
       render: (_, record) => (
         <Button style={{ marginRight: "10px" }}>
-          <Link to={`/admin/discount-hotels/edit/${record.id}`}>
+          <Link to={`/admin/vehicles/edit/${record.id}`}>
             {<EditOutlined />}
           </Link>
         </Button>
@@ -296,8 +319,9 @@ function DiscountHotels() {
   ];
   return (
     <>
+      {contextHolder};
       <Button color="green" variant="solid" style={{ marginBottom: "20px" }}>
-        <Link to="/admin/discount-hotels/create">
+        <Link to="/admin/vehicles/create">
           <PlusOutlined />
           Tạo mới
         </Link>
@@ -315,6 +339,22 @@ function DiscountHotels() {
       </div>
       <div style={{ marginBottom: "20px", marginTop: "20px" }}>
         <Select
+          value={carStatus}
+          style={{ width: 240, marginRight: "20px" }}
+          options={dataCarStatus}
+          onChange={(value) => {
+            setCarStatus(value);
+          }}
+        />
+        <Select
+          value={carType}
+          style={{ width: 240, marginRight: "20px" }}
+          options={dataCarTypes}
+          onChange={(value) => {
+            setCarType(value);
+          }}
+        />
+        <Select
           value={timeOption}
           style={{ width: 180, marginRight: "20px" }}
           options={timeOptions}
@@ -329,22 +369,6 @@ function DiscountHotels() {
           />
         )}
         <Select
-          value={discountStatus}
-          style={{ width: 160, marginRight: "20px" }}
-          options={dataDiscountStatus}
-          onChange={(value) => {
-            setDiscountStatus(value);
-          }}
-        />
-        <Select
-          value={discountType}
-          style={{ width: 180, marginRight: "20px" }}
-          options={dataDiscountType}
-          onChange={(value) => {
-            setDiscountType(value);
-          }}
-        />
-        <Select
           value={sortOption}
           style={{ width: 240, marginRight: "20px", marginTop: "20px" }}
           options={sortOptions}
@@ -353,7 +377,6 @@ function DiscountHotels() {
           }}
         />
       </div>
-
       <Table
         dataSource={data}
         columns={columns}
@@ -370,4 +393,4 @@ function DiscountHotels() {
     </>
   );
 }
-export default DiscountHotels;
+export default Vehicles;

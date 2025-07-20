@@ -35,7 +35,7 @@ function ListPaymentTransaction() {
   const [endDate, setEndDate] = useState(null);
   const [shouldResetPageNo, setShouldResetPageNo] = useState();
   const [isSearchMode, setIsSearchMode] = useState(false);
-  const [triggreSearch, setTriggerSearch] = useState(false);
+  const [triggerSearch, setTriggerSearch] = useState(false);
   const { RangePicker } = DatePicker;
   const timeOptions = [
     { label: "Thời gian thanh toán", value: 0 },
@@ -85,36 +85,6 @@ function ListPaymentTransaction() {
     ]
   );
   useEffect(() => {
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
-  }, [
-    propertyId,
-    timeOption,
-    transactionType,
-    transactionStatus,
-    sortOption,
-    beginDate,
-    endDate,
-  ]);
-  useEffect(() => {
-    setPageNo(1);
-  }, [shouldResetPageNo]);
-  const fetchTransactions = async () => {
-    try {
-      console.log(filter);
-      setIsSearchMode(false);
-      setKeyword("");
-      const res = await getAllPaymentTransactions(filter);
-      console.log("TransactionPayments data:", res);
-      if (res.code == 200) {
-        setTotal(res.data.total);
-        setData(res.data.dataPage);
-      }
-    } catch (error) {
-      console.error("Error fetching transaction types:", error);
-    }
-  };
-
-  useEffect(() => {
     const fetchApi = async () => {
       try {
         const resProperties = await getAllProperties();
@@ -146,8 +116,30 @@ function ListPaymentTransaction() {
     };
     fetchApi();
   }, []);
+
+  // fetch transactions
+  const fetchTransactions = async () => {
+    try {
+      console.log(filter);
+      const res = await getAllPaymentTransactions(filter);
+      console.log("TransactionPayments data:", res);
+      if (res.code == 200) {
+        setTotal(res.data.total);
+        setData(res.data.dataPage);
+      }
+    } catch (error) {
+      console.error("Error fetching transaction types:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchTransactions();
+    setIsSearchMode(false);
+      setKeyword("");
+    if ((pageNo === 1)) {
+      fetchTransactions();
+    } else {
+      setPageNo(1);
+    }
   }, [
     propertyId,
     timeOption,
@@ -157,11 +149,29 @@ function ListPaymentTransaction() {
     beginDate,
     endDate,
   ]);
+
+  useEffect(() => {
+    if (!isSearchMode) {
+      fetchTransactions();
+    }
+  }, [pageNo]);
+  //end
+
+  //search
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
+  const handleSearch = async () => {
+    setIsSearchMode(true);
+    if (pageNo === 1) {
+      getApiSearch(); // Gọi API trực tiếp nếu đã ở trang 1
+    } else {
+      setTriggerSearch(true);
+      setPageNo(1); // Khi pageNo thay đổi, useEffect sẽ gọi API
+    }
+  };
   const getApiSearch = async () => {
-     try {
+    try {
       console.log("Searching for keyword:", keyword);
       console.log(pageNo, pageSize);
       const res = await getSearchTransaction(keyword, pageNo, pageSize);
@@ -173,20 +183,14 @@ function ListPaymentTransaction() {
       console.error("Error during search:", error);
     }
   };
-  const handleSearch = async () => {
-    console.log("Searching for keyword:", keyword);
-    setTriggerSearch((triggreSearch) => !triggreSearch);
-    setIsSearchMode(true);
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
-  };
+
   useEffect(() => {
-    getApiSearch();
-  }, [triggreSearch,pageNo]);
-  useEffect(() => {
-    if (!isSearchMode) {
-      fetchTransactions();
+    if (isSearchMode) {
+      getApiSearch();
+      setTriggerSearch(false);
     }
   }, [pageNo]);
+
   const handleChangRangePicker = (dates, dateStrings) => {
     console.log("Selected dates:", dates, dateStrings);
     if (dates) {

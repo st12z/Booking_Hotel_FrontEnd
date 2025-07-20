@@ -6,12 +6,13 @@ import {
   EditOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import {
-  getAllDiscountType,
-} from "../../../service/RoomService/DiscountService";
+import { getAllDiscountType } from "../../../service/RoomService/DiscountService";
 import { getDate, getFormatPrice } from "../../../utils/format";
 import { Link } from "react-router-dom";
-import { getAllDiscountCarsByPage, getSearchDiscountCars } from "../../../service/RoomService/DiscountCarsService";
+import {
+  getAllDiscountCarsByPage,
+  getSearchDiscountCars,
+} from "../../../service/RoomService/DiscountCarsService";
 const { RangePicker } = DatePicker;
 function DiscountCars() {
   const [keyword, setKeyword] = useState("");
@@ -25,7 +26,7 @@ function DiscountCars() {
   const [endDate, setEndDate] = useState(null);
   const [shouldResetPageNo, setShouldResetPageNo] = useState();
   const [isSearchMode, setIsSearchMode] = useState(false);
-  const [triggreSearch, setTriggerSearch] = useState(false);
+  const [triggerSearch, setTriggerSearch] = useState(false);
   const [timeOption, setTimeOption] = useState(0);
   const timeOptions = [
     { label: "Thời gian tạo", value: 0 },
@@ -70,11 +71,29 @@ function DiscountCars() {
       endDate,
     ]
   );
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const resDiscountType = await getAllDiscountType();
+        if (resDiscountType.code == 200) {
+          const discountTypes = resDiscountType.data.map((item) => ({
+            label: item,
+            value: item,
+          }));
+          discountTypes.unshift({ label: "Loại phiếu giảm giá", value: 0 });
+        }
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+    fetchApi();
+  }, []);
+
+  // fetchDiscounts
   const fetchDiscounts = async () => {
     try {
       const res = await getAllDiscountCarsByPage(filter);
-      setIsSearchMode(false);
-      setKeyword("");
+
       console.log("------------Gọi API filter---------");
       console.log("filter", filter);
       console.log("discount cars data:", res);
@@ -86,43 +105,34 @@ function DiscountCars() {
       console.error("Error fetching bills:", error);
     }
   };
+
   useEffect(() => {
-    const fetchApi = async () => {
-      try {
-        const resDiscountType = await getAllDiscountType();
-        if (resDiscountType.code == 200) {
-          const discountTypes = resDiscountType.data.map((item) => ({
-            label: item,
-            value: item,
-          }));
-          discountTypes.push({ label: "Loại phiếu giảm giá", value: 0 });
-        }
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    };
-    fetchApi();
-  }, []);
+    setIsSearchMode(false);
+    setKeyword("");
+    if (pageNo === 1) {
+      fetchDiscounts();
+    } else {
+      setPageNo(1);
+    }
+  }, [timeOption, discountStatus, sortOption, beginDate, endDate]);
+
   useEffect(() => {
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
-  }, [
-    timeOption,
-    discountStatus,
-    sortOption,
-    beginDate,
-    endDate,
-  ]);
-  useEffect(() => {
-    setPageNo(1);
-  }, [shouldResetPageNo]);
+    if (!isSearchMode) {
+      fetchDiscounts();
+    }
+  }, [pageNo]);
+  //search
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
   const handleSearch = async () => {
-    console.log("Searching for keyword:", keyword);
-    setTriggerSearch((triggreSearch) => !triggreSearch);
     setIsSearchMode(true);
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+    if (pageNo === 1) {
+      getApiSearch(); // Gọi API trực tiếp nếu đã ở trang 1
+    } else {
+      setTriggerSearch(true);
+      setPageNo(1); // Khi pageNo thay đổi, useEffect sẽ gọi API
+    }
   };
 
   const getApiSearch = async () => {
@@ -139,22 +149,12 @@ function DiscountCars() {
     }
   };
   useEffect(() => {
-    getApiSearch();
-  }, [triggreSearch, pageNo]);
-  useEffect(() => {
-    fetchDiscounts();
-  }, [
-    timeOption,
-    discountStatus,
-    sortOption,
-    beginDate,
-    endDate,
-  ]);
-  useEffect(() => {
-    if (!isSearchMode) {
-      fetchDiscounts();
+    if (isSearchMode) {
+      getApiSearch();
     }
   }, [pageNo]);
+
+  //
   const handleChangRangePicker = (dates, dateStrings) => {
     console.log("Selected dates:", dates, dateStrings);
     if (dates) {
@@ -194,7 +194,7 @@ function DiscountCars() {
       key: "image",
       render: (_, record) => (
         <>
-            <img src={record.images} style={{width:"150px"}}/>
+          <img src={record.images} style={{ width: "150px" }} />
         </>
       ),
     },
@@ -203,7 +203,7 @@ function DiscountCars() {
       key: "description",
       render: (_, record) => (
         <>
-            <p style={{ color: "#0057B8" }}>
+          <p style={{ color: "#0057B8" }}>
             <b>{record.description}</b>
           </p>
         </>
@@ -214,7 +214,7 @@ function DiscountCars() {
       key: "quantity",
       render: (_, record) => (
         <>
-            <p style={{ color: "#0057B8" }}>
+          <p style={{ color: "#0057B8" }}>
             <b>{record.quantity}</b>
           </p>
         </>
@@ -225,7 +225,7 @@ function DiscountCars() {
       key: "startDate",
       render: (_, record) => (
         <>
-            <p style={{ color: "#0057B8" }}>
+          <p style={{ color: "#0057B8" }}>
             <b>{getDate(record.quantity)}</b>
           </p>
         </>
@@ -236,7 +236,7 @@ function DiscountCars() {
       key: "endDate",
       render: (_, record) => (
         <>
-            <p style={{ color: "#0057B8" }}>
+          <p style={{ color: "#0057B8" }}>
             <b>{getDate(record.endDate)}</b>
           </p>
         </>
@@ -247,7 +247,7 @@ function DiscountCars() {
       key: "createdAt",
       render: (_, record) => (
         <>
-            <p style={{ color: "#0057B8" }}>
+          <p style={{ color: "#0057B8" }}>
             <b>{getDate(record.createdAt)}</b>
           </p>
         </>

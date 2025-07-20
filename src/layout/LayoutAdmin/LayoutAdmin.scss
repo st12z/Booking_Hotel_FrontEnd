@@ -1,10 +1,10 @@
 .header-admin{
-  background-color: #C5D3DA;
+  background-color: #E20043;
   border-bottom: 1px solid #ddd;
   padding: 0;
   margin-bottom: 0px;
   &__logo{
-    border-right: 2px solid white;
+    border-right: 2px solid #0057B8;
     width: 240px;
     height: 100%;
     padding: 10px;
@@ -38,10 +38,11 @@
       margin-right: 30px;
       position: relative;
       .icon-notification{
-        color: black;
+        color: #0057B8;
+        font-weight: 600;
       }
       .count-notification{
-        color: red;
+        color: #0057B8;
         font-weight: 600;
         font-size: 16px;
         position: absolute;

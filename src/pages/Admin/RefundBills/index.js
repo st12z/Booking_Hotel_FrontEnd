@@ -39,7 +39,7 @@ function RefundBills() {
   const [transactionType, setTransactionType] = useState(0);
   const [shouldResetPageNo, setShouldResetPageNo] = useState();
   const [isSearchMode, setIsSearchMode] = useState(false);
-  const [triggreSearch, setTriggerSearch] = useState(false);
+  const [triggerSearch, setTriggerSearch] = useState(false);
   const transactionOptions = [
     { label: "Loại hoàn tiền", value: 0 },
     { label: "Hoàn tiền một phần", value: "03" },
@@ -86,28 +86,6 @@ function RefundBills() {
     ]
   );
   useEffect(() => {
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
-  }, [propertyId, timeOption, sortOption, beginDate, endDate, transactionType]);
-  useEffect(() => {
-    setPageNo(1);
-  }, [shouldResetPageNo]);
-  const fetchBills = async () => {
-    try {
-      console.log(filter);
-      setIsSearchMode(false);
-      setKeyword("");
-      const res = await getAllRefundBills(filter);
-      console.log("refundBills data:", res);
-      if (res.code == 200) {
-        setTotal(res.data.total);
-        setData(res.data.dataPage);
-      }
-    } catch (error) {
-      console.error("Error fetching refundBills:", error);
-    }
-  };
-  useEffect(() => {
-    fetchBills();
     const fetchApi = async () => {
       try {
         const resProperties = await getAllProperties();
@@ -126,17 +104,51 @@ function RefundBills() {
     };
     fetchApi();
   }, []);
+
+  //fetchBills
+  const fetchBills = async () => {
+    try {
+      console.log(filter);
+      setIsSearchMode(false);
+      setKeyword("");
+      const res = await getAllRefundBills(filter);
+      console.log("refundBills data:", res);
+      if (res.code == 200) {
+        setTotal(res.data.total);
+        setData(res.data.dataPage);
+      }
+    } catch (error) {
+      console.error("Error fetching refundBills:", error);
+    }
+  };
   useEffect(() => {
-    fetchBills();
+    setIsSearchMode(false);
+    setKeyword("");
+    if ((pageNo === 1)) {
+      fetchBills();
+    } else {
+      setPageNo(1);
+    }
   }, [propertyId, timeOption, sortOption, beginDate, endDate, transactionType]);
+
+  useEffect(() => {
+    if (!isSearchMode) {
+      fetchBills();
+    }
+  }, [pageNo]);
+  // end
+
+  // search
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
   const handleSearch = async () => {
-    console.log("Searching for keyword:", keyword);
-    setTriggerSearch((triggreSearch) => !triggreSearch);
     setIsSearchMode(true);
-    setShouldResetPageNo((shouldResetPageNo) => !shouldResetPageNo);
+    if (pageNo === 1) {
+      getApiSearch(); // Gọi API trực tiếp nếu đã ở trang 1
+    } else {
+      setPageNo(1); // Khi pageNo thay đổi, useEffect sẽ gọi API
+    }
   };
   const getApiSearch = async () => {
     try {
@@ -151,11 +163,8 @@ function RefundBills() {
     }
   };
   useEffect(() => {
-    getApiSearch();
-  }, [triggreSearch, pageNo]);
-  useEffect(() => {
-    if (!isSearchMode) {
-      fetchBills();
+    if (isSearchMode) {
+      getApiSearch();
     }
   }, [pageNo]);
   const handleChangRangePicker = (dates, dateStrings) => {
