@@ -5,6 +5,10 @@ export const registerUser = async (data) => {
   const res = await post("register", data);
   return res;
 }
+export const createStaff = async(data)=>{
+  const result = await postAuthorization("users/api/users/create-staff",data);
+  return result;
+}
 export const getAccessToken = async (query) => {
   const res = await getCredentials(query);
   return res;

@@ -4,6 +4,7 @@ import {
   EyeOutlined,
   PrinterOutlined,
   EditOutlined,
+  PlusOutlined
 } from "@ant-design/icons";
 import {
   Button,
@@ -288,7 +289,7 @@ function ManageUsers() {
           {!(record.roleDtos.length == 1 && record.roleDtos[0].id == 1) &&
             checked == true && (
               <button style={{ marginRight: "10px" }}>
-                <Link to={`/admin/users/edit-roles/${record.id}`}>
+                <Link to={`/admin/manage-users/edit-roles/${record.id}`}>
                   Chỉnh sửa role
                 </Link>
               </button>
@@ -332,6 +333,13 @@ function ManageUsers() {
   return (
     <>
       {contextHolder}
+      <h2>Danh sách người dùng</h2>
+      <Button color="green" variant="solid" style={{ marginBottom: "20px",marginBottom:"20px" }}>
+        <Link to="/admin/manage-users/create">
+          <PlusOutlined />
+          Tạo mới
+        </Link>
+      </Button>
       <div className="input_search">
         <Input
           value={keyword}
@@ -348,6 +356,7 @@ function ManageUsers() {
           <SearchOutlined />
           <span>Tìm kiếm</span>
         </div>
+        
       </div>
       <div style={{ marginBottom: "20px", marginTop: "20px" }}>
         <Select

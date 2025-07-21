@@ -322,11 +322,11 @@ export const routes = [
                 element: <CreateRole />,
               },
               {
-                path: "users/edit-roles/:id",
+                path: "manage-users/edit-roles/:id",
                 element: <EditRoleOfUser />,
               },
               {
-                path: "users/create",
+                path: "manage-users/create",
                 element: <CreateStaff />,
               },
             ],
