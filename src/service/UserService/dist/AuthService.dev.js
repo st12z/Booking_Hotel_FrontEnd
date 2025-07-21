@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.getAllUsersAdmin = exports.getAmountVisitsByMonth = exports.getAmountUsers = exports.getAmountVisitsToday = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
+exports.updateRolesByUserId = exports.resetPassword = exports.getSearchUsers = exports.getAllUsers = exports.getAllUsersAdmin = exports.getAmountVisitsByMonth = exports.getAmountUsers = exports.getAmountVisitsToday = exports.updateVisits = exports.createRoomChats = exports.getInfoUserById = exports.getInfoUser = exports.logout = exports.getAccessTokenByRefreshToken = exports.getAccessToken = exports.registerUser = void 0;
 
 var _requestUserService = require("../../utils/requestUserService");
 
@@ -285,3 +285,95 @@ var getAllUsersAdmin = function getAllUsersAdmin() {
 };
 
 exports.getAllUsersAdmin = getAllUsersAdmin;
+
+var getAllUsers = function getAllUsers(filter) {
+  var result;
+  return regeneratorRuntime.async(function getAllUsers$(_context13) {
+    while (1) {
+      switch (_context13.prev = _context13.next) {
+        case 0:
+          _context13.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("users/api/users/filter", filter));
+
+        case 2:
+          result = _context13.sent;
+          return _context13.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context13.stop();
+      }
+    }
+  });
+};
+
+exports.getAllUsers = getAllUsers;
+
+var getSearchUsers = function getSearchUsers(keyword, pageNo, pageSize) {
+  var result;
+  return regeneratorRuntime.async(function getSearchUsers$(_context14) {
+    while (1) {
+      switch (_context14.prev = _context14.next) {
+        case 0:
+          _context14.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("users/api/users/search?keyword=".concat(keyword, "&pageNo=").concat(pageNo, "&pageSize=").concat(pageSize)));
+
+        case 2:
+          result = _context14.sent;
+          return _context14.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context14.stop();
+      }
+    }
+  });
+};
+
+exports.getSearchUsers = getSearchUsers;
+
+var resetPassword = function resetPassword(id) {
+  var result;
+  return regeneratorRuntime.async(function resetPassword$(_context15) {
+    while (1) {
+      switch (_context15.prev = _context15.next) {
+        case 0:
+          _context15.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.getAuthorization)("users/api/users/reset-password/".concat(id)));
+
+        case 2:
+          result = _context15.sent;
+          return _context15.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context15.stop();
+      }
+    }
+  });
+};
+
+exports.resetPassword = resetPassword;
+
+var updateRolesByUserId = function updateRolesByUserId(id, roles) {
+  var result;
+  return regeneratorRuntime.async(function updateRolesByUserId$(_context16) {
+    while (1) {
+      switch (_context16.prev = _context16.next) {
+        case 0:
+          _context16.next = 2;
+          return regeneratorRuntime.awrap((0, _getAuthorization.postAuthorization)("users/api/users/update-roles/".concat(id), roles));
+
+        case 2:
+          result = _context16.sent;
+          return _context16.abrupt("return", result);
+
+        case 4:
+        case "end":
+          return _context16.stop();
+      }
+    }
+  });
+};
+
+exports.updateRolesByUserId = updateRolesByUserId;

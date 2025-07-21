@@ -1,5 +1,5 @@
 import { get, getCredentials, post } from "../../utils/requestUserService";
-import { getAuthorization } from "../getAuthorization";
+import { getAuthorization, postAuthorization } from "../getAuthorization";
 
 export const registerUser = async (data) => {
   const res = await post("register", data);
@@ -48,5 +48,21 @@ export const getAmountVisitsByMonth=async(month)=>{
 }
 export const getAllUsersAdmin = async()=>{
   const result= await getAuthorization(`users/api/users/all-users-admin`);
+  return result;
+}
+export const getAllUsers = async(filter)=>{
+  const result= await postAuthorization(`users/api/users/filter`,filter);
+  return result;
+}
+export const getSearchUsers = async(keyword,pageNo,pageSize)=>{
+  const result= await getAuthorization(`users/api/users/search?keyword=${keyword}&pageNo=${pageNo}&pageSize=${pageSize}`);
+  return result;
+}
+export const resetPassword = async(id)=>{
+  const result= await getAuthorization(`users/api/users/reset-password/${id}`);
+  return result;
+}
+export const updateRolesByUserId = async(id,roles)=>{
+  const result = await postAuthorization(`users/api/users/update-roles/${id}`,roles);
   return result;
 }

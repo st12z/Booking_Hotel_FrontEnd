@@ -111,9 +111,6 @@ function Bills() {
     fetchApi();
   }, []);
 
-
-
-
   // fethBills
   const fetchBills = async () => {
     try {
@@ -132,16 +129,19 @@ function Bills() {
   useEffect(() => {
     setIsSearchMode(false);
     setKeyword("");
-    if ((pageNo === 1)) {
+    if (pageNo === 1) {
       fetchBills();
     } else {
       setPageNo(1);
     }
   }, [propertyId, timeOption, billTypeStatus, sortOption, beginDate, endDate]);
-
+  const isMounted = useRef(false);
   useEffect(() => {
-    if (!isSearchMode) {
+    // Dùng ref để tránh gọi fetchBills lần đầu khi component mount
+    if (!isSearchMode && isMounted.current) {
       fetchBills();
+    } else {
+      isMounted.current = true;
     }
   }, [pageNo]);
 
@@ -172,7 +172,7 @@ function Bills() {
     }
   };
   useEffect(() => {
-    if (isSearchMode ) {
+    if (isSearchMode) {
       getApiSearch();
     }
   }, [pageNo]);

@@ -1,5 +1,5 @@
 import { Input, Select, Table, DatePicker, Tag, Button } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { getAllProperties } from "../../../service/RoomService/PropertyService";
 import {
   getAllRefundBills,
@@ -124,16 +124,18 @@ function RefundBills() {
   useEffect(() => {
     setIsSearchMode(false);
     setKeyword("");
-    if ((pageNo === 1)) {
+    if (pageNo === 1) {
       fetchBills();
     } else {
       setPageNo(1);
     }
   }, [propertyId, timeOption, sortOption, beginDate, endDate, transactionType]);
-
+  const isMounted = useRef(false);
   useEffect(() => {
-    if (!isSearchMode) {
+    if (!isSearchMode && isMounted.current) {
       fetchBills();
+    } else {
+      isMounted.current = true;
     }
   }, [pageNo]);
   // end

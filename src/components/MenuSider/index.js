@@ -9,7 +9,7 @@ import {
   PicCenterOutlined,
   SketchOutlined,
   GiftOutlined,
-  LikeOutlined
+  LikeOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { FaCity } from "react-icons/fa";
@@ -20,8 +20,7 @@ import {
   BsBackpack2,
   BsCarFront,
   BsChatText,
-  BsClipboard2Pulse
-
+  BsClipboard2Pulse,
 } from "react-icons/bs";
 
 import {
@@ -31,8 +30,14 @@ import {
   BsHouses,
   BsBagHeart,
 } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
 
 function MenuSider() {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const adminRoleCheck = ["MANAGER", "ADMIN"].some((role) =>
+    user.roles?.includes(role)
+  );
   const items = [
     {
       key: "/dashboard",
@@ -89,7 +94,7 @@ function MenuSider() {
     {
       key: "discounts",
       label: "Quản lý phiếu giảm giá",
-      icon: <GiftOutlined /> ,
+      icon: <GiftOutlined />,
       children: [
         {
           key: "discounts-hotels",
@@ -117,28 +122,35 @@ function MenuSider() {
     {
       key: "vehicles",
       label: <Link to="/admin/vehicles">Quản lý phương tiện</Link>,
-      icon: <BsCarFront  />,
+      icon: <BsCarFront />,
     },
-    {
-      key: "room-chats",
-      label: <Link to="/admin/manage-room-chats">Quản lý phòng chat</Link>,
-      icon: <BsChatText  />,
-    },
-    {
-      key: "roles",
-      label: <Link to="/admin/roles">Quản lý role</Link>,
-      icon: <BsClipboard2Pulse  />,
-    },
-    {
-      key: "users",
-      label: <Link to="/admin/manage-users">Quản lý người dùng</Link>,
-      icon: <UserOutlined /> ,
-    },
-    {
-      key: "setting",
-      label: <Link to="/admin/setting">Cài đặt chung</Link>,
-      icon: <SettingOutlined />
-    },
+
+    ...(adminRoleCheck
+      ? [
+          {
+            key: "room-chats",
+            label: (
+              <Link to="/admin/manage-room-chats">Quản lý phòng chat</Link>
+            ),
+            icon: <BsChatText />,
+          },
+          {
+            key: "roles",
+            label: <Link to="/admin/roles">Quản lý role</Link>,
+            icon: <BsClipboard2Pulse />,
+          },
+          {
+            key: "users",
+            label: <Link to="/admin/manage-users">Quản lý người dùng</Link>,
+            icon: <UserOutlined />,
+          },
+          {
+            key: "setting",
+            label: <Link to="/admin/setting">Cài đặt chung</Link>,
+            icon: <SettingOutlined />,
+          },
+        ]
+      : []),
   ];
   return (
     <>

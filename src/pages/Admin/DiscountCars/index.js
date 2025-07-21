@@ -1,5 +1,5 @@
 import { Button, DatePicker, Input, Select, Table, Tag } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   SearchOutlined,
   PrinterOutlined,
@@ -115,10 +115,13 @@ function DiscountCars() {
       setPageNo(1);
     }
   }, [timeOption, discountStatus, sortOption, beginDate, endDate]);
-
+  const isMounted = useRef(false);
   useEffect(() => {
-    if (!isSearchMode) {
+    if (!isSearchMode && isMounted.current) {
       fetchDiscounts();
+    }
+    else{
+      isMounted.current=true;
     }
   }, [pageNo]);
   //search

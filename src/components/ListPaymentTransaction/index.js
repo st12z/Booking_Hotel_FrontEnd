@@ -11,7 +11,7 @@ import {
   SearchOutlined,
   PrinterOutlined,
 } from "@ant-design/icons";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   getAllPaymentTransactions,
   getAllTransactionTypes,
@@ -149,10 +149,13 @@ function ListPaymentTransaction() {
     beginDate,
     endDate,
   ]);
-
+  const isMounted = useRef(false);
   useEffect(() => {
-    if (!isSearchMode) {
+    if (!isSearchMode && isMounted.current) {
       fetchTransactions();
+    }
+    else{
+      isMounted.current=true;
     }
   }, [pageNo]);
   //end

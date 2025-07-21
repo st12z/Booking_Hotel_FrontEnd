@@ -13,6 +13,7 @@ import { login } from "../../action/login";
 import { addParamIfExists } from "../../utils/appendParams";
 import { SearchContext } from ".";
 import { SaveUser } from "../../reducers/SaveUserReducer";
+import { getAllRoles, getAllRolesAdmin } from "../../service/UserService/RoleService";
 
 const { RangePicker } = DatePicker;
 
@@ -32,10 +33,26 @@ function Header() {
   }, [searchParams]);
 
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
   const [dataDestinations, setDataDestinations] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const isLogin = useSelector((state) => state.login);
-  const user = useSelector((state) => state.user);
+  const [roleAdmins,setRoleAdmins] = useState([]);
+  useEffect(()=>{
+    const fetchApi = async ()=>{
+      try{
+        const res = await getAllRolesAdmin();
+        console.log("roles admin",res.data);
+        if(res.code==200){
+          const roleAdmins = res.data.map(item=>item.name);
+          setRoleAdmins(roleAdmins);
+        }
+      }catch(error){
+        console.error(error);
+      }
+    };
+    fetchApi();
+  },[]);
   const handleChange = (e) => {
     if (e.target.value.length > 0) {
       const destination = e.target.value;

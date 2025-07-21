@@ -49,7 +49,7 @@ function Vehicles() {
   const [keyword, setKeyword] = useState("");
   const [data, setData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
   const [total, setTotal] = useState(0);
   const [timeOption, setTimeOption] = useState(0);
   const [carType, setCarType] = useState(0);
@@ -166,10 +166,13 @@ function Vehicles() {
       setPageNo(1);
     }
   }, [carType, timeOption, sortOption, beginDate, endDate,carStatus]);
-
+  const isMounted = useRef(false);
   useEffect(() => {
-    if (!isSearchMode) {
+    if (!isSearchMode && isMounted.current) {
       fetchVehicles();
+    }
+    else{
+      isMounted.current=true;
     }
   }, [pageNo]);
   // end

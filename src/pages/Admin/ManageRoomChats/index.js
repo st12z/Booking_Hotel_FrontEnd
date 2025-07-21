@@ -4,8 +4,9 @@ import {
   updateRoomChats,
 } from "../../../service/RoomService/RoomChatsService";
 import { getAllUsersAdmin } from "../../../service/UserService/AuthService";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined,EyeOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Input, notification, Select, Table } from "antd";
+import { Link } from "react-router-dom";
 function ManageRoomChats() {
   const [data, setData] = useState([]);
   const [pageNo, setPageNo] = useState(1);
@@ -158,6 +159,19 @@ function ManageRoomChats() {
             )}
           </div>
         </>
+      ),
+    },
+    {
+      title: "Hành động",
+      key: "payment",
+      render: (_, record) => (
+        <div style={{ display: "flex" }}>
+          <Button style={{ marginRight: "10px" }}>
+            <Link to={`/admin/manage-room-chats/${record.id}`}>
+              {<EyeOutlined />}
+            </Link>
+          </Button>
+        </div>
       ),
     },
   ];

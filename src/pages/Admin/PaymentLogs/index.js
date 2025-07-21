@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Button,
   Input,
@@ -146,16 +146,18 @@ function PaymentLogs() {
   useEffect(() => {
     setIsSearchMode(false);
     setKeyword("");
-    if ((pageNo === 1)) {
+    if (pageNo === 1) {
       fetchSuspiciousTrans();
     } else {
       setPageNo(1);
     }
   }, [suspiciousTranType, timeOption, sortOption, beginDate, endDate]);
-
+  const isMounted = useRef(false);
   useEffect(() => {
-    if (!isSearchMode) {
+    if (!isSearchMode && isMounted.current) {
       fetchSuspiciousTrans();
+    } else {
+      isMounted.current = true;
     }
   }, [pageNo]);
 

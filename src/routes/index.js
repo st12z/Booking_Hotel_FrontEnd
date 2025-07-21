@@ -64,6 +64,9 @@ import Setting from "../pages/Admin/Setting";
 import EditVehicles from "../pages/Admin/EditVehicles";
 import CreateVehicles from "../pages/Admin/CreateVehicles";
 import DetailRefundBill from "../pages/Admin/DetailRefundBill";
+import DetailRoomChats from "../pages/Admin/DetailRoomChats";
+import CreateRole from "../pages/Admin/CreateRole";
+import EditRoleOfUser from "../pages/Admin/EditRoleOfUser";
 export const routes = [
   {
     path: "/",
@@ -320,6 +323,18 @@ export const routes = [
           {
             path: "vehicles/create",
             element: <CreateVehicles/>
+          },
+          {
+            path: "manage-room-chats/:id",
+            element: <DetailRoomChats/>
+          },
+          {
+            path: "roles/create",
+            element: <CreateRole/>
+          },
+          {
+            path: "users/edit-roles/:id",
+            element: <EditRoleOfUser/>
           }
         ],
       },

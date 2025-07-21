@@ -53,7 +53,7 @@ function Reviews() {
   const [triggerSearch, setTriggerSearch] = useState(false);
   const [sortOption, setSortOption] = useState(0);
   const [api, contextHolder] = notification.useNotification();
-  const [isReload,setIsReload] = useState(false);
+  const [isReload, setIsReload] = useState(false);
   const openNotification = (placement, message, color) => {
     api.info({
       message: `Thông báo`,
@@ -138,10 +138,12 @@ function Reviews() {
       setPageNo(1);
     }
   }, [propertyId, timeOption, sortOption, beginDate, endDate]);
-
+  const isMounted = useRef(false);
   useEffect(() => {
-    if (!isSearchMode) {
+    if (!isSearchMode && isMounted.current) {
       fetchReviews();
+    } else {
+      isMounted.current = true;
     }
   }, [pageNo]);
   //fetchReviews
@@ -150,7 +152,7 @@ function Reviews() {
   const handleChangeInput = (e) => {
     setKeyword(e.target.value);
   };
-  
+
   const handleSearch = async () => {
     setIsSearchMode(true);
     if (pageNo === 1) {
@@ -196,7 +198,7 @@ function Reviews() {
       const res = await deleteReview(id);
       console.log(res);
       if (res.code == 200) {
-        setIsReload(isReload=>!isReload);
+        setIsReload((isReload) => !isReload);
         openNotification("topRight", "Xóa thành công", "green");
       } else {
         openNotification("topRight", "Xóa thất bại", "red");
@@ -332,7 +334,6 @@ function Reviews() {
           }}
         />
       </div>
-
       <Table
         dataSource={data}
         columns={columns}
