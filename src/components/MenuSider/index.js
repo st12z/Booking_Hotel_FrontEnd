@@ -31,13 +31,34 @@ import {
   BsBagHeart,
 } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { getAllRolesAdmin } from "../../service/UserService/RoleService";
 
 function MenuSider() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const adminRoleCheck = ["MANAGER", "ADMIN"].some((role) =>
-    user.roles?.includes(role)
-  );
+  const [adminRoleCheck, setAdminRoleCheck] = useState(false);
+  useEffect(() => {
+    const fetchApi = async () => {
+      try {
+        const res = await getAllRolesAdmin();
+        console.log("roles admin", res);
+        if (res.code == 200) {
+           const roles = res.data;
+          const roleStaff = roles.find((item) => item.name == "STAFF");
+          const roleAdmins = res.data.filter((item) => item.id != roleStaff.id).map(item=>item.name);
+          const check = roleAdmins.some((item) =>
+            user.roles.includes(item)
+          );
+          setAdminRoleCheck(check);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchApi();
+  }, []);
+
   const items = [
     {
       key: "/dashboard",

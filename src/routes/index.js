@@ -13,7 +13,6 @@ import MyBill from "../pages/MyBill";
 import BillDetail from "../pages/BillDetail";
 import NotFound404 from "../pages/NotFound404";
 import Chat from "../pages/Chat";
-import AdminRoute from "../components/AdminRoute";
 import AdminBoard from "../pages/Admin/AdminBoard";
 import LayoutAdmin from "../layout/LayoutAdmin";
 import RoomChats from "../pages/Admin/RoomChats";
@@ -67,6 +66,9 @@ import DetailRefundBill from "../pages/Admin/DetailRefundBill";
 import DetailRoomChats from "../pages/Admin/DetailRoomChats";
 import CreateRole from "../pages/Admin/CreateRole";
 import EditRoleOfUser from "../pages/Admin/EditRoleOfUser";
+import CreateStaff from "../pages/Admin/CreateStaff";
+import StaffRoute from "../components/StaffRoute";
+import AdminRoute from "../components/AdminRoute";
 export const routes = [
   {
     path: "/",
@@ -134,15 +136,14 @@ export const routes = [
           },
           {
             path: "my-discounts",
-            element: <MyDiscounts/>
+            element: <MyDiscounts />,
           },
-          
         ],
       },
     ],
   },
   {
-    element: <AdminRoute />,
+    element: <StaffRoute />,
     children: [
       {
         path: "/admin",
@@ -206,136 +207,148 @@ export const routes = [
           },
           {
             path: "suspicious-payment-logs",
-            element: <PaymentLogs />
+            element: <PaymentLogs />,
           },
           {
             path: "cities",
-            element: <Cities />
+            element: <Cities />,
           },
           {
             path: "cities/create",
-            element: <CreateCity/>
+            element: <CreateCity />,
           },
           {
             path: "cities/edit/:id",
-            element: <EditCity />
+            element: <EditCity />,
           },
           {
             path: "trips",
-            element: <Trips/>
+            element: <Trips />,
           },
           {
             path: "trips/edit/:id",
-            element: <EditTrip/>
+            element: <EditTrip />,
           },
           {
             path: "trips/create",
-            element: <CreateTrip />
+            element: <CreateTrip />,
           },
           {
             path: "trip-types",
-            element: <TripTypes/>
+            element: <TripTypes />,
           },
           {
             path: "trip-types/edit/:id",
-            element: <EditTripType/>
+            element: <EditTripType />,
           },
           {
             path: "trip-types/create",
-            element: <CreateTripType/>
+            element: <CreateTripType />,
           },
           {
             path: "property-types",
-            element: <PropertyTypes/>
+            element: <PropertyTypes />,
           },
           {
             path: "property-types/edit/:id",
-            element: <EditPropertyType/>
+            element: <EditPropertyType />,
           },
           {
             path: "property-types/create",
-            element: <CreatePropertyType/>
+            element: <CreatePropertyType />,
           },
           {
             path: "discount-hotels",
-            element: <DiscountHotels/>
+            element: <DiscountHotels />,
           },
           {
             path: "discount-cars",
-            element: <DiscountCars/>
+            element: <DiscountCars />,
           },
           {
             path: "discount-cars/edit/:id",
-            element: <EditDiscountCars/>
+            element: <EditDiscountCars />,
           },
           {
             path: "discount-hotels/edit/:id",
-            element: <EditDiscountHotels/>
+            element: <EditDiscountHotels />,
           },
           {
             path: "discount-hotels/create",
-            element: <CreateDiscountHotel/>
+            element: <CreateDiscountHotel />,
           },
           {
             path: "discount-cars/create",
-            element: <CreateDiscountCar/>
+            element: <CreateDiscountCar />,
           },
           {
             path: "facilities",
-            element: <Facilities/>
+            element: <Facilities />,
           },
           {
             path: "facilities/edit/:id",
-            element: <EditFacilities/>
+            element: <EditFacilities />,
           },
           {
             path: "facilities/create",
-            element: <CreateFacilities/>
+            element: <CreateFacilities />,
           },
           {
             path: "reviews",
-            element: <Reviews/>
-          },
-          {
-            path: "roles",
-            element: <Roles/>
+            element: <Reviews />,
           },
           {
             path: "vehicles",
-            element: <Vehicles/>
+            element: <Vehicles />,
           },
+          // adminRoute
           {
-            path: "manage-room-chats",
-            element: <ManageRoomChats/>
+            element: <AdminRoute />,
+            children: [
+              {
+                path: "roles",
+                element: <Roles />,
+              },
+              {
+                path: "manage-room-chats",
+                element: <ManageRoomChats />,
+              },
+              {
+                path: "manage-users",
+                element: <ManageUsers />,
+              },
+              {
+                path: "roles/create",
+                element: <CreateRole />,
+              },
+              {
+                path: "users/edit-roles/:id",
+                element: <EditRoleOfUser />,
+              },
+              {
+                path: "users/create",
+                element: <CreateStaff />,
+              },
+            ],
           },
-          {
-            path: "manage-users",
-            element: <ManageUsers/>
-          },
+          // AdminRoute
+
           {
             path: "setting",
-            element: <Setting/>
+            element: <Setting />,
           },
           {
             path: "vehicles/edit/:id",
-            element: <EditVehicles/>
+            element: <EditVehicles />,
           },
           {
             path: "vehicles/create",
-            element: <CreateVehicles/>
+            element: <CreateVehicles />,
           },
           {
             path: "manage-room-chats/:id",
-            element: <DetailRoomChats/>
+            element: <DetailRoomChats />,
           },
-          {
-            path: "roles/create",
-            element: <CreateRole/>
-          },
-          {
-            path: "users/edit-roles/:id",
-            element: <EditRoleOfUser/>
-          }
         ],
       },
     ],

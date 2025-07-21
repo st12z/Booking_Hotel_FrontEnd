@@ -8,7 +8,7 @@ import { notification, Skeleton } from "antd";
 import NotFound404 from "../../pages/NotFound404";
 import { getAllRolesAdmin } from "../../service/UserService/RoleService";
 
-function AdminRoute() {
+function StaffRoute() {
   const [auth, setAuth] = useState(false);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -20,9 +20,7 @@ function AdminRoute() {
         const res = await getAllRolesAdmin();
         console.log("roles admin", res.data);
         if (res.code == 200) {
-          const roles = res.data;
-          const roleStaff = roles.find((item) => item.name == "STAFF");
-          const roleAdmins = res.data.filter((item) => item.id != roleStaff.id).map(item=>item.name);
+          const roleAdmins = res.data.map((item) => item.name);
           setRoleAdmins(roleAdmins);
         }
       } catch (error) {
@@ -66,8 +64,8 @@ function AdminRoute() {
   }, []);
   return (
     <>
-      {roleAdmins.length == 0 ? null : roleAdmins.some((role) =>
-          user.roles.includes(role)
+      {roleAdmins.length==0 ? null : roleAdmins.some(
+          (role) => user.roles.includes(role)
         ) ? (
         <Outlet />
       ) : (
@@ -76,4 +74,4 @@ function AdminRoute() {
     </>
   );
 }
-export default AdminRoute;
+export default StaffRoute;

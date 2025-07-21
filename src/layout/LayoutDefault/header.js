@@ -42,9 +42,10 @@ function Header() {
     const fetchApi = async ()=>{
       try{
         const res = await getAllRolesAdmin();
-        console.log("roles admin",res.data);
+        console.log("roles admin",res);
         if(res.code==200){
           const roleAdmins = res.data.map(item=>item.name);
+          console.log(roleAdmins);
           setRoleAdmins(roleAdmins);
         }
       }catch(error){
@@ -52,7 +53,7 @@ function Header() {
       }
     };
     fetchApi();
-  },[]);
+  },[isLogin]);
   const handleChange = (e) => {
     if (e.target.value.length > 0) {
       const destination = e.target.value;
@@ -165,9 +166,9 @@ function Header() {
             </div>
             <div className="header__top__menu">
               <ul>
-                {isLogin && (
+                {isLogin  && (
                   <>
-                    {["MANAGER", "ADMIN", "STAFF"].some((role) =>
+                    {roleAdmins.length==0 ? null : roleAdmins.some((role) =>
                       user.roles?.includes(role)
                     ) ? (
                       <li>
