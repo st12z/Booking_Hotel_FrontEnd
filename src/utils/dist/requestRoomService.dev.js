@@ -3,12 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.patch = exports.del = exports.post = exports.get = exports.getApiProtected = exports.API_DOMAIN = void 0;
+exports.patch = exports.del = exports.post = exports.get = exports.getApiProtected = void 0;
 
 var _AuthService = require("../service/UserService/AuthService");
 
-var API_DOMAIN = "http://localhost:8072/bookinghotel/rooms/api";
-exports.API_DOMAIN = API_DOMAIN;
+var _variable = require("./variable");
 
 var getApiProtected = function getApiProtected(path) {
   var response, result, resRefreshToken, resGetAccessToken, newResult;
@@ -17,7 +16,7 @@ var getApiProtected = function getApiProtected(path) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_ROOMS, "/").concat(path), {
             method: "GET",
             headers: {
               Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
@@ -51,7 +50,7 @@ var getApiProtected = function getApiProtected(path) {
 
           localStorage.setItem("access_token", resRefreshToken.data.access_token);
           _context.next = 15;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_ROOMS, "/").concat(path), {
             method: "GET",
             headers: {
               Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
@@ -93,7 +92,7 @@ var get = function get(path) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path)));
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_ROOMS, "/").concat(path)));
 
         case 2:
           response = _context2.sent;
@@ -121,7 +120,7 @@ var post = function post(path, data) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_ROOMS, "/").concat(path), {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -157,7 +156,7 @@ var del = function del(path) {
         case 0:
           access_token = localStorage.getItem("access_token");
           _context4.next = 3;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_ROOMS, "/").concat(path), {
             method: "DELETE",
             headers: {
               Authorization: "Bearer ".concat(access_token)
@@ -191,7 +190,7 @@ var patch = function patch(path, data) {
         case 0:
           access_token = localStorage.getItem("access_token");
           _context5.next = 3;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_ROOMS, "/").concat(path), {
             method: "PATCH",
             headers: {
               Accept: "application/json",

@@ -168,7 +168,7 @@ function Header() {
               <ul>
                 {isLogin  && (
                   <>
-                    {roleAdmins.length==0 ? null : roleAdmins.some((role) =>
+                    {roleAdmins.length==0 ? null :Array.isArray(user?.roles) && roleAdmins.some((role) =>
                       user.roles?.includes(role)
                     ) ? (
                       <li>

@@ -23,7 +23,9 @@ function Home() {
         console.log(error);
       }
     };
-    fetchApi();
+    if(user){
+      fetchApi();
+    }
   }, []);
   return (
     <>

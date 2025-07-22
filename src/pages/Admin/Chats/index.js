@@ -92,9 +92,7 @@ function Chats() {
 
       const client = Stomp.over(socket);
       console.log(socket);
-      // Nhận tin nhắn phản hồi từ
-      const token = localStorage.getItem("access_token");
-      client.connect({ Authorization: `Bearer ${token}` }, () => {
+      client.connect({},() => {
         console.log("Connected to stomp");
         client.subscribe(`/topic/rooms/${roomChatId}`, (returnMessage) => {
           console.log(returnMessage);

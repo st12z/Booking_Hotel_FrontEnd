@@ -4,7 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.deleteAuthorization = exports.postImagesAuthorization = exports.postAuthorization = exports.getAuthorizationBlob = exports.getFileAuthorization = exports.getAuthorization = void 0;
-var API_DOMAIN = "http://localhost:8072/bookinghotel";
+
+var _variable = require("../utils/variable");
 
 var getAuthorization = function getAuthorization(path) {
   var response, result;
@@ -13,7 +14,7 @@ var getAuthorization = function getAuthorization(path) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN, "/").concat(path), {
             method: "GET",
             headers: {
               Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
@@ -46,7 +47,7 @@ var getFileAuthorization = function getFileAuthorization(path) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN, "/").concat(path), {
             method: "GET",
             headers: {
               Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
@@ -79,7 +80,7 @@ var getAuthorizationBlob = function getAuthorizationBlob(path) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN, "/").concat(path), {
             method: "GET",
             headers: {
               Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
@@ -112,7 +113,7 @@ var postAuthorization = function postAuthorization(path, data) {
       switch (_context4.prev = _context4.next) {
         case 0:
           _context4.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN, "/").concat(path), {
             method: "POST",
             headers: {
               "Content-type": "application/json",
@@ -147,7 +148,7 @@ var postImagesAuthorization = function postImagesAuthorization(path, data) {
       switch (_context5.prev = _context5.next) {
         case 0:
           _context5.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN, "/").concat(path), {
             method: "POST",
             headers: {
               Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
@@ -181,7 +182,7 @@ var deleteAuthorization = function deleteAuthorization(path, data) {
       switch (_context6.prev = _context6.next) {
         case 0:
           _context6.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(API_DOMAIN, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN, "/").concat(path), {
             method: "DELETE",
             headers: {
               "Content-type": "application/json",

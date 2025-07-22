@@ -85,8 +85,9 @@ function BookingCustomerDetail() {
 
   const handleCheckPolicyPayment = async (e) => {
     try {
+      console.log(e);
       const resCheckPolicyPayment = await checkBookingPolicy(e);
-      console.log(resCheckPolicyPayment);
+      console.log("resCheckPolicyPayment",resCheckPolicyPayment);
       if (resCheckPolicyPayment.code == 200) {
         const data = resCheckPolicyPayment.data;
         if (data.check == true) {

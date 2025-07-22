@@ -1,12 +1,11 @@
 import { Stomp } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
 import { API_DOMAIN_SOCKET } from "./variable";
-export const connectStomp = (url, data) => {
+export const connectStomp = (url,data) => {
   const socket = new SockJS(`${API_DOMAIN_SOCKET}/ws`);
   const client = Stomp.over(socket);
 
-  const token = localStorage.getItem("access_token");
-  client.connect({ Authorization: `Bearer ${token}` }, () => {
+  client.connect({}, () => {
     console.log("Đã kết nối tới STOMP");
     client.send(`${url}`, {}, JSON.stringify(data));
   });

@@ -4,7 +4,7 @@ import {
   EyeOutlined,
   PrinterOutlined,
   EditOutlined,
-  PlusOutlined
+  PlusOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -50,14 +50,12 @@ function ManageUsers() {
   const [pageNo, setPageNo] = useState(1);
   const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
-  const [dataProperties, setDataProperties] = useState([]);
   const [timeOption, setTimeOption] = useState(0);
   const [dataRoleTypes, setDataRoleTypes] = useState([]);
   const [roleId, setRoleId] = useState(0);
   const [sortOption, setSortOption] = useState(0);
   const [beginDate, setBeginDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [shouldResetPageNo, setShouldResetPageNo] = useState();
   const [isSearchMode, setIsSearchMode] = useState(false);
   const isMounted = useRef(false);
   const [api, contextHolder] = notification.useNotification();
@@ -281,21 +279,28 @@ function ManageUsers() {
     {
       title: "Vai trò",
       key: "avatar",
-      render: (_, record) => (
-        <>
-          <p style={{ color: "#0057B8" }}>
-            <b>{record.roles.join(", ")}</b>
-          </p>
-          {!(record.roleDtos.length == 1 && record.roleDtos[0].id == 1) &&
-            checked == true && (
-              <button style={{ marginRight: "10px" }}>
-                <Link to={`/admin/manage-users/edit-roles/${record.id}`}>
-                  Chỉnh sửa role
-                </Link>
-              </button>
-            )}
-        </>
-      ),
+      render: (_, record) => {
+        console.log("record", record);
+        return (
+          <>
+            <p style={{ color: "#0057B8" }}>
+              <b>
+                {(Array.isArray(record?.roles) ? record.roles : []).join(
+                  ", "
+                ) || "No Roles"}
+              </b>
+            </p>
+            {!(record.roleDtos.length == 1 && record.roleDtos[0].id == 1) &&
+              checked == true && (
+                <button style={{ marginRight: "10px" }}>
+                  <Link to={`/admin/manage-users/edit-roles/${record.id}`}>
+                    Chỉnh sửa role
+                  </Link>
+                </button>
+              )}
+          </>
+        );
+      },
     },
     {
       title: "Ngày tạo",
@@ -317,10 +322,11 @@ function ManageUsers() {
             className=""
             style={{ display: "flex", alignItems: "center", gap: "10px" }}
           >
-            <Popconfirm title="Bạn có muốn reset password?" onConfirm={()=>handleResetPassword(record.id)}>
-              <Button type="primary" >
-                Reset password
-              </Button>
+            <Popconfirm
+              title="Bạn có muốn reset password?"
+              onConfirm={() => handleResetPassword(record.id)}
+            >
+              <Button type="primary">Reset password</Button>
             </Popconfirm>
           </div>
         </>
@@ -334,7 +340,11 @@ function ManageUsers() {
     <>
       {contextHolder}
       <h2>Danh sách người dùng</h2>
-      <Button color="green" variant="solid" style={{ marginBottom: "20px",marginBottom:"20px" }}>
+      <Button
+        color="green"
+        variant="solid"
+        style={{ marginBottom: "20px", marginBottom: "20px" }}
+      >
         <Link to="/admin/manage-users/create">
           <PlusOutlined />
           Tạo mới
@@ -356,7 +366,6 @@ function ManageUsers() {
           <SearchOutlined />
           <span>Tìm kiếm</span>
         </div>
-        
       </div>
       <div style={{ marginBottom: "20px", marginTop: "20px" }}>
         <Select
@@ -397,19 +406,21 @@ function ManageUsers() {
       >
         Chỉnh sửa roles
       </Checkbox>
-      <Table
-        dataSource={data}
-        columns={columns}
-        pagination={{
-          current: pageNo,
-          pageSize: pageSize,
-          total: total,
-          onChange: (page, size) => {
-            setPageNo(page);
-            setPageSize(size);
-          },
-        }}
-      />
+      {data && (
+        <Table
+          dataSource={data}
+          columns={columns}
+          pagination={{
+            current: pageNo,
+            pageSize: pageSize,
+            total: total,
+            onChange: (page, size) => {
+              setPageNo(page);
+              setPageSize(size);
+            },
+          }}
+        />
+      )}
     </>
   );
 }

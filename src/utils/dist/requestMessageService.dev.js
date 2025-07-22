@@ -3,20 +3,24 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.patch = exports.del = exports.post = exports.get = exports.getCredentials = void 0;
+exports.patch = exports.del = exports.post = exports.get = exports.getApiProtected = void 0;
+
+var _AuthService = require("../service/UserService/AuthService");
 
 var _variable = require("./variable");
 
-var getCredentials = function getCredentials(path) {
-  var response, result;
-  return regeneratorRuntime.async(function getCredentials$(_context) {
+var getApiProtected = function getApiProtected(path) {
+  var response, result, resRefreshToken, resGetAccessToken, newResult;
+  return regeneratorRuntime.async(function getApiProtected$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_USERS, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_MESSAGES, "/").concat(path), {
             method: "GET",
-            credentials: "include"
+            headers: {
+              Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
+            }
           }));
 
         case 2:
@@ -26,9 +30,52 @@ var getCredentials = function getCredentials(path) {
 
         case 5:
           result = _context.sent;
+          console.log(result);
+
+          if (!(result.code == 401)) {
+            _context.next = 23;
+            break;
+          }
+
+          _context.next = 10;
+          return regeneratorRuntime.awrap((0, _AuthService.getAccessTokenByRefreshToken)("refresh-token"));
+
+        case 10:
+          resRefreshToken = _context.sent;
+
+          if (!(resRefreshToken.status == 200)) {
+            _context.next = 22;
+            break;
+          }
+
+          localStorage.setItem("access_token", resRefreshToken.data.access_token);
+          _context.next = 15;
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_MESSAGES, "/").concat(path), {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer ".concat(localStorage.getItem("access_token"))
+            }
+          }));
+
+        case 15:
+          resGetAccessToken = _context.sent;
+          _context.next = 18;
+          return regeneratorRuntime.awrap(resGetAccessToken.json());
+
+        case 18:
+          newResult = _context.sent;
+          return _context.abrupt("return", newResult);
+
+        case 22:
+          throw new Error({
+            code: 401,
+            message: "Phiên đăng nhập hết hạn.Vui lòng đăng nhập lại!"
+          });
+
+        case 23:
           return _context.abrupt("return", result);
 
-        case 7:
+        case 24:
         case "end":
           return _context.stop();
       }
@@ -36,7 +83,7 @@ var getCredentials = function getCredentials(path) {
   });
 };
 
-exports.getCredentials = getCredentials;
+exports.getApiProtected = getApiProtected;
 
 var get = function get(path) {
   var response, result;
@@ -45,7 +92,7 @@ var get = function get(path) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_USERS, "/").concat(path)));
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_MESSAGES, "/").concat(path)));
 
         case 2:
           response = _context2.sent;
@@ -73,7 +120,7 @@ var post = function post(path, data) {
       switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_USERS, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_MESSAGES, "/").concat(path), {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -109,7 +156,7 @@ var del = function del(path) {
         case 0:
           access_token = localStorage.getItem("access_token");
           _context4.next = 3;
-          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_USERS, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_MESSAGES, "/").concat(path), {
             method: "DELETE",
             headers: {
               Authorization: "Bearer ".concat(access_token)
@@ -144,7 +191,7 @@ var patch = function patch(path, data) {
         case 0:
           access_token = localStorage.getItem("access_token");
           _context5.next = 3;
-          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_USERS, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_MESSAGES, "/").concat(path), {
             method: "PATCH",
             headers: {
               Accept: "application/json",

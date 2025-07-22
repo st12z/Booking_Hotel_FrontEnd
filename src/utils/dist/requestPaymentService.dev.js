@@ -14,7 +14,7 @@ var get = function get(path) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_BOOKINGS, "/").concat(path)));
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_PAYMENTS, "/").concat(path)));
 
         case 2:
           response = _context.sent;
@@ -42,7 +42,7 @@ var post = function post(path, data) {
       switch (_context2.prev = _context2.next) {
         case 0:
           _context2.next = 2;
-          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_BOOKINGS, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_PAYMENTS, "/").concat(path), {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -78,7 +78,7 @@ var del = function del(path) {
         case 0:
           access_token = localStorage.getItem("access_token");
           _context3.next = 3;
-          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_BOOKINGS, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_PAYMENTS, "/").concat(path), {
             method: "DELETE",
             headers: {
               Authorization: "Bearer ".concat(access_token)
@@ -113,7 +113,7 @@ var patch = function patch(path, data) {
         case 0:
           access_token = localStorage.getItem("access_token");
           _context4.next = 3;
-          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_BOOKINGS, "/").concat(path), {
+          return regeneratorRuntime.awrap(fetch("".concat(_variable.API_DOMAIN_PAYMENTS, "/").concat(path), {
             method: "PATCH",
             headers: {
               Accept: "application/json",

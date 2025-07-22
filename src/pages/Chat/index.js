@@ -54,6 +54,7 @@ function Chat() {
     const fetchApi = async () => {
       try {
         const res = await getRoomChatsOfUser(user.id);
+        console.log(user.id);
         console.log(res);
         if (res.code == 200) {
           const roomChatId = res.data[0]?.id;
@@ -93,8 +94,7 @@ function Chat() {
       const client = Stomp.over(socket);
       console.log(socket);
       // Nhận tin nhắn phản hồi từ
-      const token = localStorage.getItem("access_token");
-      client.connect({ Authorization: `Bearer ${token}` }, () => {
+      client.connect({}, () => {
         console.log("Connected to stomp");
         client.subscribe(`/topic/rooms/${roomChatId}`, (returnMessage) => {
           console.log(returnMessage);

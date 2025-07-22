@@ -64,7 +64,7 @@ function StaffRoute() {
   }, []);
   return (
     <>
-      {roleAdmins.length==0 ? null : roleAdmins.some(
+      {roleAdmins.length==0 ? null :Array.isArray(user?.roles) && roleAdmins.some(
           (role) => user.roles.includes(role)
         ) ? (
         <Outlet />

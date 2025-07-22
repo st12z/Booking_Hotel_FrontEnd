@@ -149,10 +149,11 @@ function Search() {
           res = await getPropertiesBySearch(params.toString());
         } else {
           console.log("--------- Gọi API filter--------- ");
-          console.log(filter);
+          console.log("filter",filter);
           res = await getPropertiesFilterAfterSearch(params.toString(), filter);
         }
         console.log("params:", params.toString());
+        console.log("res",res);
         console.log(pageNo);
         if (res.code === 200) {
           setData(res.data.dataPage);

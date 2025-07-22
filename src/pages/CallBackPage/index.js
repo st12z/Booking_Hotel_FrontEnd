@@ -12,6 +12,7 @@ function CallBackPage(){
     const fetchApi = async () => {
       try{
         const resAccessToken=  await getAccessToken(`access-token?code=${code}`);
+        console.log("resAccessToken:",resAccessToken);
         if(resAccessToken.code==200){
           localStorage.setItem("access_token",resAccessToken.data.access_token);
           const getInfoUserApi = await getInfoUser();

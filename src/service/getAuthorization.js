@@ -1,4 +1,4 @@
-const API_DOMAIN = "http://localhost:8072/bookinghotel";
+import { API_DOMAIN } from "../utils/variable";
 export const getAuthorization = async (path) => {
   const response = await fetch(`${API_DOMAIN}/${path}`, {
     method: "GET",
