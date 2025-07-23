@@ -37,6 +37,7 @@ function DiscountCarsItem(props) {
         "Vui lòng đăng nhập để lưu phiếu giảm giá!",
         "red"
       );
+      return;
     }
     const fetchApi = async () => {
       const data = {
