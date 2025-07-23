@@ -4,7 +4,6 @@ import {
   getBillByKeyword,
   getMyBills,
 } from "../../service/BookingService/BillService";
-import { render } from "@testing-library/react";
 import { Button, Popconfirm, Skeleton, Table, Tag } from "antd";
 import { getDate, getFormatPrice, getTime } from "../../utils/format";
 import { EyeOutlined, DeleteOutlined, SearchOutlined } from "@ant-design/icons";
