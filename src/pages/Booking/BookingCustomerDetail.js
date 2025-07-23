@@ -87,22 +87,23 @@ function BookingCustomerDetail() {
     try {
       console.log(e);
       const resCheckPolicyPayment = await checkBookingPolicy(e);
-      console.log("resCheckPolicyPayment",resCheckPolicyPayment);
+      console.log("resCheckPolicyPayment", resCheckPolicyPayment);
       if (resCheckPolicyPayment.code == 200) {
         const data = resCheckPolicyPayment.data;
         if (data.check == true) {
           if (data.suspiciousType == "AMOUNT") {
             nav(`/check-booking-otp?uniqueCheck=${data.uniqueCheck}`);
+          } else if (data.suspiciousType == "FREQUENCY") {
+            openNotification(
+              "topRight",
+              "Bạn đã thanh toán thất bại 3 lần liên tiếp. Vui lòng thử lại sau!",
+              "red"
+            );
           }
-          else if(data.suspiciousType == "FREQUENCY"){
-             openNotification("topRight", "Bạn đã thanh toán thất bại 3 lần liên tiếp. Vui lòng thử lại sau!", "red");
-          }
-        }
-        else{
-          const resConfirmBooking=await confirmBooking(data.uniqueCheck);
+        } else {
+          const resConfirmBooking = await confirmBooking(data.uniqueCheck);
           console.log(resConfirmBooking);
           window.open(resConfirmBooking.data, "_self");
-          
         }
       }
     } catch (err) {
@@ -110,10 +111,10 @@ function BookingCustomerDetail() {
       console.error(err);
     }
   };
-  const handleSubmit = (e) => {
-    console.log(e);
-    setLoading(true);
-    setTimeout(async () => {
+  const handleSubmit = async (e) => {
+    try {
+      console.log(e);
+      setLoading(true);
       let checkCar = true;
       if (priceCar != 0) {
         checkCar = await checkBookingCar(e);
@@ -128,8 +129,12 @@ function BookingCustomerDetail() {
       if (checkCar && checkHotel) {
         handleCheckPolicyPayment(e);
       }
-      setLoading(false);
-    }, 3000);
+    } catch (error) {
+      openNotification("topRight", "Đặt phòng thất bại!", "red"); 
+      console.error(error);
+    }finally{
+       setLoading(false);
+    }
   };
 
   return (

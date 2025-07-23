@@ -75,7 +75,7 @@ function DiscountItem(props) {
       fetchApi();
       setSaved(true);
       setLoadingButton(false);
-    }, 3000);
+    }, 1000);
   };
 
   return (

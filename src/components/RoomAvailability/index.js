@@ -76,7 +76,6 @@ function RoomAvailability(props) {
   };
   // xử lý form tìm kiếm
   const handleSubmit = (e) => {
-    setLoading(true);
     e.preventDefault();
     const searchRequest = {
       checkIn: formatLocalDateTime(e.target[0].value || ""),
@@ -89,6 +88,7 @@ function RoomAvailability(props) {
   // Gọi api tìm kiếm phòng theo điều kiện searchRequest
   useEffect(() => {
     const fetchApi = async () => {
+      setLoading(true);
       try {
         const res = await getRoomTypesBySearchRequest(
           `slugProperty=${params.slug}`,
@@ -126,9 +126,7 @@ function RoomAvailability(props) {
       }
     };
     if (searchRequest) {
-      setTimeout(() => {
         fetchApi();
-      }, 1000);
     }
   }, [searchRequest]);
 
@@ -206,7 +204,7 @@ function RoomAvailability(props) {
         return newLoadings;
       });
       await fetchApi(id);
-    }, 3000);
+    }, 1000);
   };
 
   // xử lý select chọn số phòng
@@ -268,7 +266,7 @@ function RoomAvailability(props) {
         setTimeout(() => {
           setReversedButtonLoading(false);
           nav(`/booking?${query.toString()}`);
-        }, 3000);
+        }, 1000);
       } else {
         openNotification("topRight", "Vui lòng kiểm tra lại!", "red");
       }

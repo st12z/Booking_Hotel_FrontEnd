@@ -120,7 +120,7 @@ function BookingPropertyDetail(props) {
           : totalOrderNew * ((1.0 * discount.discountValue) / 100);
       setPriceDiscount(priceDiscountFromCoupon);
       setChoosedId(id);
-    }, 3000);
+    }, 1000);
   };
 
   // set form
@@ -165,7 +165,7 @@ function BookingPropertyDetail(props) {
       });
       setPriceDiscount(0);
       setChoosedId(-1);
-    }, 3000);
+    }, 1000);
   };
   // sử dụng discont car
   const handleUseDiscountCar = (index, id) => {
@@ -188,7 +188,7 @@ function BookingPropertyDetail(props) {
       }
 
       setChoosedIdCar(id);
-    }, 3000);
+    }, 1000);
   };
   // nút hủy dùng discount car
   const handleCancelDiscountCar = (index, id) => {
@@ -206,7 +206,7 @@ function BookingPropertyDetail(props) {
         return newLoadings;
       });
       setChoosedIdCar(-1);
-    }, 3000);
+    }, 1000);
   };
   if(choosedIdCar != -1){
     form.setFieldsValue({
