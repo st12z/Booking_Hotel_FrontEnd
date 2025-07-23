@@ -1,70 +1,67 @@
-# Getting Started with Create React App
+# 🏨 Booking Hotel - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📌 Giới thiệu dự án
 
-## Available Scripts
+**Booking Hotel Frontend** là giao diện người dùng của hệ thống đặt phòng khách sạn, được xây dựng bằng **ReactJS** với thiết kế hiện đại, responsive, tích hợp đầy đủ các tính năng:
 
-In the project directory, you can run:
+- Đăng ký, đăng nhập, xác thực người dùng thông qua **Keycloak**
+- Tìm kiếm và lọc phòng theo nhu cầu
+- Xem chi tiết phòng và đặt phòng trực tuyến
+- Gửi đánh giá và nhận xét sau khi đặt
+- Tích hợp thanh toán VNPAY
+- Thông báo và nhắn tin realtime qua WebSocket
+- Giao diện quản trị dành cho admin với chức năng thống kê, phân quyền, xuất Excel,...
 
-### `npm start`
+Frontend tương tác với hệ thống backend microservice thông qua API Gateway và cập nhật dữ liệu realtime từ server.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🛠️ Công nghệ sử dụng
 
-### `npm test`
+Dựa theo `package.json`, frontend sử dụng các thư viện và công nghệ sau:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 🔷 Ngôn ngữ & Framework
+- **React 19** – Thư viện JavaScript chính để xây dựng UI
+- **React Router v7** – Điều hướng route động
+- **Redux + Redux Persist** – Quản lý trạng thái toàn cục, lưu vào localStorage
+- **SASS** – CSS tiền xử lý, giúp viết style có cấu trúc hơn
 
-### `npm run build`
+### 🎨 UI & Hiển thị
+- **Ant Design (v5)** – Bộ UI component mạnh mẽ
+- **Framer Motion** – Hiệu ứng chuyển động mượt mà
+- **Swiper** – Hiển thị slider ảnh phòng hoặc banner
+- **React Icons** – Thư viện biểu tượng phong phú
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🗓️ Xử lý thời gian
+- **Day.js** & **Moment.js** – Format và xử lý thời gian
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 🔒 Xác thực & Token
+- **jwt-decode** – Giải mã token JWT từ Keycloak
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 📤 Upload & Soạn thảo nội dung
+- **file-upload-with-preview** – Giao diện upload ảnh người dùng/phòng
+- **TinyMCE + tinymce-react** – Trình soạn thảo văn bản HTML (mô tả phòng, nội dung tin nhắn)
 
-### `npm run eject`
+### 📊 Biểu đồ & Dashboard
+- **@ant-design/charts** & **@ant-design/plots** – Vẽ biểu đồ thống kê trong trang admin
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 💬 WebSocket & Giao tiếp realtime
+- **sockjs-client + @stomp/stompjs** – Kết nối WebSocket để nhắn tin, thông báo realtime
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 😊 Tương tác nâng cao
+- **emoji-picker-react** – Chèn emoji vào khung chat
+- **node-emoji** – Xử lý emoji trong nội dung văn bản
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### 🧪 Testing
+- **@testing-library/react** – Viết test cho component
+- **@testing-library/jest-dom** – Hỗ trợ assertion trực quan
+- **@testing-library/user-event** – Giả lập hành vi người dùng trong test
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 🌐 Đường dẫn triển khai
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Frontend đã được deploy trên **Vercel** tại địa chỉ:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+🔗 [https://booking-hotel-front-end.vercel.app/](https://booking-hotel-front-end.vercel.app/)
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
