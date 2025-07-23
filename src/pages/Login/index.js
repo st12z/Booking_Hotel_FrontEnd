@@ -1,5 +1,5 @@
 import {Button, Col, Row} from "antd";
-import { urlRedirectLogin } from "../../utils/redirectLogin";
+import { urlRedirectLogin } from "../../utils/variable"; 
 function Login(){
   const handleClick = ()=>{
     window.location.href = urlRedirectLogin;
