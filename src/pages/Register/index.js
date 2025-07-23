@@ -84,10 +84,8 @@ function Register() {
         setLoading(false);
       }
     };
-    setTimeout(()=>{
-      fetchApi();
-      
-    },1000)
+    fetchApi();
+    
   };
 
   return (

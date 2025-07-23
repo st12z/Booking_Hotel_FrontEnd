@@ -162,18 +162,12 @@ function Search() {
       } catch (error) {
         console.error("Lỗi khi gọi API:", error);
       } finally {
-        setTimeout(() => {
           setLoading(false);
-        }, 3000);
       }
     };
 
     if (params.toString()) {
-      const timeout = setTimeout(() => {
         fetchApi();
-      }, 300); // debounce nhẹ
-
-      return () => clearTimeout(timeout);
     }
   }, [params.toString(), filter]);
   // thay đổi thay trượt giá
