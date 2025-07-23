@@ -32,7 +32,7 @@ function DiscountCarsItem(props) {
   // lưu phiếu giảm giá
   const handleSave = (id) => {
     console.log(user);
-    if (!user) {
+    if (!user.id) {
       openNotification(
         "topRight",
         "Vui lòng đăng nhập để lưu phiếu giảm giá!",
