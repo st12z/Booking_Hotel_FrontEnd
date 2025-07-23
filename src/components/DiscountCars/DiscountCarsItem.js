@@ -31,6 +31,7 @@ function DiscountCarsItem(props) {
 
   // lưu phiếu giảm giá
   const handleSave = (id) => {
+    console.log(user);
     if (!user) {
       openNotification(
         "topRight",
