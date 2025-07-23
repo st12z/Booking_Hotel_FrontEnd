@@ -1,5 +1,4 @@
 import LayoutDefault from "../layout/LayoutDefault";
-import Home from "../pages/home";
 import Search from "../pages/Search";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
@@ -69,6 +68,7 @@ import EditRoleOfUser from "../pages/Admin/EditRoleOfUser";
 import CreateStaff from "../pages/Admin/CreateStaff";
 import StaffRoute from "../components/StaffRoute";
 import AdminRoute from "../components/AdminRoute";
+import HomePage from "../pages/HomePage";
 export const routes = [
   {
     path: "/",
@@ -76,7 +76,7 @@ export const routes = [
     children: [
       {
         path: "",
-        element: <Home />,
+        element: <HomePage />,
       },
       {
         path: "/search",

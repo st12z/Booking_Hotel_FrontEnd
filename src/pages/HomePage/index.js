@@ -11,7 +11,7 @@ import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
 import { API_DOMAIN_SOCKET } from "../../utils/variable";
 import { connectStomp } from "../../utils/connectStomp";
-function Home() {
+function HomePage() {
   const user = useSelector((state) => state.user);
   useEffect(() => {
     const fetchApi = async () => {
@@ -38,4 +38,4 @@ function Home() {
     </>
   );
 }
-export default Home;
+export default HomePage;
